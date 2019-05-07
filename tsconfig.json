@@ -1,23 +1,26 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "lib",
     "experimentalDecorators": true,
     "target": "es2017",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "alwaysStrict": false,
     "strict": true,
     "forceConsistentCasingInFileNames": false,
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
     "strictNullChecks": true,
     "lib": ["dom", "dom.iterable", "esnext"],
-    "typeRoots": ["./node_modules/@types", "src/typings"]
+    "typeRoots": ["./node_modules/@types", "src/typings"],
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "sourceMap": false
   },
+  "compileOnSave": true,
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.jsx", "src/**/*.js"]
 }

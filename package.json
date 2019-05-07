@@ -1,4 +1,8 @@
 {
+  "main": "lib/src/functions.js",
+  "engines": {
+    "node": "8"
+  },
   "dependencies": {
     "@types/lodash": "^4.14.123",
     "firebase-admin": "^7.2.0",
@@ -29,6 +33,10 @@
     "start:watch": "nodemon dist/server.js",
     "start:debug": "nodemon --config nodemon-debug.json",
     "start:prod": "node dist/startServer.js",
-    "lint": "tslint -p tsconfig.json -c tslint.json"
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   }
 }

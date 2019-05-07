@@ -3,7 +3,7 @@ import Db from "./Db";
 import {processResults} from "./process";
 import {scrapers} from "./env";
 
-async function main() {
+export default async function main() {
   const db = new Db();
   const startDate = new Date(2019, 3, 1);
   // startDate.setMonth(startDate.getMonth() - 1);
@@ -11,4 +11,4 @@ async function main() {
   await db.addTranscations(processResults(results));
 }
 
-main().catch(err => console.error(err));
+// main().catch(err => console.error(err));
