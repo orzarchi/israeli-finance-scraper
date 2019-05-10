@@ -6,7 +6,8 @@
     "israeli-bank-scrapers": "^0.6.7",
     "lodash": "^4.17.11",
     "puppeteer": "^1.14.0",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "ynab": "^1.12.0"
   },
   "devDependencies": {
     "@types/node": "^11.13.2",
@@ -24,11 +25,10 @@
     "build": "tsc",
     "watch-ts": "tsc -w",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "ts-node src/main.ts",
+    "scrape": "ts-node src/commands/scrape.ts",
+    "ynab": "ts-node src/commands/uploadToYnab.ts",
     "start:dev": "nodemon",
-    "start:watch": "nodemon dist/server.js",
     "start:debug": "nodemon --config nodemon-debug.json",
-    "start:prod": "node dist/startServer.js",
     "lint": "tslint -p tsconfig.json -c tslint.json"
   }
 }

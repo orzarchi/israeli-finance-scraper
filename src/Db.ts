@@ -32,4 +32,13 @@ export default class Db {
         const dateString = `${date.getFullYear()}-${month}-${day}`;
         return `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(0, 4)}-${transaction.chargedAmount}`;
     }
+
+    async getTransactions(startDate: Date):Promise<PersistedTransaction[]> {
+        const collection = this.db.collection("transactions");
+        const result = await collection.orderBy('date').where('date', '>=', startDate).get();
+        return result.docs.map(x => {
+            const data = x.data();
+            return {...data, date:data.date.toDate()} as PersistedTransaction;
+        });
+    }
 }

@@ -1,8 +1,45 @@
 import { createScraper } from "israeli-bank-scrapers";
 import puppeteer from "puppeteer";
-import {ScraperConfig, ScrapeResult} from "./types";
+import {ScraperConfig, ScrapeResult,Account, PersistedTransaction, Provider} from "./types";
+import _ from "lodash";
+import shortid from "shortid";
 
-export async function run(startDate:Date,scrapers:ScraperConfig[]) {
+function mapTransaction(account: Account, providerName: Provider) {
+    return account.txns.map(tx => ({
+        id: shortid.generate(),
+        account: account.accountNumber.trim(),
+        provider: providerName,
+        chargedAmount: tx.chargedAmount,
+        date: new Date(tx.date),
+        description: tx.description,
+        installments: tx.installments||null,
+        originalAmount: tx.originalAmount,
+        originalCurrency: tx.originalCurrency,
+        approvalNumber: tx.identifier||0,
+        memo: tx.memo||''
+    }));
+}
+
+function mapScrape(
+    scrape: ScrapeResult,
+    providerName: Provider
+): PersistedTransaction[] {
+    return _.flatten(scrape.accounts.map(x => mapTransaction(x, providerName)));
+}
+
+function processResults(results: {
+    [x: string]: ScrapeResult;
+}): PersistedTransaction[] {
+    return _.flatten(
+        Object.keys(results).map(providerName => {
+            const scrape = results[providerName];
+            return mapScrape(scrape, providerName as Provider);
+        })
+    );
+}
+
+
+export async function run(startDate:Date,...scrapers:ScraperConfig[]) {
     const results: {[x:string]: ScrapeResult} = {};
     const browser = await puppeteer.launch();
     for (const scraperConfig of scrapers) {
@@ -30,6 +67,6 @@ export async function run(startDate:Date,scrapers:ScraperConfig[]) {
         }
     }
 
-    return results;
+    return processResults(results);
 }
 
