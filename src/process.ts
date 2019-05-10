@@ -10,11 +10,11 @@ function mapTransaction(account: Account, providerName: Provider) {
     chargedAmount: tx.chargedAmount,
     date: new Date(tx.date),
     description: tx.description,
-    installments: tx.installments,
+    installments: tx.installments||null,
     originalAmount: tx.originalAmount,
     originalCurrency: tx.originalCurrency,
     approvalNumber: tx.identifier||0,
-    memo: tx.memo
+    memo: tx.memo||''
   }));
 }
 

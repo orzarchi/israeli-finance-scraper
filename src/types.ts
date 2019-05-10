@@ -47,7 +47,7 @@ export type PersistedTransaction = {
     chargedAmount: number;
     description: string;
     memo: string; // can be null or empty
-    installments: {
+    installments: null | {
         number: number; // the current installment number
         total: number; // the total number of installments
     };

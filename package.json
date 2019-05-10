@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "@types/lodash": "^4.14.123",
-    "firebase-admin": "^7.2.0",
-    "firebase-functions": "^2.2.1",
+    "firebase-admin": "^7.3.0",
+    "firebase-functions": "^2.3.1",
     "israeli-bank-scrapers": "^0.6.7",
     "lodash": "^4.17.11",
     "puppeteer": "^1.14.0",
