@@ -1,7 +1,7 @@
-import { ynabApiKey } from './env';
 import { api as YNABApi,SaveTransaction, TransactionSummary } from 'ynab';
 import { PersistedTransaction } from './types';
 import ClearedEnum = TransactionSummary.ClearedEnum;
+import {configuration} from "./env";
 
 
 function createYnabTransaction(accountId: string, transaction: PersistedTransaction): SaveTransaction {
@@ -18,7 +18,7 @@ function createYnabTransaction(accountId: string, transaction: PersistedTransact
 }
 
 export async function uploadTransactions(budgetId: string, accountId: string, transactions: PersistedTransaction[]) {
-    const ynabAPI = new YNABApi(ynabApiKey);
+    const ynabAPI = new YNABApi(configuration.ynabApiKey);
 
     console.log(`Uploading ${transactions.length} transactions to budget ${budgetId}`);
 

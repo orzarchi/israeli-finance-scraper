@@ -1,6 +1,6 @@
 import { createScraper } from 'israeli-bank-scrapers';
 import puppeteer from 'puppeteer';
-import { ScraperConfig, ScrapeResult, Account, PersistedTransaction, Provider } from './types';
+import { FinanciaAccountConfiguration, ScrapeResult, Account, PersistedTransaction, Provider } from './types';
 import _ from 'lodash';
 import shortid from 'shortid';
 import moment from 'moment';
@@ -37,7 +37,7 @@ function processResults(results: { [x: string]: ScrapeResult }): PersistedTransa
     );
 }
 
-export async function run(startDate: Date, ...scrapers: ScraperConfig[]) {
+export async function run(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
     const results: { [x: string]: ScrapeResult } = {};
     const browser = await puppeteer.launch();
     for (const scraperConfig of scrapers) {
