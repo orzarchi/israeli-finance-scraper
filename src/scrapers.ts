@@ -1,35 +1,34 @@
-import { createScraper } from "israeli-bank-scrapers";
-import puppeteer from "puppeteer";
-import {ScraperConfig, ScrapeResult,Account, PersistedTransaction, Provider} from "./types";
-import _ from "lodash";
-import shortid from "shortid";
+import { createScraper } from 'israeli-bank-scrapers';
+import puppeteer from 'puppeteer';
+import { ScraperConfig, ScrapeResult, Account, PersistedTransaction, Provider } from './types';
+import _ from 'lodash';
+import shortid from 'shortid';
+import moment from 'moment';
 
 function mapTransaction(account: Account, providerName: Provider) {
-    return account.txns.map(tx => ({
-        id: shortid.generate(),
-        account: account.accountNumber.trim(),
-        provider: providerName,
-        chargedAmount: tx.chargedAmount,
-        date: new Date(tx.date),
-        description: tx.description,
-        installments: tx.installments||null,
-        originalAmount: tx.originalAmount,
-        originalCurrency: tx.originalCurrency,
-        approvalNumber: tx.identifier||0,
-        memo: tx.memo||''
-    }));
+    return account.txns.map(tx => {
+        const dateAsUtc = new Date(moment(tx.date).format('YYYY-MM-DD'));
+        return {
+            id: shortid.generate(),
+            account: account.accountNumber.trim(),
+            provider: providerName,
+            chargedAmount: tx.chargedAmount,
+            date: dateAsUtc,
+            description: tx.description,
+            installments: tx.installments || null,
+            originalAmount: tx.originalAmount,
+            originalCurrency: tx.originalCurrency,
+            approvalNumber: tx.identifier || 0,
+            memo: tx.memo || ''
+        };
+    });
 }
 
-function mapScrape(
-    scrape: ScrapeResult,
-    providerName: Provider
-): PersistedTransaction[] {
+function mapScrape(scrape: ScrapeResult, providerName: Provider): PersistedTransaction[] {
     return _.flatten(scrape.accounts.map(x => mapTransaction(x, providerName)));
 }
 
-function processResults(results: {
-    [x: string]: ScrapeResult;
-}): PersistedTransaction[] {
+function processResults(results: { [x: string]: ScrapeResult }): PersistedTransaction[] {
     return _.flatten(
         Object.keys(results).map(providerName => {
             const scrape = results[providerName];
@@ -38,9 +37,8 @@ function processResults(results: {
     );
 }
 
-
-export async function run(startDate:Date,...scrapers:ScraperConfig[]) {
-    const results: {[x:string]: ScrapeResult} = {};
+export async function run(startDate: Date, ...scrapers: ScraperConfig[]) {
+    const results: { [x: string]: ScrapeResult } = {};
     const browser = await puppeteer.launch();
     for (const scraperConfig of scrapers) {
         console.log(`Scraping ${scraperConfig.companyId}`);
@@ -54,10 +52,10 @@ export async function run(startDate:Date,...scrapers:ScraperConfig[]) {
             browser
         });
 
-        const scrapeResult = await scraper.scrape(scraperConfig.credentials) as ScrapeResult;
+        const scrapeResult = (await scraper.scrape(scraperConfig.credentials)) as ScrapeResult;
 
         if (scrapeResult.success) {
-            scrapeResult.accounts.forEach((account) => {
+            scrapeResult.accounts.forEach(account => {
                 console.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
             });
 
@@ -69,4 +67,3 @@ export async function run(startDate:Date,...scrapers:ScraperConfig[]) {
 
     return processResults(results);
 }
-
