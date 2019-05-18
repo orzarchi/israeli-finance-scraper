@@ -1,8 +1,9 @@
-import { api as YNABApi,SaveTransaction, TransactionSummary } from 'ynab';
+import { api as YNABApi, SaveTransaction, TransactionDetail, TransactionSummary } from 'ynab';
 import { PersistedTransaction } from './types';
 import ClearedEnum = TransactionSummary.ClearedEnum;
-import {configuration} from "./env";
-
+import { configuration } from './env';
+import _ from 'lodash';
+import {readCsv, writeCsv} from "./files";
 
 function createYnabTransaction(accountId: string, transaction: PersistedTransaction): SaveTransaction {
     return {
@@ -31,4 +32,36 @@ export async function uploadTransactions(budgetId: string, accountId: string, tr
         `Uploaded ${uploadedTransactionIds.length} transactions, of them ${uploadedTransactionIds.length -
             duplicateImportIds.length} are new`
     );
+}
+
+export async function updateTransactions(budgetId: string, transactions: TransactionDetail[]) {
+    const ynabAPI = new YNABApi(configuration.ynabApiKey);
+    return ynabAPI.transactions.updateTransactions(budgetId, { transactions });
+}
+
+export async function getUncategorizedTransactions(budgetId: string) {
+    const ynabAPI = new YNABApi(configuration.ynabApiKey);
+    const transactions = await ynabAPI.transactions.getTransactions(budgetId, undefined, 'uncategorized');
+    return transactions.data.transactions;
+}
+
+export async function getYnabCategoryIdLookup(budgetId: string): Promise<Array<{ name: string; id: string }>> {
+    try{
+        const categories = await readCsv('./categories.csv');
+        return categories.map(x=>({id:x[0],name:x[1]}));
+    }
+    catch(err){
+
+    }
+
+    const ynabAPI = new YNABApi(configuration.ynabApiKey);
+    const categoryGroups = await ynabAPI.categories.getCategories(budgetId);
+    const categories = _.flatMap(categoryGroups.data.category_groups, x => x.categories);
+    try{
+        await writeCsv('./categories.csv',categories.map(x=>[x.id,x.name]));
+    }
+    catch{
+
+    }
+    return categories;
 }
