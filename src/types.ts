@@ -53,6 +53,13 @@ export type PersistedTransaction = {
     };
 };
 
+export interface IPersistedConfiguration {
+    id: string;
+    ynabApiKey: string;
+    ynabBudgets: YnabBudget[];
+    accountsConfig: FinanciaAccountConfiguration[];
+}
+
 export type FinanciaAccountConfiguration = {
     id: string;
     accounts: string[];
@@ -74,6 +81,6 @@ export type YnabBudget = {
 };
 
 export type YnabUploadTarget = {
-    budgetId:string,
-    accountId:string
-}
+    budgetId: string;
+    accountId: string;
+};

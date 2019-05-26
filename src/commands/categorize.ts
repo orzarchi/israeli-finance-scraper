@@ -1,16 +1,17 @@
 import {getUncategorizedTransactions, getYnabCategoryIdLookup, updateTransactions} from '../ynab';
-import {configuration} from '../env';
 import _ from 'lodash';
 import {csvFileCategorizationProvider} from "../categorization/CsvFileCategorizationProvider";
 import {CategorizationProvider} from "../categorization";
 import {applyLearnedCategories} from "../categorization/apply";
+import Db from "../Db";
 
 async function categorize(
+    ynabApiKey:string,
     budgetId: string,
     ...categorizationProviders: CategorizationProvider[]
 ) {
-    const ynabCategoryIdLookup = (await getYnabCategoryIdLookup(budgetId)).map(x => [x.name,x.id]);
-    const uncategorizedTx = await getUncategorizedTransactions(budgetId);
+    const ynabCategoryIdLookup = (await getYnabCategoryIdLookup(ynabApiKey,budgetId)).map(x => [x.name,x.id]);
+    const uncategorizedTx = await getUncategorizedTransactions(ynabApiKey,budgetId);
     let stillUncategorizedTx = uncategorizedTx;
 
     for(const categorizationProvider of categorizationProviders){
@@ -29,8 +30,16 @@ async function categorize(
 
     if (newlyCategorizedTx.length) {
         console.info(`Categorized ${newlyCategorizedTx.length} transactions`);
-        await updateTransactions(budgetId, newlyCategorizedTx);
+        await updateTransactions(ynabApiKey,budgetId, newlyCategorizedTx);
     }
 }
 
-categorize(configuration.ynabBudgets[0].id, csvFileCategorizationProvider).catch(err => console.error(err));
+async function test(){
+    const db = new Db();
+    const configurations = await db.getConfigurations();
+    for (const configuration of configurations) {
+        await categorize(configuration.ynabApiKey, configuration.ynabBudgets[0].id, csvFileCategorizationProvider)
+    }
+}
+
+test().catch(err => console.error(err));
