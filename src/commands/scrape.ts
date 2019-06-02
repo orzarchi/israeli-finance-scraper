@@ -2,7 +2,7 @@ import { run } from '../scrapers';
 import Db from '../Db';
 import moment from 'moment';
 
-async function scrape() {
+export async function scrape() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -17,6 +17,7 @@ async function scrape() {
             await db.addTranscations(results);
         }
     }
+
+    console.log(`Finished scraping everything :)`);
 }
 
-scrape().catch(err => console.error(err));
