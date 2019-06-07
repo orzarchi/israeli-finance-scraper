@@ -67,7 +67,7 @@ export type FinanciaAccountConfiguration = {
         budgetName: string;
         accountName: string;
     };
-    companyId: string;
+    companyId: Provider;
     credentials: {
         username: string;
         password: string;

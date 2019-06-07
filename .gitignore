@@ -27,5 +27,7 @@ yarn-error.log*
 
 cypress/videos
 cypress/screenshots
-env.ts
 *.csv
+lib/
+*.zip
+src/**/*.js

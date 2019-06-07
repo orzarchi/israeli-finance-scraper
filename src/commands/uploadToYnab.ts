@@ -3,7 +3,7 @@ import { uploadTransactions } from '../ynab';
 import { PersistedTransaction } from '../types';
 import _ from 'lodash';
 
-async function uploadToYnab() {
+export async function uploadToYnab() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = new Date();
@@ -30,4 +30,3 @@ async function uploadToYnab() {
     }
 }
 
-uploadToYnab().catch(err => console.error(err));

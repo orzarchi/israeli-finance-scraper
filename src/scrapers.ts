@@ -1,5 +1,6 @@
 import { createScraper } from 'israeli-bank-scrapers';
-import puppeteer from 'puppeteer';
+import chrome from 'chrome-aws-lambda';
+import locateChrome from 'locate-chrome';
 import { FinanciaAccountConfiguration, ScrapeResult, Account, PersistedTransaction, Provider } from './types';
 import _ from 'lodash';
 import shortid from 'shortid';
@@ -37,9 +38,28 @@ function processResults(results: { [x: string]: ScrapeResult }): PersistedTransa
     );
 }
 
+async function getChromePath() {
+    let lambdaPath = await chrome.executablePath;
+    if (!lambdaPath){
+        lambdaPath = await locateChrome()
+    }
+
+    return lambdaPath;
+}
+
 export async function run(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
     const results: { [x: string]: ScrapeResult } = {};
-    const browser = await puppeteer.launch();
+    let executablePath = await getChromePath();
+    if (!executablePath){
+        console.error("Can't find chrome path");
+    }
+    const args = chrome.args;
+    const browser = await chrome.puppeteer.launch({
+        args,
+        executablePath: executablePath,
+        headless: false
+    });
+
     for (const scraperConfig of scrapers) {
         console.log(`Scraping ${scraperConfig.companyId}`);
 
