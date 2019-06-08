@@ -3,6 +3,7 @@ import serviceAccount from '../firebase-service-account.json';
 import { IPersistedConfiguration, PersistedTransaction } from './types';
 import { Configuration } from './Configuration';
 import _ from 'lodash';
+import { CollectionReference } from '@google-cloud/firestore';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -15,21 +16,38 @@ export default class Db {
         this.db = admin.firestore();
     }
 
-    async addTranscations(transactions: PersistedTransaction[]) {
-        if (!transactions.length){
+    async addTranscations(transactions: PersistedTransaction[], overwriteIds:boolean=false) {
+        if (!transactions.length) {
             return;
         }
 
         console.log(`Persisting ${transactions.length} transactions`);
+
         const batch = this.db.batch();
         const collection = this.db.collection('transactions');
-        const mergeFields = Object.keys(_.omit(transactions[0],'id'));
-        transactions.forEach(x => {
-            batch.set(collection.doc(this.getUniqueDbId(x)), x,{mergeFields});
+        let newTransactions = transactions;
+
+        if (!overwriteIds){
+            newTransactions = await this.removeExistingTransactions(transactions, collection);
+        }
+
+        newTransactions.forEach(x => {
+            batch.set(collection.doc(this.getUniqueDbId(x)), x);
         });
 
         await batch.commit();
-        console.log('Finished persisting');
+        console.log(`Finished persisting ${newTransactions.length} new transactions`);
+    }
+
+    private async removeExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
+        const existingDocuments = await this.db.getAll(
+            ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
+        );
+
+        const existingTransactions = _.compact(existingDocuments.map(x => x.data()));
+
+        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => x.id);
+        return newTransactions;
     }
 
     private getUniqueDbId(transaction: PersistedTransaction) {
@@ -40,10 +58,11 @@ export default class Db {
             .toString()
             .padStart(2, '0');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
-        let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(0, 4)}-${
-            transaction.chargedAmount
-            }`;
-        return uniqueId.replace(/[ /]/g,'');
+        let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(
+            0,
+            4
+        )}-${transaction.chargedAmount}`;
+        return uniqueId.replace(/[ /]/g, '');
     }
 
     async getTransactions(startDate: Date): Promise<PersistedTransaction[]> {
