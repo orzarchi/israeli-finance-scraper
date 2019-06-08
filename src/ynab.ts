@@ -12,7 +12,7 @@ function createYnabTransaction(accountId: string, transaction: PersistedTransact
         cleared: ClearedEnum.Cleared,
         date: new Date(transaction.date).toISOString(),
         import_id: transaction.id,
-        memo: `${transaction.provider}-${transaction.account}`,
+        memo: `${transaction.provider}-${transaction.account}${transaction.memo ? ' ' + transaction.memo : ''}`,
         payee_name: transaction.description
     };
 }
