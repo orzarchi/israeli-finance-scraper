@@ -22,10 +22,10 @@ export async function uploadTransactions(ynabApiKey:string, budgetId: string, ac
 
     console.log(`Uploading ${transactions.length} transactions to budget ${budgetId}`);
 
-    const response = await ynabAPI.transactions.bulkCreateTransactions(budgetId, {
+    const response = await ynabAPI.transactions.createTransactions(budgetId, {
         transactions: transactions.map(x => createYnabTransaction(accountId, x))
     });
-    let uploadedTransactionIds = response.data.bulk.transaction_ids;
+    let uploadedTransactionIds = response.data.transaction_ids;
     console.log(
         `Uploaded ${uploadedTransactionIds.length} new transactions`
     );
