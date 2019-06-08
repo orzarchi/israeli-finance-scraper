@@ -17,6 +17,9 @@ export async function scrape() {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)){
                 continue;
             }
+            if (env.ONLY_ACCOUNTS.length && !env.ONLY_ACCOUNTS.some(x=>scraper.accounts.includes(x))){
+                continue;
+            }
 
             const results = await run(startDate, scraper);
             await db.addTranscations(results);
