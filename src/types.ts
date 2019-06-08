@@ -51,6 +51,8 @@ export type PersistedTransaction = {
         number: number; // the current installment number
         total: number; // the total number of installments
     };
+    scrapeId?:string;
+    scrapeDate?:Date;
 };
 
 export interface IPersistedConfiguration {

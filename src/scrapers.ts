@@ -47,7 +47,7 @@ async function getChromePath() {
     return lambdaPath;
 }
 
-export async function run(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
+export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConfiguration[]) {
     const results: { [x: string]: ScrapeResult } = {};
     let executablePath = await getChromePath();
     if (!executablePath){

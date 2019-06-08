@@ -1,7 +1,8 @@
-import { run } from '../scrapers';
+import { runScrape } from '../scrapers';
 import Db from '../Db';
 import moment from 'moment';
-import env from "../env";
+import env from '../env';
+import shortid = require('shortid');
 
 export async function scrape() {
     const db = new Db();
@@ -11,21 +12,27 @@ export async function scrape() {
         .subtract(env.MONTHS_TO_SCRAPE, 'months')
         .toDate();
 
+    const scrapeId = shortid.generate();
+    const scrapeDate = new Date();
+
     for (const configuration of configurations) {
         console.log(`Scraping configuration ${configuration.id}`);
         for (const scraper of configuration.accountsConfig) {
-            if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)){
+            if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
-            if (env.ONLY_ACCOUNTS.length && !env.ONLY_ACCOUNTS.some(x=>scraper.accounts.includes(x))){
+            if (env.ONLY_ACCOUNTS.length && !env.ONLY_ACCOUNTS.some(x => scraper.accounts.includes(x))) {
                 continue;
             }
 
-            const results = await run(startDate, scraper);
+            const results = await runScrape(startDate, scraper);
+            results.forEach(x => {
+                x.scrapeId = scrapeId;
+                x.scrapeDate = scrapeDate;
+            });
             await db.addTranscations(results);
         }
     }
 
     console.log(`Finished scraping everything :)`);
 }
-
