@@ -8,7 +8,7 @@ export async function scrape() {
     const configurations = await db.getConfigurations();
     const startDate = moment()
         .startOf('month')
-        .subtract(2, 'months')
+        .subtract(env.MONTHS_TO_SCRAPE, 'months')
         .toDate();
 
     for (const configuration of configurations) {
