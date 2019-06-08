@@ -2,6 +2,7 @@ import admin, { ServiceAccount } from 'firebase-admin';
 import serviceAccount from '../firebase-service-account.json';
 import { IPersistedConfiguration, PersistedTransaction } from './types';
 import { Configuration } from './Configuration';
+import _ from 'lodash';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -15,11 +16,16 @@ export default class Db {
     }
 
     async addTranscations(transactions: PersistedTransaction[]) {
+        if (!transactions.length){
+            return;
+        }
+
         console.log(`Persisting ${transactions.length} transactions`);
         const batch = this.db.batch();
         const collection = this.db.collection('transactions');
+        const mergeFields = Object.keys(_.omit(transactions[0],'id'));
         transactions.forEach(x => {
-            batch.set(collection.doc(this.getUniqueDbId(x)), x);
+            batch.set(collection.doc(this.getUniqueDbId(x)), x,{mergeFields});
         });
 
         await batch.commit();
