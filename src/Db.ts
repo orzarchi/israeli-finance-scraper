@@ -40,9 +40,10 @@ export default class Db {
             .toString()
             .padStart(2, '0');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
-        return `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(0, 4)}-${
+        let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(0, 4)}-${
             transaction.chargedAmount
-        }`;
+            }`;
+        return uniqueId.replace(/[ /]/g,'');
     }
 
     async getTransactions(startDate: Date): Promise<PersistedTransaction[]> {

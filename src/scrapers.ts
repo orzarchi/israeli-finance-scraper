@@ -15,7 +15,7 @@ function mapTransaction(account: Account, providerName: Provider) {
             provider: providerName,
             chargedAmount: tx.chargedAmount,
             date: dateAsUtc,
-            description: tx.description,
+            description: tx.description.trim(),
             installments: tx.installments || null,
             originalAmount: tx.originalAmount,
             originalCurrency: tx.originalCurrency,
