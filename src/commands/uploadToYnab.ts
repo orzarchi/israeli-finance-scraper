@@ -2,10 +2,11 @@ import Db from '../Db';
 import { uploadTransactions } from '../ynab';
 import { PersistedTransaction } from '../types';
 import _ from 'lodash';
-import env from "../env";
+import env from '../env';
 import moment from 'moment';
+import {tryDebuggingLocally} from "../debug";
 
-export async function uploadToYnab() {
+export const uploadToYnab = tryDebuggingLocally(async function() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -33,5 +34,4 @@ export async function uploadToYnab() {
             await uploadTransactions(configuration.ynabApiKey, configParts[0], configParts[1], newTransactions);
         }
     }
-}
-
+});

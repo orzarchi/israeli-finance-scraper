@@ -3,8 +3,9 @@ import Db from '../Db';
 import moment from 'moment';
 import env from '../env';
 import shortid = require('shortid');
+import {tryDebuggingLocally} from "../debug";
 
-export async function scrape() {
+export const scrape = tryDebuggingLocally(async function() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -38,4 +39,4 @@ export async function scrape() {
     }
 
     console.log(`Finished scraping everything :) ${total} scraped`);
-}
+});
