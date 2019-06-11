@@ -31,3 +31,4 @@ cypress/screenshots
 lib/
 *.zip
 src/**/*.js
+firebase-service-account.json
