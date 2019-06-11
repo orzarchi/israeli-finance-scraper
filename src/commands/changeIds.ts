@@ -11,5 +11,5 @@ export async function changeIds() {
         x.id = shortid.generate();
     });
 
-    return db.addTranscations(transactions,true);
+    return db.addTransactions(transactions,true);
 }

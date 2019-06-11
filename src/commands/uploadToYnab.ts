@@ -3,12 +3,16 @@ import { uploadTransactions } from '../ynab';
 import { PersistedTransaction } from '../types';
 import _ from 'lodash';
 import env from "../env";
+import moment from 'moment';
 
 export async function uploadToYnab() {
     const db = new Db();
     const configurations = await db.getConfigurations();
-    const startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - env.MONTHS_TO_SCRAPE);
+    const startDate = moment()
+        .startOf('month')
+        .subtract(env.MONTHS_TO_SCRAPE, 'months')
+        .toDate();
+
     const transactions = await db.getTransactions(startDate);
 
     for (const configuration of configurations) {

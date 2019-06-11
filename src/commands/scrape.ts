@@ -15,6 +15,8 @@ export async function scrape() {
     const scrapeId = shortid.generate();
     const scrapeDate = new Date();
 
+    let total = 0;
+
     for (const configuration of configurations) {
         console.log(`Scraping configuration ${configuration.id}`);
         for (const scraper of configuration.accountsConfig) {
@@ -30,9 +32,10 @@ export async function scrape() {
                 x.scrapeId = scrapeId;
                 x.scrapeDate = scrapeDate;
             });
-            await db.addTranscations(results);
+            total += results.length;
+            await db.addTransactions(results);
         }
     }
 
-    console.log(`Finished scraping everything :)`);
+    console.log(`Finished scraping everything :) ${total} scraped`);
 }

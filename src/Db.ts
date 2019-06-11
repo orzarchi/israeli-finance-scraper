@@ -4,6 +4,7 @@ import { IPersistedConfiguration, PersistedTransaction } from './types';
 import { Configuration } from './Configuration';
 import _ from 'lodash';
 import { CollectionReference } from '@google-cloud/firestore';
+import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -16,7 +17,7 @@ export default class Db {
         this.db = admin.firestore();
     }
 
-    async addTranscations(transactions: PersistedTransaction[], overwriteIds:boolean=false) {
+    async addTransactions(transactions: PersistedTransaction[], overwriteIds: boolean = false) {
         if (!transactions.length) {
             return;
         }
@@ -27,7 +28,7 @@ export default class Db {
         const collection = this.db.collection('transactions');
         let newTransactions = transactions;
 
-        if (!overwriteIds){
+        if (!overwriteIds) {
             newTransactions = await this.removeExistingTransactions(transactions, collection);
         }
 
@@ -71,10 +72,12 @@ export default class Db {
             .orderBy('date')
             .where('date', '>=', startDate)
             .get();
-        return result.docs.map(x => {
-            const data = x.data();
-            return { ...data, date: data.date.toDate() } as PersistedTransaction;
-        });
+        return result.docs.map(this.mapDocument);
+    }
+
+    mapDocument(document: DocumentSnapshot){
+        const data = document.data()!;
+        return { ...data, date: data.date.toDate() } as PersistedTransaction
     }
 
     async getConfigurations(): Promise<Configuration[]> {
