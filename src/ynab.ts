@@ -62,3 +62,15 @@ export async function getYnabCategoryIdLookup(ynabApiKey:string, budgetId: strin
     }
     return categories;
 }
+
+export async function getAccounts(ynabApiKey:string, budgetId:string){
+    const ynabAPI = new YNABApi(ynabApiKey);
+    const result = await ynabAPI.accounts.getAccounts(budgetId);
+    return result.data.accounts;
+}
+
+export async function getBudgets(ynabApiKey:string){
+    const ynabAPI = new YNABApi(ynabApiKey);
+    const result = await ynabAPI.budgets.getBudgets();
+    return result.data.budgets;
+}

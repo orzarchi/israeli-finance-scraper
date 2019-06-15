@@ -5,12 +5,18 @@ export class Configuration implements IPersistedConfiguration {
     public ynabApiKey: string;
     public ynabBudgets: YnabBudget[];
     public accountsConfig: FinanciaAccountConfiguration[];
+    public persistenceId: string;
 
-    constructor(dto: IPersistedConfiguration) {
+    constructor(persistenceId:string, dto: IPersistedConfiguration) {
         this.id = dto.id;
+        this.persistenceId = persistenceId;
         this.ynabApiKey = dto.ynabApiKey;
         this.ynabBudgets = dto.ynabBudgets;
         this.accountsConfig = dto.accountsConfig;
+    }
+
+    public toJson(){
+        return JSON.parse(JSON.stringify(this));
     }
 
     public getYnabUploadTarget(accountId: string): YnabUploadTarget | null {

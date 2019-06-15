@@ -85,12 +85,12 @@ export default class Db {
         const result = await collection.get();
         return result.docs.map(x => {
             const savedConfiguration = x.data() as IPersistedConfiguration;
-            return new Configuration(savedConfiguration);
+            return new Configuration(x.id ,savedConfiguration);
         });
     }
 
-    async updateConfiguration(configuration: IPersistedConfiguration): Promise<void> {
+    async updateConfiguration(persistenceId:string, configuration: IPersistedConfiguration): Promise<void> {
         const collection = this.db.collection('configurations');
-        await collection.add(configuration);
+        await collection.doc(persistenceId).set(configuration);
     }
 }

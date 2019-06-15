@@ -3,6 +3,7 @@
         "@types/lodash": "^4.14.123",
         "chrome-aws-lambda": "^1.17.1",
         "csv-parse": "^4.4.1",
+        "enquirer": "^2.3.0",
         "firebase-admin": "^7.3.0",
         "firebase-functions": "^2.3.1",
         "israeli-bank-scrapers": "orzarchi/israeli-bank-scrapers",
@@ -28,6 +29,7 @@
     "scripts": {
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "scrape": "ts-node --files src/commands/scrape.ts",
+        "configure": "ts-node --files src/commands/configure.ts",
         "ynab": "ts-node --files src/commands/uploadToYnab.ts",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "package": "rm dist.zip; npm run build && cd lib && zip -r ../dist.zip * && cd .. && zip -r dist.zip ./node_modules",

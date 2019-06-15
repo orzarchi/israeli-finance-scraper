@@ -51,8 +51,8 @@ export type PersistedTransaction = {
         number: number; // the current installment number
         total: number; // the total number of installments
     };
-    scrapeId?:string;
-    scrapeDate?:Date;
+    scrapeId?: string;
+    scrapeDate?: Date;
 };
 
 export interface IPersistedConfiguration {
@@ -79,7 +79,7 @@ export type FinanciaAccountConfiguration = {
 export type YnabBudget = {
     name: string;
     id: string;
-    accounts: { name: string; id: string }[];
+    accounts: { name: string; id: string; transferAccountId: string }[];
 };
 
 export type YnabUploadTarget = {
