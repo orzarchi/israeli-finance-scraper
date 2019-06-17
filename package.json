@@ -30,6 +30,7 @@
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "scrape": "ts-node --files src/commands/scrape.ts",
         "configure": "ts-node --files src/commands/configure.ts",
+        "changeids": "ts-node --files src/commands/changeIds.ts",
         "ynab": "ts-node --files src/commands/uploadToYnab.ts",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "package": "rm dist.zip; npm run build && cd lib && zip -r ../dist.zip * && cd .. && zip -r dist.zip ./node_modules",
