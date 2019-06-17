@@ -75,9 +75,9 @@ export default class Db {
         return result.docs.map(this.mapDocument);
     }
 
-    mapDocument(document: DocumentSnapshot){
+    mapDocument(document: DocumentSnapshot) {
         const data = document.data()!;
-        return { ...data, date: data.date.toDate() } as PersistedTransaction
+        return { ...data, date: data.date.toDate() } as PersistedTransaction;
     }
 
     async getConfigurations(): Promise<Configuration[]> {
@@ -85,12 +85,16 @@ export default class Db {
         const result = await collection.get();
         return result.docs.map(x => {
             const savedConfiguration = x.data() as IPersistedConfiguration;
-            return new Configuration(x.id ,savedConfiguration);
+            return new Configuration(x.id, savedConfiguration);
         });
     }
 
-    async updateConfiguration(persistenceId:string, configuration: IPersistedConfiguration): Promise<void> {
+    async updateConfiguration(persistenceId: string, configuration: IPersistedConfiguration): Promise<void> {
         const collection = this.db.collection('configurations');
-        await collection.doc(persistenceId).set(configuration);
+        if (!persistenceId) {
+            await collection.add(configuration);
+        } else {
+            await collection.doc(persistenceId).set(configuration);
+        }
     }
 }

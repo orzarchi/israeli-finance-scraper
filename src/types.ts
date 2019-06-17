@@ -62,13 +62,16 @@ export interface IPersistedConfiguration {
     accountsConfig: FinanciaAccountConfiguration[];
 }
 
+export type FinancialAccountYnabMapping = {
+    accountName: string;
+    ynabTargetBudgetId: string;
+    ynabTargetAccountId: string;
+    payingYnabAccountId?: string;
+};
+
 export type FinanciaAccountConfiguration = {
     id: string;
-    accounts: string[];
-    ynab?: {
-        budgetName: string;
-        accountName: string;
-    };
+    accounts: Array<FinancialAccountYnabMapping>;
     companyId: Provider;
     credentials: {
         username: string;
@@ -76,13 +79,20 @@ export type FinanciaAccountConfiguration = {
     };
 };
 
+export type YnabAccount = {
+    name: string;
+    id: string;
+    transferAccountId: string;
+};
+
 export type YnabBudget = {
     name: string;
     id: string;
-    accounts: { name: string; id: string; transferAccountId: string }[];
+    accounts: YnabAccount[];
 };
 
 export type YnabUploadTarget = {
     budgetId: string;
     accountId: string;
+    transferId?: string;
 };
