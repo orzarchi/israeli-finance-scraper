@@ -6,12 +6,16 @@ import _ from 'lodash';
 import shortid from 'shortid';
 import moment from 'moment';
 
+function removeNonAscii(str:string){
+    return str.replace(/[^\x20-\x7E]+/g, "").trim()
+}
+
 function mapTransaction(account: Account, providerName: Provider) {
     return account.txns.map(tx => {
         const dateAsUtc = new Date(moment(tx.date).format('YYYY-MM-DD'));
         return {
             id: shortid.generate(),
-            account: account.accountNumber.trim(),
+            account: removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,
             date: dateAsUtc,

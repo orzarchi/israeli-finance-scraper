@@ -28,14 +28,19 @@ export class Configuration implements IPersistedConfiguration {
         this.accountsConfig = dto.accountsConfig;
     }
 
+    private removeNonAscii(str:string){
+        return str.replace(/[^\x20-\x7E]+/g, "").trim()
+    }
+
     public toJson() {
         return JSON.parse(JSON.stringify(this));
     }
 
     public getYnabUploadTarget(transaction: PersistedTransaction): YnabUploadTarget | null {
         const accountConfiguration = _.flatMap(this.accountsConfig, x => x.accounts).find(
-            x => x.accountName === transaction.account
+            x => this.removeNonAscii(x.accountName) === this.removeNonAscii(transaction.account)
         );
+
         if (!accountConfiguration) {
             return null;
         }
