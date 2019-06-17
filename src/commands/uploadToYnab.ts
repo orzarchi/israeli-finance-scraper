@@ -4,7 +4,7 @@ import { PersistedTransaction } from '../types';
 import _ from 'lodash';
 import env from '../env';
 import moment from 'moment';
-import {tryDebuggingLocally} from "../debug";
+import { tryDebuggingLocally } from '../debug';
 
 export const uploadToYnab = tryDebuggingLocally(async function() {
     const db = new Db();
@@ -18,10 +18,16 @@ export const uploadToYnab = tryDebuggingLocally(async function() {
 
     for (const configuration of configurations) {
         const accountBatches = _.groupBy(
-            transactions.filter(tx => !!configuration.getYnabUploadTarget(tx.account)),
+            transactions.filter(tx => !!configuration.getYnabUploadTarget(tx)),
             (tx: PersistedTransaction) => {
-                let ynabUploadTarget = configuration.getYnabUploadTarget(tx.account);
-                return ynabUploadTarget && [ynabUploadTarget.budgetId, ynabUploadTarget.accountId];
+                let ynabUploadTarget = configuration.getYnabUploadTarget(tx);
+                return (
+                    ynabUploadTarget && [
+                        ynabUploadTarget.budgetId,
+                        ynabUploadTarget.accountId,
+                        ynabUploadTarget.transferId
+                    ]
+                );
             }
         );
         for (const ynabConfiguration in accountBatches) {
@@ -31,7 +37,13 @@ export const uploadToYnab = tryDebuggingLocally(async function() {
 
             const newTransactions = accountBatches[ynabConfiguration];
             const configParts = ynabConfiguration.split(',');
-            await uploadTransactions(configuration.ynabApiKey, configParts[0], configParts[1], newTransactions);
+            await uploadTransactions(
+                configuration.ynabApiKey,
+                configParts[0],
+                configParts[1],
+                newTransactions,
+                configParts[2]
+            );
         }
     }
 });

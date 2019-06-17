@@ -30,7 +30,8 @@ export async function uploadTransactions(
     transferAccountId?: string | null
 ) {
 
-    console.log(`Uploading ${transactions.length} transactions to budget ${budgetId}`);
+    const transferAccountLogString = transferAccountId ? ` (Transferring to account ${transferAccountId})` : '';
+    console.log(`Uploading ${transactions.length} transactions to budget ${budgetId}${transferAccountLogString}`);
 
     const ynabAPI = new YNABApi(ynabApiKey);
 

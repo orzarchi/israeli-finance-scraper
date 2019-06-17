@@ -28,8 +28,8 @@ export class Configuration implements IPersistedConfiguration {
         this.accountsConfig = dto.accountsConfig;
     }
 
-    private removeNonAscii(str:string){
-        return str.replace(/[^\x20-\x7E]+/g, "").trim()
+    private removeNonAscii(str: string) {
+        return str.replace(/[^\x20-\x7E]+/g, '').trim();
     }
 
     public toJson() {
@@ -59,22 +59,27 @@ export class Configuration implements IPersistedConfiguration {
         finanacialAccountYnabMapping: FinancialAccountYnabMapping,
         ynabAccounts: YnabAccount[]
     ) {
-        if (!finanacialAccountYnabMapping.payingYnabAccountId) {
-            return;
-        }
-
         const matchingDescription = this.creditCardPaymentDescriptions.find(
             x => x.description === transaction.description
         );
         if (!matchingDescription) {
             return;
         }
-        const payingYnabAccount = ynabAccounts.find(x => x.id === finanacialAccountYnabMapping.payingYnabAccountId);
 
-        if (!payingYnabAccount) {
+        const payeeFinancialAccount = _.flatMap(
+            this.accountsConfig.filter(x => x.companyId === matchingDescription.provider),
+            x => x.accounts
+        ).find(x => x.payingYnabAccountId === finanacialAccountYnabMapping.ynabTargetAccountId);
+        if (!payeeFinancialAccount) {
             return;
         }
 
-        return payingYnabAccount.transferAccountId;
+        const payeeYnabAccount = ynabAccounts.find(x => x.id === payeeFinancialAccount.ynabTargetAccountId);
+
+        if (!payeeYnabAccount) {
+            return;
+        }
+
+        return payeeYnabAccount.transferAccountId;
     }
 }
