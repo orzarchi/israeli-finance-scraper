@@ -16,7 +16,7 @@ function createYnabTransaction(
         cleared: ClearedEnum.Cleared,
         date: new Date(transaction.date).toISOString(),
         import_id: transaction.id,
-        memo: `${transaction.provider}-${transaction.account}${transaction.memo ? ' ' + transaction.memo : ''}`,
+        memo: transaction.memo,
         payee_name: !payeeId ? transaction.description : undefined,
         payee_id: payeeId ? payeeId : undefined
     };
