@@ -2,6 +2,7 @@ import { runScrape } from '../scrapers';
 import Db from '../Db';
 import moment from 'moment';
 import env from '../env';
+import _ from 'lodash';
 import shortid = require('shortid');
 import {tryDebuggingLocally} from "../debug";
 
@@ -24,7 +25,7 @@ export const scrape = tryDebuggingLocally(async function() {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
-            if (env.ONLY_ACCOUNTS.length && !env.ONLY_ACCOUNTS.some(x => scraper.accounts.includes(x))) {
+            if (env.ONLY_ACCOUNTS.length && !_.intersection(env.ONLY_ACCOUNTS,scraper.accounts.map(x=>x.accountName)).length) {
                 continue;
             }
 
