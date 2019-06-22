@@ -19,7 +19,7 @@ export default class Db {
 
     async addTransactions(transactions: PersistedTransaction[], overwriteIds: boolean = false) {
         if (!transactions.length) {
-            return;
+            return 0;
         }
 
         console.log(`Persisting ${transactions.length} transactions`);
@@ -38,6 +38,8 @@ export default class Db {
 
         await batch.commit();
         console.log(`Finished persisting ${newTransactions.length} new transactions`);
+
+        return newTransactions.length;
     }
 
     private async removeExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
@@ -45,9 +47,9 @@ export default class Db {
             ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
         );
 
-        const existingTransactions = _.compact(existingDocuments.map(x => x.data()));
+        const existingTransactions = _.compact(existingDocuments.map(this.mapDocument));
 
-        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => x.id);
+        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => this.getUniqueDbId(x));
         return newTransactions;
     }
 

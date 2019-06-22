@@ -34,10 +34,11 @@ export const scrape = tryDebuggingLocally(async function() {
                 x.scrapeId = scrapeId;
                 x.scrapeDate = scrapeDate;
             });
-            total += results.length;
-            await db.addTransactions(results);
+            const newTransactions = await db.addTransactions(results);
+            total += newTransactions;
+
         }
     }
 
-    console.log(`Finished scraping everything :) ${total} scraped`);
+    console.log(`Finished scraping everything :) ${total} new transctions scraped`);
 });
