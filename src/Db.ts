@@ -74,11 +74,14 @@ export default class Db {
             .orderBy('date')
             .where('date', '>=', startDate)
             .get();
-        return result.docs.map(this.mapDocument);
+        return result.docs.map(x=>this.mapDocument(x)!);
     }
 
     mapDocument(document: DocumentSnapshot) {
         const data = document.data()!;
+        if (!data){
+            return null;
+        }
         return { ...data, date: data.date.toDate() } as PersistedTransaction;
     }
 
