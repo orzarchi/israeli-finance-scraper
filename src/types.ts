@@ -42,6 +42,7 @@ export type PersistedTransaction = {
     provider: Provider;
     account: string;
     date: Date; // ISO date string
+    processedDate: Date; // ISO date string
     originalAmount: number;
     originalCurrency: string;
     chargedAmount: number;
