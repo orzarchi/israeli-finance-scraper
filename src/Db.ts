@@ -47,7 +47,7 @@ export default class Db {
             ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
         );
 
-        const existingTransactions = _.compact(existingDocuments.map(this.mapDocument)) as PersistedTransaction[];
+        const existingTransactions = existingDocuments.filter(x=>!!x.data()).map(this.mapDocument);
 
         const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => this.getUniqueDbId(x));
         return newTransactions;
@@ -74,14 +74,11 @@ export default class Db {
             .orderBy('date')
             .where('date', '>=', startDate)
             .get();
-        return result.docs.map(x=>this.mapDocument(x)!);
+        return result.docs.map(x=>this.mapDocument(x));
     }
 
     mapDocument(document: DocumentSnapshot) {
         const data = document.data()!;
-        if (!data){
-            return null;
-        }
         return { ...data, date: data.date.toDate() } as PersistedTransaction;
     }
 
