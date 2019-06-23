@@ -47,7 +47,7 @@ export default class Db {
             ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
         );
 
-        const existingTransactions = _.compact(existingDocuments.map(this.mapDocument));
+        const existingTransactions = _.compact(existingDocuments.map(this.mapDocument)) as PersistedTransaction[];
 
         const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => this.getUniqueDbId(x));
         return newTransactions;
