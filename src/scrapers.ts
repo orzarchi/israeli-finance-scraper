@@ -1,7 +1,7 @@
-import { createScraper } from 'israeli-bank-scrapers';
+import {createScraper} from 'israeli-bank-scrapers';
 import chrome from 'chrome-aws-lambda';
 import locateChrome from 'locate-chrome';
-import { FinanciaAccountConfiguration, ScrapeResult, Account, PersistedTransaction, Provider } from './types';
+import {Account, FinanciaAccountConfiguration, PersistedTransaction, Provider, ScrapeResult} from './types';
 import _ from 'lodash';
 import shortid from 'shortid';
 import moment from 'moment';
@@ -12,13 +12,13 @@ function removeNonAscii(str:string){
 
 function mapTransaction(account: Account, providerName: Provider) {
     return account.txns.map(tx => {
-        const dateAsUtc = new Date(moment(tx.date).format('YYYY-MM-DD'));
         return {
             id: shortid.generate(),
             account: removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,
-            date: dateAsUtc,
+            date: new Date(moment(tx.date).format('YYYY-MM-DD')),
+            processedDate: new Date(moment(tx.processedDate).format('YYYY-MM-DD')),
             description: tx.description.trim(),
             installments: tx.installments || null,
             originalAmount: tx.originalAmount,
