@@ -1,10 +1,10 @@
-import admin, { ServiceAccount } from 'firebase-admin';
+import admin, {ServiceAccount} from 'firebase-admin';
 import serviceAccount from '../firebase-service-account.json';
-import { IPersistedConfiguration, PersistedTransaction } from './types';
-import { Configuration } from './Configuration';
+import {IPersistedConfiguration, PersistedTransaction} from './types';
+import {Configuration} from './Configuration';
 import _ from 'lodash';
-import { CollectionReference } from '@google-cloud/firestore';
-import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import {CollectionReference} from '@google-cloud/firestore';
+import {DocumentSnapshot} from 'firebase-functions/lib/providers/firestore';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -44,10 +44,10 @@ export default class Db {
 
     private async removeExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
         const existingDocuments = await this.db.getAll(
-            ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
+            ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), {fieldMask: ['id']})
         );
 
-        const existingTransactions = existingDocuments.filter(x=>!!x.data()).map(this.mapDocument);
+        const existingTransactions = existingDocuments.filter(x => !!x.data()).map(this.mapDocument);
 
         const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => this.getUniqueDbId(x));
         return newTransactions;
@@ -68,18 +68,23 @@ export default class Db {
         return uniqueId.replace(/[ /]/g, '');
     }
 
-    async getTransactions(startDate: Date): Promise<PersistedTransaction[]> {
+    async getTransactions(startDate: Date, endDate?: Date): Promise<PersistedTransaction[]> {
         const collection = this.db.collection('transactions');
-        const result = await collection
+        let query = collection
             .orderBy('date')
-            .where('date', '>=', startDate)
-            .get();
-        return result.docs.map(x=>this.mapDocument(x));
+            .where('date', '>=', startDate);
+
+        if (endDate) {
+            query = query.where('date', '<=', endDate);
+        }
+
+        const result = await query.get();
+        return result.docs.map(x => this.mapDocument(x));
     }
 
     mapDocument(document: DocumentSnapshot) {
         const data = document.data()!;
-        return { ...data, date: data.date.toDate() } as PersistedTransaction;
+        return {...data, date: data.date.toDate()} as PersistedTransaction;
     }
 
     async getConfigurations(): Promise<Configuration[]> {

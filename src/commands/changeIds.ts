@@ -11,7 +11,7 @@ export const changeIds = tryDebuggingLocally(async function () {
         .subtract(env.MONTHS_TO_SCRAPE, 'months')
         .toDate();
 
-    const transactions = await db.getTransactions(startDate);
+    const transactions = await db.getTransactions(startDate, undefined);
     transactions.forEach(x=>{
         x.id = shortid.generate();
     });
