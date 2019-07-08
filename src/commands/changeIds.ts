@@ -1,20 +1,20 @@
-import Db from "../Db";
-import env from "../env";
-import shortid from "shortid";
-import {tryDebuggingLocally} from "../debug";
-import moment from "moment";
+import Db from '../Db';
+import env from '../env';
+import shortid from 'shortid';
+import { tryDebuggingLocally } from '../debug';
+import moment from 'moment';
 
-export const changeIds = tryDebuggingLocally(async function () {
+export const changeIds = tryDebuggingLocally(async function() {
     const db = new Db();
     const startDate = moment()
         .startOf('month')
         .subtract(env.MONTHS_TO_SCRAPE, 'months')
         .toDate();
 
-    const transactions = await db.getTransactions(startDate, undefined);
-    transactions.forEach(x=>{
+    const transactions = await db.getTransactions(startDate);
+    transactions.forEach(x => {
         x.id = shortid.generate();
     });
 
-    return db.addTransactions(transactions,true);
+    return db.addTransactions(transactions, true);
 });
