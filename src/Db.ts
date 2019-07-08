@@ -47,9 +47,11 @@ export default class Db {
             ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
         );
 
-        const existingTransactions = existingDocuments.filter(x=>!!x.data()).map(this.mapDocument);
+        const existingTransactions = existingDocuments.filter(x => !!x.data()).map(this.mapDocument);
 
-        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) => this.getUniqueDbId(x));
+        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) =>
+            this.getUniqueDbId(x)
+        );
         return newTransactions;
     }
 
@@ -68,13 +70,16 @@ export default class Db {
         return uniqueId.replace(/[ /]/g, '');
     }
 
-    async getTransactions(startDate: Date): Promise<PersistedTransaction[]> {
+    async getTransactions(startDate: Date, endDate?: Date): Promise<PersistedTransaction[]> {
         const collection = this.db.collection('transactions');
-        const result = await collection
-            .orderBy('date')
-            .where('date', '>=', startDate)
-            .get();
-        return result.docs.map(x=>this.mapDocument(x));
+        let query = collection.orderBy('date').where('date', '>=', startDate);
+
+        if (endDate) {
+            query = query.where('date', '<=', endDate);
+        }
+
+        const result = await query.get();
+        return result.docs.map(x => this.mapDocument(x));
     }
 
     mapDocument(document: DocumentSnapshot) {

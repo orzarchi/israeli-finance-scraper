@@ -14,7 +14,8 @@ export const uploadToYnab = tryDebuggingLocally(async function() {
         .subtract(env.MONTHS_TO_SCRAPE, 'months')
         .toDate();
 
-    const transactions = await db.getTransactions(startDate);
+    const todayDate = moment().toDate();
+    const transactions = await db.getTransactions(startDate, todayDate);
 
     for (const configuration of configurations) {
         const accountBatches = _.groupBy(
