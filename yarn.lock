@@ -2691,18 +2691,18 @@ isomorphic-fetch@^2.2.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
-israeli-bank-scrapers@^0.6.8:
+israeli-bank-scrapers@orzarchi/israeli-bank-scrapers:
   version "0.6.8"
-  resolved "https://registry.yarnpkg.com/israeli-bank-scrapers/-/israeli-bank-scrapers-0.6.8.tgz#888810c3ae34f96fbe04954d1b4ea13faf68c7e4"
-  integrity sha512-a88YFquHVHxKIhbL4k5HG0YZZe0D/EdV0fh3yDnDYmyXbpYJhz70qCM4cO9zoTM/9MqvnnqUHgWfouUpvSrx+g==
+  resolved "https://codeload.github.com/orzarchi/israeli-bank-scrapers/tar.gz/59af833620e8da2baa1b405f1c61c71ea5af2b3e"
   dependencies:
     babel-polyfill "^6.26.0"
     build-url "^1.1.2"
     lodash "^4.17.10"
     moment "^2.22.2"
     node-fetch "^2.2.0"
-    puppeteer "^1.7.0"
     uuid "^3.3.2"
+  optionalDependencies:
+    puppeteer "^1.7.0"
 
 isurl@^1.0.0-alpha5:
   version "1.0.0"
