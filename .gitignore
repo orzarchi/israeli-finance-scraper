@@ -33,3 +33,4 @@ lib/
 *.zip
 src/**/*.js
 firebase-service-account.json
+.build

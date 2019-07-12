@@ -1,11 +1,12 @@
-import { Callback, Context } from 'aws-lambda';
+import * as functions from 'firebase-functions';
+
 import { scrape } from '../../commands/scrape';
 console.log('starting function');
-export default async function(e: any, ctx: Context, cb: Callback): Promise<void> {
+export default functions.https.onRequest(async (request, response) => {
     try {
         await scrape();
-        cb(null, { success: true });
+        response.status(200).send('Scraped!');
     } catch (err) {
-        cb(err, { success: false });
+        response.status(500).send('Error!');
     }
-}
+});

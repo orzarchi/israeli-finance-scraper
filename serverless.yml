@@ -1,34 +1,24 @@
-service: finance
+service: scraper
 
 provider:
-    name: aws
-    runtime: nodejs8.10
-    timeout: 900
-#    iamRoleStatements:
-#        - Effect: Allow # note that these rights are given in the default policy and are required if we override the iam policies
-#          Action:
-#              - logs:CreateLogGroup
-#              - logs:CreateLogStream
-#              - logs:PutLogEvents
-#          Resource:
-#              - 'Fn::Join':
-#                    - ':'
-#                    - - 'arn:aws:logs'
-#                      - Ref: 'AWS::Region'
-#                      - Ref: 'AWS::AccountId'
-#                      - 'log-group:/aws/lambda/*:*:*'
-#              - Effect: "Allow"
-#                Action:
-#                    - "ses:SendEmail"
-#                Resource:
-#                    - "*"
+    project: shovi-functions
+    region: europe-west1
+    name: google
+    runtime: nodejs8
+    timeout: 540s
+    credentials: ./firebase-service-account.json
+    package:
+        exclude:
+            - node_modules/**
 functions:
     scrape:
-        handler: src/functions/scrape/index.default
+        handler: default
         package:
             include:
                 -firebase-service-account.json
+        events:
+            - http: scrape
 
 plugins:
     - serverless-plugin-typescript
-    - serverless-step-functions
+    - serverless-google-cloudfunctions

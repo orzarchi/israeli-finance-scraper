@@ -1,4 +1,5 @@
 {
+    "main": "src/functions/scrape/index.js",
     "dependencies": {
         "@google-cloud/firestore": "^2.2.1",
         "@types/lodash": "^4.14.123",
@@ -16,15 +17,14 @@
         "ynab": "^1.12.0"
     },
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.26",
         "@types/node": "^11.13.2",
         "@types/puppeteer": "^1.12.3",
         "@types/puppeteer-core": "^1.9.0",
         "@types/shortid": "^0.0.29",
         "prettier": "^1.16.4",
         "serverless": "^1.45.1",
+        "serverless-google-cloudfunctions": "^2.3.2",
         "serverless-plugin-typescript": "^1.1.7",
-        "serverless-step-functions": "^1.25.0",
         "ts-node": "^8.0.3",
         "tsconfig-paths": "^3.8.0",
         "tslint": "^5.15.0",
@@ -38,9 +38,8 @@
         "changeids": "ts-node --files src/commands/changeIds.ts",
         "ynab": "ts-node --files src/commands/uploadToYnab.ts",
         "lint": "tslint -p tsconfig.json -c tslint.json",
-        "sls": "sls",
-        "deploy": "./deploy.sh",
-        "install-compact": "yarn install --ignore-optional --ignore-engines",
-        "postinstall": "cd node_modules/israeli-bank-scrapers && npm install --no-optional && npm run prepublishOnly && rm -rf node_modules"
+        "sls": "node ./node_modules/.bin/sls",
+        "deploy": "sls --region europe-west1 deploy",
+        "install-compact": "yarn install --ignore-optional"
     }
 }
