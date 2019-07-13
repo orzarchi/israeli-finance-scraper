@@ -1,10 +1,10 @@
-import { runScrape } from '../scrapers';
 import Db from '../Db';
 import moment from 'moment';
 import env from '../env';
 import _ from 'lodash';
 import shortid from 'shortid';
-import logger from "../logger";
+import logger from '../logger';
+import Scraper from '../Scraper';
 
 export const scrape = async function() {
     const db = new Db();
@@ -25,18 +25,20 @@ export const scrape = async function() {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
-            if (env.ONLY_ACCOUNTS.length && !_.intersection(env.ONLY_ACCOUNTS, scraper.accounts.map(x => x.accountName)).length) {
+            if (
+                env.ONLY_ACCOUNTS.length &&
+                !_.intersection(env.ONLY_ACCOUNTS, scraper.accounts.map(x => x.accountName)).length
+            ) {
                 continue;
             }
 
-            const results = await runScrape(startDate, scraper);
+            const results = await new Scraper(configuration.persistenceId).runScrape(startDate, scraper);
             results.forEach(x => {
                 x.scrapeId = scrapeId;
                 x.scrapeDate = scrapeDate;
             });
             const newTransactions = await db.addTransactions(results);
             total += newTransactions;
-
         }
     }
 

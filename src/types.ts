@@ -54,6 +54,7 @@ export type PersistedTransaction = {
     };
     scrapeId?: string;
     scrapeDate?: Date;
+    userId: string;
 };
 
 export interface IPersistedConfiguration {

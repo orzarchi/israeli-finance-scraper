@@ -5,7 +5,7 @@ import { Configuration } from './Configuration';
 import _ from 'lodash';
 import { CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
-import logger from "./logger";
+import logger from './logger';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -18,26 +18,31 @@ export default class Db {
         this.db = admin.firestore();
     }
 
-    async addTransactions(transactions: PersistedTransaction[], overwriteIds: boolean = false) {
+    async addTransactions(transactions: PersistedTransaction[], updateExisting: boolean = false) {
         if (!transactions.length) {
             return 0;
         }
 
         logger.log(`Persisting ${transactions.length} transactions`);
 
-        const batch = this.db.batch();
         const collection = this.db.collection('transactions');
         let newTransactions = transactions;
-
-        if (!overwriteIds) {
+        if (!updateExisting) {
             newTransactions = await this.removeExistingTransactions(transactions, collection);
         }
 
-        newTransactions.forEach(x => {
-            batch.set(collection.doc(this.getUniqueDbId(x)), x);
+        const promises = _.chunk(newTransactions, 500).map(async chunk => {
+            const batch = this.db.batch();
+
+            chunk.forEach(x => {
+                batch.set(collection.doc(this.getUniqueDbId(x)), x);
+            });
+
+            await batch.commit();
         });
 
-        await batch.commit();
+        await Promise.all(promises);
+
         logger.log(`Finished persisting ${newTransactions.length} new transactions`);
 
         return newTransactions.length;
