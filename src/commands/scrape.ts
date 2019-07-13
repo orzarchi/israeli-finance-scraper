@@ -4,9 +4,9 @@ import moment from 'moment';
 import env from '../env';
 import _ from 'lodash';
 import shortid = require('shortid');
-import {tryDebuggingLocally} from "../debug";
+import logger from "../logger";
 
-export const scrape = tryDebuggingLocally(async function() {
+export const scrape = async function() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -20,12 +20,13 @@ export const scrape = tryDebuggingLocally(async function() {
     let total = 0;
 
     for (const configuration of configurations) {
-        console.log(`Scraping configuration ${configuration.id}`);
+        logger.log(`Scraping configuration ${configuration.id}`);
+        return;
         for (const scraper of configuration.accountsConfig) {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
-            if (env.ONLY_ACCOUNTS.length && !_.intersection(env.ONLY_ACCOUNTS,scraper.accounts.map(x=>x.accountName)).length) {
+            if (env.ONLY_ACCOUNTS.length && !_.intersection(env.ONLY_ACCOUNTS, scraper.accounts.map(x => x.accountName)).length) {
                 continue;
             }
 
@@ -40,5 +41,6 @@ export const scrape = tryDebuggingLocally(async function() {
         }
     }
 
-    console.log(`Finished scraping everything :) ${total} new transctions scraped`);
-});
+    logger.log(`Finished scraping everything :) ${total} new transctions scraped`);
+    return total;
+};

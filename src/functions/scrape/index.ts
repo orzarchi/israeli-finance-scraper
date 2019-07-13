@@ -1,7 +1,8 @@
 import * as functions from 'firebase-functions';
 
 import { scrape } from '../../commands/scrape';
-console.log('starting function');
+import logger from "../../logger";
+logger.log('starting function');
 export default functions.https.onRequest(async (request, response) => {
     try {
         await scrape();

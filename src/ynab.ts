@@ -3,6 +3,7 @@ import { PersistedTransaction } from './types';
 import ClearedEnum = TransactionSummary.ClearedEnum;
 import _ from 'lodash';
 import { readCsv, writeCsv } from './files';
+import logger from "./logger";
 
 function createYnabTransaction(
     accountId: string,
@@ -31,7 +32,7 @@ export async function uploadTransactions(
 ) {
 
     const transferAccountLogString = transferAccountId ? ` (Transferring to account ${transferAccountId})` : '';
-    console.log(`Uploading ${transactions.length} transactions to budget ${budgetId}${transferAccountLogString}`);
+    logger.log(`Uploading ${transactions.length} transactions to budget ${budgetId}${transferAccountLogString}`);
 
     const ynabAPI = new YNABApi(ynabApiKey);
 
@@ -41,7 +42,7 @@ export async function uploadTransactions(
         transactions: ynabTransactions
     });
     let uploadedTransactionIds = response.data.transaction_ids;
-    console.log(`Uploaded ${uploadedTransactionIds.length} new transactions`);
+    logger.log(`Uploaded ${uploadedTransactionIds.length} new transactions`);
 }
 
 export async function updateTransactions(ynabApiKey: string, budgetId: string, transactions: TransactionDetail[]) {

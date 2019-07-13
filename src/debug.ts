@@ -1,8 +1,25 @@
-export const tryDebuggingLocally = (func: () => Promise<any>) => {
-    const isRunningInLambda = !!process.env.AWS_LAMBDA_FUNCTION_NAME;
-    if (!isRunningInLambda) {
-        func().catch(x=>console.error(x))
-    }
+import { scrape } from './commands/scrape';
+import { uploadToYnab } from './commands/uploadToYnab';
+import { startBot } from './commands/startBot';
+import { startBotAndScrape } from './commands/startBotAndScrape';
 
-    return func;
-};
+const commandName = process.argv[2];
+let command;
+switch (commandName) {
+    case 'scrape':
+        command = scrape;
+        break;
+    case 'upload':
+        command = uploadToYnab;
+        break;
+    case 'startBot':
+        command = startBot;
+        break;
+    case 'startBotAndScrape':
+        command = startBotAndScrape;
+        break;
+    default:
+        throw new Error(`Unknown command ${commandName}`);
+}
+
+command().catch((x: Error) => console.error(x));

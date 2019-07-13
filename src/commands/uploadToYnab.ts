@@ -4,9 +4,8 @@ import { PersistedTransaction } from '../types';
 import _ from 'lodash';
 import env from '../env';
 import moment from 'moment';
-import { tryDebuggingLocally } from '../debug';
 
-export const uploadToYnab = tryDebuggingLocally(async function() {
+export const uploadToYnab = async function() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -47,4 +46,4 @@ export const uploadToYnab = tryDebuggingLocally(async function() {
             );
         }
     }
-});
+}

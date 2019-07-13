@@ -5,6 +5,7 @@ import {Account, FinanciaAccountConfiguration, PersistedTransaction, Provider, S
 import _ from 'lodash';
 import shortid from 'shortid';
 import moment from 'moment';
+import logger from "./logger";
 
 function removeNonAscii(str:string){
     return str.replace(/[^\x20-\x7E]+/g, "").trim()
@@ -65,7 +66,7 @@ export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConf
     });
 
     for (const scraperConfig of scrapers) {
-        console.log(`Scraping ${scraperConfig.companyId}`);
+        logger.log(`Scraping ${scraperConfig.companyId}`);
 
         const scraper = createScraper({
             companyId: scraperConfig.companyId, // mandatory; one of 'hapoalim', 'leumi', 'discount', 'otsarHahayal', 'visaCal', 'leumiCard', 'isracard', 'amex'
@@ -80,7 +81,7 @@ export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConf
 
         if (scrapeResult.success) {
             scrapeResult.accounts.forEach(account => {
-                console.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
+                logger.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
             });
 
             results[scraperConfig.companyId] = scrapeResult;

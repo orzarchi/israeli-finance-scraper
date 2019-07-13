@@ -1,5 +1,4 @@
 import Db from '../Db';
-import { tryDebuggingLocally } from '../debug';
 import { getAccounts, getBudgets } from '../ynab';
 import { prompt } from 'enquirer';
 import _ from 'lodash';
@@ -105,7 +104,7 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
     }
 }
 
-export const configure = tryDebuggingLocally(async function() {
+export const configure = async function() {
     const db = new Db();
     const configurations = await db.getConfigurations();
     let configurationToEdit = null;
@@ -121,4 +120,4 @@ export const configure = tryDebuggingLocally(async function() {
     //todo: add new scrapers
     await configureScrapersYnabMapping(configurationToEdit);
     await db.updateConfiguration(configurationToEdit.persistenceId, configurationToEdit.toJson());
-});
+};

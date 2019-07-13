@@ -5,6 +5,7 @@ import { Configuration } from './Configuration';
 import _ from 'lodash';
 import { CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
+import logger from "./logger";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -22,7 +23,7 @@ export default class Db {
             return 0;
         }
 
-        console.log(`Persisting ${transactions.length} transactions`);
+        logger.log(`Persisting ${transactions.length} transactions`);
 
         const batch = this.db.batch();
         const collection = this.db.collection('transactions');
@@ -37,7 +38,7 @@ export default class Db {
         });
 
         await batch.commit();
-        console.log(`Finished persisting ${newTransactions.length} new transactions`);
+        logger.log(`Finished persisting ${newTransactions.length} new transactions`);
 
         return newTransactions.length;
     }

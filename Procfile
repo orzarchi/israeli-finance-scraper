@@ -1,1 +1,1 @@
-scrape: yarn scrape
+web: yarn startBot

@@ -1,10 +1,9 @@
 import Db from '../Db';
 import env from '../env';
 import shortid from 'shortid';
-import { tryDebuggingLocally } from '../debug';
 import moment from 'moment';
 
-export const changeIds = tryDebuggingLocally(async function() {
+export const changeIds = async function() {
     const db = new Db();
     const startDate = moment()
         .startOf('month')
@@ -17,4 +16,4 @@ export const changeIds = tryDebuggingLocally(async function() {
     });
 
     return db.addTransactions(transactions, true);
-});
+};
