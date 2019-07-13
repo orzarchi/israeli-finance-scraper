@@ -6,6 +6,7 @@ import _ from 'lodash';
 import shortid from 'shortid';
 import moment from 'moment';
 import logger from "./logger";
+import env from './env';
 
 function removeNonAscii(str:string){
     return str.replace(/[^\x20-\x7E]+/g, "").trim()
@@ -62,7 +63,7 @@ export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConf
     const browser = await chrome.puppeteer.launch({
         args,
         executablePath: executablePath,
-        headless: false
+        headless: env.HEADLESS
     });
 
     for (const scraperConfig of scrapers) {

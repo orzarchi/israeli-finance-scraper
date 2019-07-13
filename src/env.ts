@@ -10,5 +10,6 @@ export default {
     BOT_TOKEN: process.env['BOT_TOKEN'],
     CHAT_ID: process.env['CHAT_ID'],
     HEROKU_PORT: parseInt(process.env['PORT']||'5000'),
-    HEROKU_ADDRESS: process.env['HEROKU_ADDRESS']
+    HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
+    HEADLESS: yn(process.env['HEADLESS'] || true) || false
 }

@@ -39,7 +39,7 @@
     },
     "scripts": {
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "scrape": "ts-node --files src/runCommand.ts scrape",
+        "scrape": "HEADLESS=false ts-node --files src/runCommand.ts scrape",
         "configure": "ts-node --files src/runCommand.ts configure",
         "changeids": "ts-node --files src/runCommand.ts changeIds",
         "startBotAndScrape": "ts-node --files src/runCommand.ts startBotAndScrape",
