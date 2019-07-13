@@ -7,7 +7,7 @@ export const startBotAndScrape = async () => {
     }
     const channelId = env.CHAT_ID;
     if (!channelId) {
-        throw new Error('BOT_TOKEN env var not set!');
+        throw new Error('CHAT_ID env var not set!');
     }
     const bot = new TelegramBot(env.BOT_TOKEN);
     return bot.scrape(async x => {

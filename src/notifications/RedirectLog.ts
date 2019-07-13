@@ -8,18 +8,18 @@ export const fakeLogger = (callback: (x: string) => void) => ({
     debug: (msg: string, ...args: any[]) => callback(`[debug] ${msg}`)
 });
 
-export class BufferedStdout {
+export class RedirectLog {
     private buffered = [] as string[];
 
     constructor(private notifier: (x: string) => void) {
-        setInterval(() => this.flushNotifications(), 3000);
+        setInterval(() => this.flushNotifications(), 7000);
     }
 
-    public startListening() {
+    public start() {
         logger.overrideLogger(fakeLogger(this.queueNotifications.bind(this)));
     }
 
-    public stopListening() {
+    public stop() {
         logger.resetLogger();
     }
 

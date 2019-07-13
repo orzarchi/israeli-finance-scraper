@@ -1,7 +1,7 @@
 import Telegraf, { ContextMessageUpdate } from 'telegraf';
 import Db from '../Db';
 import { IncomingMessage } from 'telegraf/typings/telegram-types';
-import { BufferedStdout } from './BufferedStdout';
+import { RedirectLog } from './RedirectLog';
 import logger from '../logger';
 import { scrape } from '../commands/scrape';
 import { uploadToYnab } from '../commands/uploadToYnab';
@@ -54,22 +54,22 @@ export default class TelegramBot {
 
     public async scrape(reply: (text: string) => Promise<void>) {
         logger.info('Got scrape command');
-        await reply('Starting scraping...');
-        const bufferedNotifier = new BufferedStdout(x => reply(x));
+        const redirectLog = new RedirectLog(x => reply(x));
+        logger.info('Starting scraping...');
+
         try {
-            bufferedNotifier.startListening();
-            const totalScraped = await scrape();
-            if (totalScraped) {
+            redirectLog.start();
+            const scrapedTranscationsNumber = await scrape();
+            if (scrapedTranscationsNumber > 0) {
                 await uploadToYnab();
             }
+            redirectLog.stop();
         } catch (err) {
-            bufferedNotifier.stopListening();
+            redirectLog.stop();
             try {
                 logger.error(err);
                 await reply(`Error scraping: ${err.message}`);
             } catch {}
-        } finally {
-            bufferedNotifier.stopListening();
         }
         logger.info('Finished scrape command');
     }
@@ -92,7 +92,7 @@ export default class TelegramBot {
             )
             .join('\n');
 
-        return reply(replyString || "No transactions!");
+        return reply(replyString || 'No transactions!');
     }
 
     private formatCurrency(x: string) {
