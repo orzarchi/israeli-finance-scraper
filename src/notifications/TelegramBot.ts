@@ -65,7 +65,7 @@ export default class TelegramBot {
         } catch (err) {
             bufferedNotifier.stopListening();
             try {
-                console.error(err);
+                logger.error(err);
                 await reply(`Error scraping: ${err.message}`);
             } catch {}
         } finally {

@@ -71,7 +71,7 @@ export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConf
 
             results[scraperConfig.companyId] = scrapeResult;
         } else {
-            console.error(`scraping failed for the following reason: ${scrapeResult.errorType}`);
+            logger.error(`scraping failed for the following reason: ${scrapeResult.errorType}. Message: ${scrapeResult.errorMessage}`);
         }
     }
 

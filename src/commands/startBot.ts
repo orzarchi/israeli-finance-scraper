@@ -1,5 +1,6 @@
 import env from '../env';
 import TelegramBot from '../notifications/TelegramBot';
+import logger from '../logger';
 
 export const startBot = async () => {
     if (!env.BOT_TOKEN) {
@@ -12,6 +13,6 @@ export const startBot = async () => {
     try {
         await new TelegramBot(env.BOT_TOKEN).launchBot(env.HEROKU_ADDRESS, env.HEROKU_PORT);
     } catch (x) {
-        console.error('Error launching telegram bot', x);
+        logger.error('Error launching telegram bot', x);
     }
 };
