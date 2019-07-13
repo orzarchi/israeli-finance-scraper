@@ -48,7 +48,8 @@
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "sls": "node ./node_modules/.bin/sls",
         "deploy": "sls --region europe-west1 deploy",
-        "install-compact": "yarn install --ignore-optional"
+        "install-compact": "yarn install --ignore-optional",
+        "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json"
     },
     "optionalDependencies": {
         "telegraf": "^3.30.1"
