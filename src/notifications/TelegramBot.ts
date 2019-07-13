@@ -78,8 +78,8 @@ export default class TelegramBot {
         const db = new Db();
         const resolvedDaysAgo = daysAgo || 5;
         const startDate = moment()
-            .startOf('month')
             .subtract(resolvedDaysAgo, 'days')
+            .startOf('day')
             .toDate();
         logger.info(`Returning transactions ${resolvedDaysAgo} days back`);
         const transactions = await db.getTransactions(startDate);
@@ -92,7 +92,7 @@ export default class TelegramBot {
             )
             .join('\n');
 
-        return reply(replyString);
+        return reply(replyString || "No transactions!");
     }
 
     private formatCurrency(x: string) {
