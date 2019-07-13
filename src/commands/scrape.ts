@@ -3,7 +3,7 @@ import Db from '../Db';
 import moment from 'moment';
 import env from '../env';
 import _ from 'lodash';
-import shortid = require('shortid');
+import shortid from 'shortid';
 import logger from "../logger";
 
 export const scrape = async function() {
@@ -21,7 +21,6 @@ export const scrape = async function() {
 
     for (const configuration of configurations) {
         logger.log(`Scraping configuration ${configuration.id}`);
-        return;
         for (const scraper of configuration.accountsConfig) {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;

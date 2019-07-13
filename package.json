@@ -39,16 +39,15 @@
     },
     "scripts": {
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "scrape": "ts-node --files src/debug.ts scrape",
-        "configure": "ts-node --files src/debug.ts configure",
-        "changeids": "ts-node --files src/debug.ts changeIds",
-        "startBotAndScrape": "ts-node --files src/debug.ts startBotAndScrape",
-        "startBot": "ts-node --files src/commands/startBot.ts",
-        "ynab": "ts-node --files src/debug.ts uploadToYnab",
+        "scrape": "ts-node --files src/runCommand.ts scrape",
+        "configure": "ts-node --files src/runCommand.ts configure",
+        "changeids": "ts-node --files src/runCommand.ts changeIds",
+        "startBotAndScrape": "ts-node --files src/runCommand.ts startBotAndScrape",
+        "startBot": "ts-node --files src/runCommand.ts startBot",
+        "ynab": "ts-node --files src/runCommand.ts uploadToYnab",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "sls": "node ./node_modules/.bin/sls",
         "deploy": "sls --region europe-west1 deploy",
-        "install-compact": "yarn install --ignore-optional",
         "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json"
     },
     "optionalDependencies": {

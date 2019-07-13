@@ -1,18 +1,17 @@
 import Telegraf, { ContextMessageUpdate } from 'telegraf';
 import Db from '../Db';
-import moment = require('moment');
 import { IncomingMessage } from 'telegraf/typings/telegram-types';
 import { BufferedStdout } from './BufferedStdout';
 import logger from '../logger';
-import {scrape} from "../commands/scrape";
-import {uploadToYnab} from "../commands/uploadToYnab";
+import { scrape } from '../commands/scrape';
+import { uploadToYnab } from '../commands/uploadToYnab';
+import moment from 'moment';
 
 export default class TelegramBot {
     private bot: Telegraf<ContextMessageUpdate>;
 
-    constructor(botToken: string){
+    constructor(botToken: string) {
         this.bot = new Telegraf(botToken);
-
     }
 
     async launchBot(hostname: string, port: number) {
@@ -41,8 +40,8 @@ export default class TelegramBot {
         logger.info(`Started telegram bot on ${hostname}:${port}`);
     }
 
-    public sendMessage(chatId:string,message:string){
-        return this.bot!.telegram.sendMessage(chatId,message);
+    public sendMessage(chatId: string, message: string) {
+        return this.bot!.telegram.sendMessage(chatId, message);
     }
 
     private _getArg(message?: IncomingMessage) {
@@ -59,11 +58,12 @@ export default class TelegramBot {
         const bufferedNotifier = new BufferedStdout(x => reply(x));
         try {
             bufferedNotifier.startListening();
-            const totalScraped= await scrape();
-            if (totalScraped){
+            const totalScraped = await scrape();
+            if (totalScraped) {
                 await uploadToYnab();
             }
         } catch (err) {
+            bufferedNotifier.stopListening();
             try {
                 console.error(err);
                 await reply(`Error scraping: ${err.message}`);
