@@ -45,7 +45,7 @@ function processResults(results: { [x: string]: ScrapeResult }): PersistedTransa
 
 export async function runScrape(startDate: Date,...scrapers: FinanciaAccountConfiguration[]) {
     const results: { [x: string]: ScrapeResult } = {};
-    const browser = puppeteer.launch({
+    const browser = await puppeteer.launch({
         args:['--no-sandbox', '--disable-setuid-sandbox'],
         headless: env.HEADLESS
     });
