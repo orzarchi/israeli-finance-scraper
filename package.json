@@ -37,7 +37,7 @@
         "changeids": "yarn runCommand changeIds",
         "startBotAndScrape": "yarn runCommand startBotAndScrape",
         "startBot": "yarn runCommand startBot",
-        "ynab": "yarn runCommand uploadToYnab",
+        "uploadToYnab": "yarn runCommand uploadToYnab",
         "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json"
     },
     "optionalDependencies": {
