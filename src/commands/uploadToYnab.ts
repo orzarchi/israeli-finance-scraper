@@ -17,19 +17,14 @@ export const uploadToYnab = async function() {
     const transactions = await db.getTransactions(startDate, todayDate);
 
     for (const configuration of configurations) {
-        const accountBatches = _.groupBy(
-            transactions.filter(tx => !!configuration.getYnabUploadTarget(tx)),
-            (tx: PersistedTransaction) => {
-                let ynabUploadTarget = configuration.getYnabUploadTarget(tx);
-                return (
-                    ynabUploadTarget && [
-                        ynabUploadTarget.budgetId,
-                        ynabUploadTarget.accountId,
-                        ynabUploadTarget.transferId
-                    ]
-                );
-            }
-        );
+        let relevantTransactions = transactions.filter(tx => configuration.hasYnabUploadTarget(tx));
+
+        const accountBatches = _.groupBy(relevantTransactions, (tx: PersistedTransaction) => {
+            let ynabUploadTarget = configuration.getYnabUploadTarget(tx, transactions);
+            return (
+                ynabUploadTarget && [ynabUploadTarget.budgetId, ynabUploadTarget.accountId, ynabUploadTarget.transferId]
+            );
+        });
         for (const ynabConfiguration in accountBatches) {
             if (!ynabConfiguration) {
                 continue;
