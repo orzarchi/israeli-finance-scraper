@@ -24,7 +24,6 @@ export default class Scraper {
 
     private mapAccount(account: Account, providerName: Provider) {
         return account.txns
-            .filter(tx => tx.status === `completed`)
             .map(tx => this.mapTransaction(tx, account, providerName));
     }
 
@@ -42,7 +41,8 @@ export default class Scraper {
             originalCurrency: tx.originalCurrency,
             approvalNumber: tx.identifier || 0,
             memo: tx.memo || '',
-            userId: this.userId
+            userId: this.userId,
+            status: tx.status
         };
     }
 

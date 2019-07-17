@@ -99,12 +99,20 @@ export default class Db {
         return uniqueId.replace(/[ /]/g, '');
     }
 
-    async getTransactions(startDate: Date, endDate?: Date): Promise<PersistedTransaction[]> {
+    async getTransactions(
+        startDate: Date,
+        endDate?: Date,
+        ignorePending: Boolean = true
+    ): Promise<PersistedTransaction[]> {
         const collection = this.db.collection('transactions');
         let query = collection.orderBy('date').where('date', '>=', startDate);
 
         if (endDate) {
             query = query.where('date', '<=', endDate);
+        }
+
+        if (ignorePending) {
+            query = query.where('status', '==', 'completed');
         }
 
         const result = await query.get();
