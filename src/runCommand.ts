@@ -20,6 +20,7 @@ switch (commandName) {
         break;
     case 'uploadToYnab':
         command = uploadToYnab;
+        break;
 
     default:
         throw new Error(`Unknown command ${commandName}`);
