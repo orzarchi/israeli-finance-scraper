@@ -18,6 +18,9 @@ switch (commandName) {
     case 'startBotAndScrape':
         command = startBotAndScrape;
         break;
+    case 'uploadToYnab':
+        command = uploadToYnab;
+
     default:
         throw new Error(`Unknown command ${commandName}`);
 }

@@ -18,7 +18,7 @@ export default class Db {
         this.db = admin.firestore();
     }
 
-    async addTransactions(transactions: PersistedTransaction[], updateExisting: boolean = false) {
+    async addTransactions(transactions: PersistedTransaction[], ignoreExistingTransactions: boolean = false) {
         if (!transactions.length) {
             return 0;
         }
@@ -27,8 +27,8 @@ export default class Db {
 
         const collection = this.db.collection('transactions');
         let newTransactions = transactions;
-        if (!updateExisting) {
-            newTransactions = await this.removeExistingTransactions(transactions, collection);
+        if (!ignoreExistingTransactions) {
+            newTransactions = await this.mergeWithExistingTransactions(transactions, collection);
         }
 
         const promises = _.chunk(newTransactions, 500).map(async chunk => {
@@ -48,17 +48,40 @@ export default class Db {
         return newTransactions.length;
     }
 
-    private async removeExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
+    private async mergeWithExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
         const existingDocuments = await this.db.getAll(
             ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
         );
 
-        const existingTransactions = existingDocuments.filter(x => !!x.data()).map(this.mapDocument);
-
-        const newTransactions = _.differenceBy(transactions, existingTransactions, (x: PersistedTransaction) =>
-            this.getUniqueDbId(x)
+        const existingTransactionsMap = new Map(
+            existingDocuments
+                .filter(x => !!x.data())
+                .map(x => {
+                    let tx = this.mapDocument(x);
+                    return [this.getUniqueDbId(tx), tx];
+                })
         );
-        return newTransactions;
+
+        return transactions.map(transaction => {
+            const existingTransaction = existingTransactionsMap.get(this.getUniqueDbId(transaction));
+
+            if (!existingTransaction) {
+                return transaction;
+            }
+
+            return this.mergeTransactions(existingTransaction, transaction);
+        });
+    }
+
+    private mergeTransactions(object: PersistedTransaction, source: PersistedTransaction) {
+        const customizer = (objValue: any, srcValue: any, key: string) => {
+            // short id
+            if (key === 'id') {
+                return objValue;
+            }
+        };
+
+        return _.mergeWith(object, source, customizer);
     }
 
     private getUniqueDbId(transaction: PersistedTransaction) {
