@@ -1,4 +1,4 @@
-type ScrapedTransaction = {
+export type ScrapedTransaction = {
     type: 'normal' | 'installments'; // can be either 'normal' or 'installments'
     identifier: number; // only if exists
     date: string; // ISO date string

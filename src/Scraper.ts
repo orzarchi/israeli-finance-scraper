@@ -1,5 +1,12 @@
-import { createScraper } from 'israeli-bank-scrapers';
-import { Account, FinanciaAccountConfiguration, PersistedTransaction, Provider, ScrapeResult } from './types';
+import {createScraper} from 'israeli-bank-scrapers';
+import {
+    Account,
+    FinanciaAccountConfiguration,
+    PersistedTransaction,
+    Provider,
+    ScrapeResult,
+    ScrapedTransaction
+} from './types';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 import shortid from 'shortid';
@@ -8,37 +15,39 @@ import logger from './logger';
 import env from './env';
 
 export default class Scraper {
-    constructor(private userId: string){
-
+    constructor(private userId: string) {
     }
+
     private removeNonAscii(str: string) {
         return str.replace(/[^\x20-\x7E]+/g, '').trim();
     }
 
-    private mapTransaction(account: Account, providerName: Provider) {
-        return account.txns.map(tx => {
-            return {
-                id: shortid.generate(),
-                account: this.removeNonAscii(account.accountNumber),
-                provider: providerName,
-                chargedAmount: tx.chargedAmount,
-                date: new Date(moment(tx.date).format('YYYY-MM-DD')),
-                processedDate: new Date(moment(tx.processedDate).format('YYYY-MM-DD')),
-                description: tx.description.trim(),
-                installments: tx.installments || null,
-                originalAmount: tx.originalAmount,
-                originalCurrency: tx.originalCurrency,
-                approvalNumber: tx.identifier || 0,
-                memo: tx.memo || '',
-                userId: this.userId
-            };
-        });
+    private mapAccount(account: Account, providerName: Provider) {
+        return account.txns
+            .map(tx => this.mapTransaction(tx, account, providerName));
+    }
+
+    private mapTransaction(tx: ScrapedTransaction, account: Account, providerName: Provider) {
+        return {
+            id: shortid.generate(),
+            account: this.removeNonAscii(account.accountNumber),
+            provider: providerName,
+            chargedAmount: tx.chargedAmount,
+            date: new Date(moment(tx.date).format('YYYY-MM-DD')),
+            processedDate: new Date(moment(tx.processedDate).format('YYYY-MM-DD')),
+            description: tx.description.trim(),
+            installments: tx.installments || null,
+            originalAmount: tx.originalAmount,
+            originalCurrency: tx.originalCurrency,
+            approvalNumber: tx.identifier || 0,
+            memo: tx.memo || '',
+            userId: this.userId,
+            status: tx.status
+        };
     }
 
     private mapScrape(scrape: ScrapeResult, providerName: Provider): PersistedTransaction[] {
-        return _.flatten(
-            scrape.accounts.map(x => this.mapTransaction(x, providerName))
-        );
+        return _.flatten(scrape.accounts.map(x => this.mapAccount(x, providerName)));
     }
 
     private processResults(results: { [x: string]: ScrapeResult }): PersistedTransaction[] {
@@ -79,9 +88,7 @@ export default class Scraper {
                 results[scraperConfig.companyId] = scrapeResult;
             } else {
                 logger.error(
-                    `scraping failed for the following reason: ${scrapeResult.errorType}. Message: ${
-                        scrapeResult.errorMessage
-                    }`
+                    `scraping failed for the following reason: ${scrapeResult.errorType}. Message: ${scrapeResult.errorMessage}`
                 );
             }
         }
