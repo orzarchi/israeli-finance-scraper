@@ -55,6 +55,7 @@ export type PersistedTransaction = {
     scrapeId?: string;
     scrapeDate?: Date;
     userId: string;
+    status: 'completed' | 'pending';
 };
 
 export interface IPersistedConfiguration {
