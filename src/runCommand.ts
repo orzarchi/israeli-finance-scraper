@@ -2,6 +2,7 @@ import { scrape } from './commands/scrape';
 import { uploadToYnab } from './commands/uploadToYnab';
 import { startBot } from './commands/startBot';
 import { startBotAndScrape } from './commands/startBotAndScrape';
+import { configure } from './commands/configure';
 
 const commandName = process.argv[2];
 let command;
@@ -20,6 +21,9 @@ switch (commandName) {
         break;
     case 'uploadToYnab':
         command = uploadToYnab;
+        break;
+    case 'configure':
+        command = configure;
         break;
 
     default:
