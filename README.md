@@ -19,7 +19,9 @@
 
 
 ## Heroku integration (Optional)
-Heroku is supported. Simply create an heroku app, and set the required env vars marked **Required for heroku integration**.
+Heroku is supported. 
+1) Create an heroku app, and set the required env vars marked **Required for heroku integration**.
+2) Add the [Puppeteer buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack.git).
 
 ## Environment Variables
 1) **ONLY_PROVIDERS** - Comma delimited list. Scraper types to run.
