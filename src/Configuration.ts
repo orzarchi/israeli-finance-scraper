@@ -12,20 +12,24 @@ import _ from 'lodash';
 
 export class Configuration implements IPersistedConfiguration {
     public id: string;
-    public ynabApiKey: string;
+    public ynabApiKey?: string;
     public ynabBudgets: YnabBudget[];
     public accountsConfig: FinanciaAccountConfiguration[];
     public persistenceId: string;
     private creditCardPaymentDescriptions: Array<{ provider: Provider; description: string }> = [
-        { provider: 'leumiCard', description: 'מקס-לאומיקאר-י' }
+        { provider: Provider.leumiCard, description: 'מקס-לאומיקאר-י' }
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {
         this.id = dto.id;
         this.persistenceId = persistenceId;
         this.ynabApiKey = dto.ynabApiKey;
-        this.ynabBudgets = dto.ynabBudgets;
+        this.ynabBudgets = dto.ynabBudgets||[];
         this.accountsConfig = dto.accountsConfig;
+    }
+
+    public get hasYnabIntegration(){
+        return !!this.ynabApiKey && !!this.ynabBudgets && this.ynabBudgets.length > 0;
     }
 
     private removeNonAscii(str: string) {

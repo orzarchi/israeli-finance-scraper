@@ -2,7 +2,7 @@ import Db from '../Db';
 import { getAccounts, getBudgets } from '../ynab';
 import { prompt } from 'enquirer';
 import _ from 'lodash';
-import { IPersistedConfiguration } from '../types';
+import { FinanciaAccountConfiguration, IPersistedConfiguration, Provider } from '../types';
 import { Configuration } from '../Configuration';
 
 async function question(...messages: string[]): Promise<string[]> {
@@ -39,10 +39,16 @@ async function confirm(message: string) {
         message
     });
 
-    return (result as { [x: string]: boolean }).answer;
+    return (result as { answer: boolean }).answer;
 }
 
 async function configureYnab(configurationToEdit: Partial<IPersistedConfiguration>) {
+    console.info('Ynab integration:');
+    const answer = await confirm('Configure YNAB integration?');
+    if (!answer) {
+        return;
+    }
+
     if (!configurationToEdit.ynabApiKey) {
         [configurationToEdit.ynabApiKey] = await question('YNAB API Key?');
     }
@@ -62,29 +68,30 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
     if (!configurationToEdit.ynabBudgets || !configurationToEdit.ynabBudgets.length) {
         return;
     }
+    console.info('Ynab mapping:');
 
     const firstYnabBudget = configurationToEdit.ynabBudgets[0];
 
-    const badAccounts =
-        configurationToEdit.accountsConfig &&
-        configurationToEdit.accountsConfig.filter(x => !_.isArray(x.accounts) || !x.accounts.length || _.has(x,'ynab'));
-    if (!badAccounts) {
-        return;
-    }
+    const financiaAccounts = configurationToEdit.accountsConfig || [];
 
-    for (const badAccount of badAccounts) {
-        badAccount.accounts=[];
+    for (const financialAccountConfiguration of financiaAccounts) {
+        financialAccountConfiguration.accounts = financialAccountConfiguration.accounts || [];
+
         let moreAccountsRequired = true;
         while (moreAccountsRequired) {
             const ynabAccountName = await choice(
-                `For provider ${badAccount.id} choose matching ynab account`,
+                `For scraper ${financialAccountConfiguration.id} choose matching ynab account`,
                 firstYnabBudget.accounts.map(x => x.name)
             );
             const ynabTargetAccountId = firstYnabBudget.accounts.find(x => x.name === ynabAccountName)!.id;
-            const [userAccountName] = await question(`Scraper given name for account?`);
+            const [userAccountName] = await question(
+                `Scraper given name for account? (This is usually only known after the first scrape. For credit cards, usually 4 last digits)`
+            );
 
             const payingYnabAccountName = await choice(
-                `Is account provider ${badAccount.id} a credit card? If so, which ynab account is the paying bank account?`,
+                `Is account provider ${
+                    financialAccountConfiguration.id
+                } a credit card? If so, which ynab account is the paying bank account?`,
                 firstYnabBudget.accounts.map(x => x.name).concat(['Not a credit card'])
             );
 
@@ -93,14 +100,46 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
                 payingYnabAccountId = firstYnabBudget.accounts.find(x => x.name === payingYnabAccountName)!.id;
             }
 
-            badAccount.accounts.push({
+            financialAccountConfiguration.accounts.push({
                 accountName: userAccountName,
                 ynabTargetBudgetId: firstYnabBudget.id,
                 ynabTargetAccountId,
                 payingYnabAccountId: payingYnabAccountId || undefined
             });
-            moreAccountsRequired = await confirm(`Add another account for provider for ${badAccount.id}`);
+            moreAccountsRequired = await confirm(
+                `Add another account for provider for ${financialAccountConfiguration.id}`
+            );
         }
+    }
+}
+
+async function configureScrapers(configurationToEdit: Partial<IPersistedConfiguration>) {
+    console.info('Scraper configuration:');
+    configurationToEdit.accountsConfig = configurationToEdit.accountsConfig || [];
+    let moreAccountsRequired = true;
+    while (moreAccountsRequired) {
+        const configurationId = await choice(
+            'Which scraper to edit?',
+            configurationToEdit.accountsConfig.map(x => x.id).concat(['Create new'])
+        );
+        let scraperToEdit: FinanciaAccountConfiguration | null = null;
+        if (configurationId === 'Create new') {
+            scraperToEdit = {} as FinanciaAccountConfiguration;
+            configurationToEdit.accountsConfig.push(scraperToEdit);
+        } else {
+            scraperToEdit = configurationToEdit.accountsConfig.find(x => x.id === configurationId)!;
+        }
+
+        const [accountId] = await question(`Scraper friendly name? (e.g. Mom's secret card)`);
+        const scraperProvider = await choice(`Scraper type?`, Object.keys(Provider));
+        const [username, password] = await question('Username?', 'Password?');
+        scraperToEdit.id = accountId;
+        scraperToEdit.companyId = scraperProvider as Provider;
+        scraperToEdit.credentials = { username, password };
+
+        moreAccountsRequired = await confirm(
+            `Add/edit another scraper?`
+        );
     }
 }
 
@@ -117,7 +156,7 @@ export const configure = async function() {
     }
 
     await configureYnab(configurationToEdit);
-    //todo: add new scrapers
+    await configureScrapers(configurationToEdit);
     await configureScrapersYnabMapping(configurationToEdit);
     await db.updateConfiguration(configurationToEdit.persistenceId, configurationToEdit.toJson());
 };

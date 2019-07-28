@@ -138,7 +138,7 @@ export default class Db {
         if (!persistenceId) {
             await collection.add(configuration);
         } else {
-            await collection.doc(persistenceId).set(configuration);
+            await collection.doc(persistenceId).set(_.omit(configuration,'persistenceId'));
         }
     }
 }

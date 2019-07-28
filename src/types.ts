@@ -26,15 +26,16 @@ export type ScrapeResult = {
     errorMessage: string; // only on success=false
 };
 
-export type Provider =
-    | 'hapoalim'
-    | 'leumi'
-    | 'discount'
-    | 'otsarHahayal'
-    | 'visaCal'
-    | 'leumiCard'
-    | 'isracard'
-    | 'amex';
+export enum Provider {
+    hapoalim = 'hapoalim',
+    leumi = 'leumi',
+    discount = 'discount',
+    otsarHahayal = 'otsarHahayal',
+    visaCal = 'visaCal',
+    leumiCard = 'leumiCard',
+    isracard = 'isracard',
+    amex = 'amex'
+}
 
 export type PersistedTransaction = {
     id: string;
@@ -60,15 +61,15 @@ export type PersistedTransaction = {
 
 export interface IPersistedConfiguration {
     id: string;
-    ynabApiKey: string;
-    ynabBudgets: YnabBudget[];
+    ynabApiKey?: string;
+    ynabBudgets?: YnabBudget[];
     accountsConfig: FinanciaAccountConfiguration[];
 }
 
 export type FinancialAccountYnabMapping = {
     accountName: string;
-    ynabTargetBudgetId: string;
-    ynabTargetAccountId: string;
+    ynabTargetBudgetId?: string;
+    ynabTargetAccountId?: string;
     payingYnabAccountId?: string;
 };
 

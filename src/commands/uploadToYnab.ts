@@ -17,6 +17,9 @@ export const uploadToYnab = async function() {
     const transactions = await db.getTransactions(startDate, todayDate);
 
     for (const configuration of configurations) {
+        if (!configuration.hasYnabIntegration){
+            console.info(`Skipping configuration ${configuration.id}, no ynab integration configured`)
+        }
         const accountBatches = _.groupBy(
             transactions.filter(tx => !!configuration.getYnabUploadTarget(tx)),
             (tx: PersistedTransaction) => {
@@ -38,7 +41,7 @@ export const uploadToYnab = async function() {
             const newTransactions = accountBatches[ynabConfiguration];
             const configParts = ynabConfiguration.split(',');
             await uploadTransactions(
-                configuration.ynabApiKey,
+                configuration.ynabApiKey!,
                 configParts[0],
                 configParts[1],
                 newTransactions,
