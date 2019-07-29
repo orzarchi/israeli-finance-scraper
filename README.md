@@ -2,7 +2,7 @@
 
 1) Create firestore account
 2) Place `firebase-service-account.json` file in root dir
-3) Install all dependencies using `yarn build`
+3) Install all dependencies using `yarn install`
 3) Run `yarn configure` to configure your scrapers and optional YNAB integration
 4) That's it! 
 
