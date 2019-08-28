@@ -41,7 +41,7 @@ export class Configuration implements IPersistedConfiguration {
     }
 
     public getYnabUploadTarget(transaction: PersistedTransaction): YnabUploadTarget | null {
-        const accountConfiguration = _.flatMap(this.accountsConfig, x => x.accounts).find(
+        const accountConfiguration = _.flatMap(this.accountsConfig, x => x.accounts||[]).find(
             x => this.removeNonAscii(x.accountName) === this.removeNonAscii(transaction.account)
         );
 

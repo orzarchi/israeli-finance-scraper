@@ -34,3 +34,4 @@ lib/
 src/**/*.js
 firebase-service-account.json
 .build
+.serverless

@@ -87,7 +87,7 @@ export default class TelegramBot {
             .map(
                 x =>
                     `[${moment(x.date).format('DD/MM')}] ${x.description.slice(0, 30)} - ${this.formatCurrency(
-                        x.originalCurrency
+                        'ILS'
                     )}${x.chargedAmount * -1}`
             )
             .join('\n');

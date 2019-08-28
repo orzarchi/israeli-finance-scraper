@@ -80,6 +80,7 @@ export type FinanciaAccountConfiguration = {
     credentials: {
         username: string;
         password: string;
+        card6Digits: string;
     };
 };
 
