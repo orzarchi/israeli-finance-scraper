@@ -133,9 +133,14 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         const [accountId] = await question(`Scraper friendly name? (e.g. Mom's secret card)`);
         const scraperProvider = await choice(`Scraper type?`, Object.keys(Provider));
         const [username, password] = await question('Username?', 'Password?');
+        let card6Digits = '';
+        if (scraperProvider === Provider.isracard){
+            card6Digits = (await question('Card last 6 digits?'))[0]
+        }
+
         scraperToEdit.id = accountId;
         scraperToEdit.companyId = scraperProvider as Provider;
-        scraperToEdit.credentials = { username, password };
+        scraperToEdit.credentials = { username, password, card6Digits };
 
         moreAccountsRequired = await confirm(
             `Add/edit another scraper?`
