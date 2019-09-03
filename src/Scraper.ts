@@ -1,4 +1,4 @@
-import {createScraper} from 'israeli-bank-scrapers';
+import {createScraper} from 'israeli-bank-scrapers-fork';
 import {
     Account,
     FinanciaAccountConfiguration,
