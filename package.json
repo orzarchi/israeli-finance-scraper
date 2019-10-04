@@ -13,7 +13,7 @@
         "enquirer": "^2.3.0",
         "firebase-admin": "^7.3.0",
         "firebase-functions": "^2.3.1",
-        "israeli-bank-scrapers-fork": "^0.7.0",
+        "israeli-bank-scrapers": "^0.7.0",
         "lodash": "^4.17.11",
         "minimist": "^1.2.0",
         "moment": "^2.24.0",
@@ -42,8 +42,5 @@
     },
     "optionalDependencies": {
         "telegraf": "^3.30.1"
-    },
-    "resolutions": {
-        "puppeteer": "^1.18.1"
     }
 }
