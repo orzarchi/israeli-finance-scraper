@@ -17,7 +17,8 @@ export class Configuration implements IPersistedConfiguration {
     public accountsConfig: FinanciaAccountConfiguration[];
     public persistenceId: string;
     private creditCardPaymentDescriptions: Array<{ provider: Provider; description: string }> = [
-        { provider: Provider.leumiCard, description: 'מקס-לאומיקאר-י' }
+        { provider: Provider.leumiCard, description: 'מקס-לאומיקאר-י' },
+        { provider: Provider.leumiCard, description: 'מקס איט פיננ-י' },
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {
