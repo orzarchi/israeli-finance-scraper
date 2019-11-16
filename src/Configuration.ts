@@ -19,6 +19,8 @@ export class Configuration implements IPersistedConfiguration {
     private creditCardPaymentDescriptions: Array<{ provider: Provider; description: string }> = [
         { provider: Provider.leumiCard, description: 'מקס-לאומיקאר-י' },
         { provider: Provider.leumiCard, description: 'מקס איט פיננ-י' },
+        { provider: Provider.leumiCard, description: 'מקס איט פיננסי' },
+        { provider: Provider.visaCal, description: 'כרטיסי אשראי ל' },
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {

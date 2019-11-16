@@ -5,7 +5,11 @@ import _ from 'lodash';
 import { FinanciaAccountConfiguration, IPersistedConfiguration, Provider } from '../types';
 import { Configuration } from '../Configuration';
 
-async function question(...messages: string[]): Promise<string[]> {
+async function question(message: string): Promise<string> {
+    const answers = await questions(message);
+    return answers[0];
+}
+async function questions(...messages: string[]): Promise<string[]> {
     const responses = (await prompt(
         messages.map((message: string, index: number) => ({
             type: 'input',
@@ -43,14 +47,15 @@ async function confirm(message: string) {
 }
 
 async function configureYnab(configurationToEdit: Partial<IPersistedConfiguration>) {
-    console.info('Ynab integration:');
     const answer = await confirm('Configure YNAB integration?');
     if (!answer) {
         return;
     }
 
+    console.info('Ynab integration:');
+
     if (!configurationToEdit.ynabApiKey) {
-        [configurationToEdit.ynabApiKey] = await question('YNAB API Key?');
+        configurationToEdit.ynabApiKey = await question('YNAB API Key?');
     }
     const budgets = await getBudgets(configurationToEdit.ynabApiKey);
     configurationToEdit.ynabBudgets = budgets.map(x => ({ id: x.id, name: x.name, accounts: [] }));
@@ -65,16 +70,26 @@ async function configureYnab(configurationToEdit: Partial<IPersistedConfiguratio
 }
 
 async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersistedConfiguration>) {
-    if (!configurationToEdit.ynabBudgets || !configurationToEdit.ynabBudgets.length) {
+    const financiaAccounts = configurationToEdit.accountsConfig || [];
+
+    if (!configurationToEdit.ynabBudgets || !configurationToEdit.ynabBudgets.length || !financiaAccounts.length) {
         return;
     }
+
+    const answer = await confirm('Configure Ynab mapping?');
+    if (!answer) {
+        return;
+    }
+
     console.info('Ynab mapping:');
 
     const firstYnabBudget = configurationToEdit.ynabBudgets[0];
 
-    const financiaAccounts = configurationToEdit.accountsConfig || [];
+    let moreConfigurationsRequired = true;
+    while (moreConfigurationsRequired) {
+        const configurationId = await choice('Which Account to edit?', financiaAccounts.map(x => x.id));
+        const financialAccountConfiguration = financiaAccounts.find(x => x.id === configurationId)!;
 
-    for (const financialAccountConfiguration of financiaAccounts) {
         financialAccountConfiguration.accounts = financialAccountConfiguration.accounts || [];
 
         let moreAccountsRequired = true;
@@ -84,7 +99,7 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
                 firstYnabBudget.accounts.map(x => x.name)
             );
             const ynabTargetAccountId = firstYnabBudget.accounts.find(x => x.name === ynabAccountName)!.id;
-            const [userAccountName] = await question(
+            const userAccountName = await question(
                 `Scraper given name for account? (This is usually only known after the first scrape. For credit cards, usually 4 last digits)`
             );
 
@@ -110,11 +125,19 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
                 `Add another account for provider for ${financialAccountConfiguration.id}`
             );
         }
+
+        moreConfigurationsRequired = await confirm(`Configure another provider?`);
     }
 }
 
 async function configureScrapers(configurationToEdit: Partial<IPersistedConfiguration>) {
+    const answer = await confirm('Configure Scrapers?');
+    if (!answer) {
+        return;
+    }
+
     console.info('Scraper configuration:');
+
     configurationToEdit.accountsConfig = configurationToEdit.accountsConfig || [];
     let moreAccountsRequired = true;
     while (moreAccountsRequired) {
@@ -130,21 +153,51 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
             scraperToEdit = configurationToEdit.accountsConfig.find(x => x.id === configurationId)!;
         }
 
-        const [accountId] = await question(`Scraper friendly name? (e.g. Mom's secret card)`);
-        const scraperProvider = await choice(`Scraper type?`, Object.keys(Provider));
-        const [username, password] = await question('Username?', 'Password?');
-        let card6Digits = '';
-        if (scraperProvider === Provider.isracard){
-            card6Digits = (await question('Card last 6 digits?'))[0]
+        const accountId = await question(`Scraper friendly name? (e.g. Mom's secret card)`);
+        const scraperProvider = (await choice(`Scraper type?`, Object.keys(Provider))) as Provider;
+        let credentials;
+        switch (scraperProvider) {
+            case Provider.hapoalim:
+            case Provider.hapoalimBeOnline:
+                credentials = {
+                    userCode: await question('Username?'),
+                    password: await question('Password?')
+                };
+                break;
+            case Provider.visaCal:
+            case Provider.leumiCard:
+            case Provider.leumi:
+            case Provider.mizrahi:
+            case Provider.otsarHahayal:
+                credentials = {
+                    username: await question('Username?'),
+                    password: await question('Password?')
+                };
+                break;
+            case Provider.discount:
+                credentials = {
+                    id: await question('Id number?'),
+                    password: await question('Password?'),
+                    num: await question('Number?')
+                };
+                break;
+            case Provider.isracard:
+            case Provider.amex:
+                credentials = {
+                    id: await question('Id number?'),
+                    card6Digits: await question('Card last 6 digits?'),
+                    password: await question('Password?')
+                };
+                break;
+            default:
+                throw new Error('Unsupported provider');
         }
 
         scraperToEdit.id = accountId;
         scraperToEdit.companyId = scraperProvider as Provider;
-        scraperToEdit.credentials = { username, password, card6Digits };
+        scraperToEdit.credentials = credentials;
 
-        moreAccountsRequired = await confirm(
-            `Add/edit another scraper?`
-        );
+        moreAccountsRequired = await confirm(`Add/edit another scraper?`);
     }
 }
 
@@ -156,7 +209,7 @@ export const configure = async function() {
     if (configurationId !== 'Create new') {
         configurationToEdit = configurations.find(x => x.id === configurationId)!;
     } else {
-        const [newName] = await question('Configuration name?');
+        const newName = await question('Configuration name?');
         configurationToEdit = new Configuration('', { id: newName } as IPersistedConfiguration);
     }
 

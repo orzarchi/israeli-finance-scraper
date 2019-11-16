@@ -28,7 +28,9 @@ export type ScrapeResult = {
 
 export enum Provider {
     hapoalim = 'hapoalim',
+    hapoalimBeOnline = 'hapoalimBeOnline',
     leumi = 'leumi',
+    mizrahi = 'mizrahi',
     discount = 'discount',
     otsarHahayal = 'otsarHahayal',
     visaCal = 'visaCal',
@@ -77,11 +79,14 @@ export type FinanciaAccountConfiguration = {
     id: string;
     accounts: Array<FinancialAccountYnabMapping>;
     companyId: Provider;
-    credentials: {
-        username: string;
-        password: string;
-        card6Digits: string;
-    };
+    credentials:
+        | {
+              username: string;
+              password: string;
+          }
+        | { userCode: string; password: string }
+        | { id: string; password: string; card6Digits: string }
+        | { id: string; password: string; num: string };
 };
 
 export type YnabAccount = {
