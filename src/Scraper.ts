@@ -1,4 +1,4 @@
-import {createScraper} from 'israeli-bank-scrapers';
+import { createScraper } from 'israeli-bank-scrapers';
 import {
     Account,
     FinanciaAccountConfiguration,
@@ -15,16 +15,14 @@ import logger from './logger';
 import env from './env';
 
 export default class Scraper {
-    constructor(private userId: string) {
-    }
+    constructor(private userId: string) {}
 
     private removeNonAscii(str: string) {
         return str.replace(/[^\x20-\x7E]+/g, '').trim();
     }
 
     private mapAccount(account: Account, providerName: Provider) {
-        return account.txns
-            .map(tx => this.mapTransaction(tx, account, providerName));
+        return account.txns.map(tx => this.mapTransaction(tx, account, providerName));
     }
 
     private mapTransaction(tx: ScrapedTransaction, account: Account, providerName: Provider) {
@@ -70,7 +68,7 @@ export default class Scraper {
             logger.log(`Scraping ${scraperConfig.companyId}`);
 
             const scraper = createScraper({
-                companyId: scraperConfig.companyId, // mandatory; one of 'hapoalim', 'leumi', 'discount', 'otsarHahayal', 'visaCal', 'leumiCard', 'isracard', 'amex'
+                companyId: scraperConfig.companyId,
                 startDate,
                 combineInstallments: false,
                 showBrowser: true,
@@ -81,15 +79,13 @@ export default class Scraper {
             const scrapeResult = (await scraper.scrape(scraperConfig.credentials)) as ScrapeResult;
 
             if (scrapeResult.success) {
-                scrapeResult.accounts.forEach(account => {
+                scrapeResult.accounts && scrapeResult.accounts.forEach(account => {
                     logger.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
                 });
 
                 results[scraperConfig.companyId] = scrapeResult;
             } else {
-                scrapeResult.accounts.forEach(account => {
-                    logger.log(`failed to scrape account number ${account.accountNumber}`);
-                });
+                logger.log(`failed to scrape ${scraperConfig.companyId} - ${scrapeResult.errorMessage}`);
             }
         }
 

@@ -158,7 +158,6 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         let credentials;
         switch (scraperProvider) {
             case Provider.hapoalim:
-            case Provider.hapoalimBeOnline:
                 credentials = {
                     userCode: await question('Username?'),
                     password: await question('Password?')

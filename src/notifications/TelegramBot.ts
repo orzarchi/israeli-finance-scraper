@@ -68,7 +68,7 @@ export default class TelegramBot {
             redirectLog.stop();
             try {
                 logger.error(err);
-                await reply(`Error scraping: ${err.message}`);
+                await reply(`Error scraping: ${err.stack}`);
             } catch {}
         }
         logger.info('Finished scrape command');
