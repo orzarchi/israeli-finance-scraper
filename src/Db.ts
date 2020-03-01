@@ -26,16 +26,21 @@ export default class Db {
         logger.log(`Persisting ${transactions.length} transactions`);
 
         const collection = this.db.collection('transactions');
+        const uniqueIds = this.getUniqueIdsForBatch(transactions);
+
         let newTransactions = transactions;
+        let newTransactionsCount = 0;
         if (!ignoreExistingTransactions) {
-            newTransactions = await this.mergeWithExistingTransactions(transactions, collection);
+            const [newTxCount, newTx] = await this.mergeWithExistingTransactions(transactions, collection, uniqueIds);
+            newTransactions = newTx;
+            newTransactionsCount = newTxCount;
         }
 
-        const promises = _.chunk(newTransactions, 500).map(async chunk => {
+        const promises = _.chunk(_.zip(newTransactions, uniqueIds), 500).map(async chunk => {
             const batch = this.db.batch();
 
-            chunk.forEach(x => {
-                batch.set(collection.doc(this.getUniqueDbId(x)), x);
+            chunk.forEach(([tx, uniqueId]) => {
+                batch.set(collection.doc(uniqueId), tx!);
             });
 
             await batch.commit();
@@ -43,14 +48,30 @@ export default class Db {
 
         await Promise.all(promises);
 
-        logger.log(`Finished persisting ${newTransactions.length} new transactions`);
+        logger.log(`Finished persisting transactions. ${newTransactionsCount} new, ${transactions.length-newTransactionsCount} updates`);
 
         return newTransactions.length;
     }
 
-    private async mergeWithExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference) {
+    private getUniqueIdsForBatch(transactions: PersistedTransaction[]) {
+        const seenAlready = new Set();
+        return transactions.map(x => {
+            const uniqueDbId = this.getUniqueDbId(x);
+            let uniqueDbIdWithPostfix = uniqueDbId;
+            let index = 2;
+            while (seenAlready.has(uniqueDbIdWithPostfix)) {
+                uniqueDbIdWithPostfix = `${uniqueDbId}-${index}`;
+                index += 1;
+            }
+
+            seenAlready.add(uniqueDbIdWithPostfix);
+            return uniqueDbIdWithPostfix;
+        });
+    }
+
+    private async mergeWithExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference, uniqueIds:string[]):Promise<[number,PersistedTransaction[]]> {
         const existingDocuments = await this.db.getAll(
-            ...transactions.map(x => collection.doc(this.getUniqueDbId(x)), { fieldMask: ['id'] })
+            ...uniqueIds.map(uniqueId => collection.doc(uniqueId), { fieldMask: ['id'] })
         );
 
         const existingTransactionsMap = new Map(
@@ -58,19 +79,23 @@ export default class Db {
                 .filter(x => !!x.data())
                 .map(x => {
                     let tx = this.mapDocument(x);
-                    return [this.getUniqueDbId(tx), tx];
+                    return [x.id, tx];
                 })
         );
 
-        return transactions.map(transaction => {
-            const existingTransaction = existingTransactionsMap.get(this.getUniqueDbId(transaction));
+        let newCount = 0;
+
+        const merged = transactions.map((transaction, index) => {
+            const existingTransaction = existingTransactionsMap.get(uniqueIds[index]);
 
             if (!existingTransaction) {
+                newCount +=1;
                 return transaction;
             }
 
             return this.mergeTransactions(existingTransaction, transaction);
         });
+        return [newCount, merged];
     }
 
     private mergeTransactions(object: PersistedTransaction, source: PersistedTransaction) {
@@ -138,7 +163,7 @@ export default class Db {
         if (!persistenceId) {
             await collection.add(configuration);
         } else {
-            await collection.doc(persistenceId).set(_.omit(configuration,'persistenceId'));
+            await collection.doc(persistenceId).set(_.omit(configuration, 'persistenceId'));
         }
     }
 }
