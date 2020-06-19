@@ -29,6 +29,7 @@ export type ScrapeResult = {
 export enum Provider {
     hapoalim = 'hapoalim',
     leumi = 'leumi',
+    max = 'max',
     mizrahi = 'mizrahi',
     discount = 'discount',
     otsarHahayal = 'otsarHahayal',

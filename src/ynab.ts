@@ -42,7 +42,9 @@ export async function uploadTransactions(
         transactions: ynabTransactions
     });
     let uploadedTransactionIds = response.data.transaction_ids;
-    logger.log(`Uploaded ${uploadedTransactionIds.length} new transactions`);
+    if (uploadedTransactionIds.length) {
+        logger.log(`Uploaded ${uploadedTransactionIds.length} new transactions to provider ${transactions[0].provider}`);
+    }
 }
 
 export async function updateTransactions(ynabApiKey: string, budgetId: string, transactions: TransactionDetail[]) {

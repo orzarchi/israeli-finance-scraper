@@ -85,7 +85,7 @@ export default class Scraper {
 
                 results[scraperConfig.companyId] = scrapeResult;
             } else {
-                logger.log(`failed to scrape ${scraperConfig.companyId} - ${scrapeResult.errorMessage}`);
+                logger.log(`failed to scrape ${scraperConfig.companyId} - ${scrapeResult.errorMessage || scrapeResult.errorType}`);
             }
         }
 

@@ -158,14 +158,10 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         let credentials;
         switch (scraperProvider) {
             case Provider.hapoalim:
-                credentials = {
-                    userCode: await question('Username?'),
-                    password: await question('Password?')
-                };
-                break;
             case Provider.visaCal:
             case Provider.leumiCard:
             case Provider.leumi:
+            case Provider.max:
             case Provider.mizrahi:
             case Provider.otsarHahayal:
                 credentials = {
