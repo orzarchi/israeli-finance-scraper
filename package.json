@@ -32,7 +32,7 @@
     "scripts": {
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "runCommand": "ts-node --files src/runCommand.ts",
-        "scrape": "HEADLESS=false yarn runCommand scrape",
+        "scrape": "yarn runCommand scrape",
         "configure": "yarn runCommand configure",
         "changeids": "yarn runCommand changeIds",
         "startBotAndScrape": "yarn runCommand startBotAndScrape",
