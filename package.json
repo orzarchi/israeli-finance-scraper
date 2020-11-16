@@ -13,7 +13,7 @@
         "enquirer": "^2.3.0",
         "firebase-admin": "^7.3.0",
         "firebase-functions": "^2.3.1",
-        "israeli-bank-scrapers": "^0.9.1-dev.39ca413a2",
+        "israeli-bank-scrapers": "^1.0.1-dev.75e939cd0",
         "lodash": "^4.17.11",
         "minimist": "^1.2.0",
         "moment": "^2.24.0",
