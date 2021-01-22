@@ -85,7 +85,7 @@ export default class Scraper {
 
                 results[scraperConfig.companyId] = scrapeResult;
             } else {
-                logger.log(`failed to scrape ${scraperConfig.companyId} - ${scrapeResult.errorMessage || scrapeResult.errorType}`);
+                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${scrapeResult.errorMessage || scrapeResult.errorType}`);
             }
         }
 
