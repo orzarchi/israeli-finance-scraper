@@ -37,7 +37,8 @@ export const scrape = async function() {
                 x.scrapeId = scrapeId;
                 x.scrapeDate = scrapeDate;
             });
-            const newTransactions = await db.addTransactions(results);
+            const finalTx = results.filter(x => x.chargedAmount !== 0 && x.status !== 'pending');
+            const newTransactions = await db.addTransactions(finalTx);
             total += newTransactions;
         }
     }
