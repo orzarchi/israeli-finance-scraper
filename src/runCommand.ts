@@ -26,10 +26,6 @@ switch (commandName) {
         command = configure;
         break;
 
-    case 'configure':
-        command = configure;
-        break;
-
     default:
         throw new Error(`Unknown command ${commandName}`);
 }

@@ -40,7 +40,7 @@ export default class Db {
             const batch = this.db.batch();
 
             chunk.forEach(([tx, uniqueId]) => {
-                batch.set(collection.doc(uniqueId), tx!);
+                batch.set(collection.doc(uniqueId!), tx!);
             });
 
             await batch.commit();
