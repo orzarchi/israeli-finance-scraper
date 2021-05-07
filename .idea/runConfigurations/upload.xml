@@ -5,8 +5,10 @@
     <scripts>
       <script value="uploadToYnab" />
     </scripts>
-    <node-interpreter value="$USER_HOME$/.nvm/versions/node/v8.16.0/bin/node" />
-    <envs />
+    <node-interpreter value="$USER_HOME$/.nvm/versions/node/v12.18.2/bin/node" />
+    <envs>
+      <env name="MONTHS_TO_SCRAPE" value="5" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>
