@@ -10,7 +10,6 @@ import {
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 import shortid from 'shortid';
-import moment from 'moment';
 import logger from './logger';
 import env from './env';
 
@@ -26,13 +25,20 @@ export default class Scraper {
     }
 
     private mapTransaction(tx: ScrapedTransaction, account: Account, providerName: Provider) {
+        // Assume serialized UTC date strings
+        const date = new Date(tx.date);
+        const processedDate = new Date(tx.processedDate);
+        if (date.getHours()) {
+            logger.warn(`${providerName} tx date has hour - possible incorrect utc handling`);
+        }
+
         return {
             id: shortid.generate(),
             account: this.removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,
-            date: new Date(moment(tx.date).format('YYYY-MM-DD')),
-            processedDate: new Date(moment(tx.processedDate).format('YYYY-MM-DD')),
+            date,
+            processedDate,
             description: tx.description.trim(),
             installments: tx.installments || null,
             originalAmount: tx.originalAmount,
