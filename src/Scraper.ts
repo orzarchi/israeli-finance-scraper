@@ -28,7 +28,7 @@ export default class Scraper {
         // Assume serialized UTC date strings
         const date = new Date(tx.date);
         const processedDate = new Date(tx.processedDate);
-        if (date.getHours()) {
+        if (tx.chargedAmount && date.getHours()) {
             logger.warn(`${providerName} tx date has hour - possible incorrect utc handling`);
         }
 

@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 import logger from './logger';
+import moment from 'moment-timezone';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
@@ -48,7 +49,10 @@ export default class Db {
 
         await Promise.all(promises);
 
-        logger.log(`Finished persisting transactions. ${newTransactionsCount} new, ${transactions.length-newTransactionsCount} updates`);
+        logger.log(
+            `Finished persisting transactions. ${newTransactionsCount} new, ${transactions.length -
+            newTransactionsCount} updates`
+        );
 
         return newTransactions.length;
     }
@@ -69,7 +73,11 @@ export default class Db {
         });
     }
 
-    private async mergeWithExistingTransactions(transactions: PersistedTransaction[], collection: CollectionReference, uniqueIds:string[]):Promise<[number,PersistedTransaction[]]> {
+    private async mergeWithExistingTransactions(
+        transactions: PersistedTransaction[],
+        collection: CollectionReference,
+        uniqueIds: string[]
+    ): Promise<[number, PersistedTransaction[]]> {
         const existingDocuments = await this.db.getAll(
             ...uniqueIds.map(uniqueId => collection.doc(uniqueId), { fieldMask: ['id'] })
         );
@@ -89,7 +97,7 @@ export default class Db {
             const existingTransaction = existingTransactionsMap.get(uniqueIds[index]);
 
             if (!existingTransaction) {
-                newCount +=1;
+                newCount += 1;
                 return transaction;
             }
 
@@ -112,10 +120,9 @@ export default class Db {
     private getUniqueDbId(transaction: PersistedTransaction) {
         const date = transaction.date;
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date
-            .getDate()
-            .toString()
-            .padStart(2, '0');
+        const day = moment(date)
+            .tz('Asia/Jerusalem')
+            .format('DD');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
         let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(
             0,
