@@ -4,6 +4,7 @@ import ClearedEnum = TransactionSummary.ClearedEnum;
 import _ from 'lodash';
 import { readCsv, writeCsv } from './files';
 import logger from "./logger";
+import moment from 'moment-timezone';
 
 function createYnabTransaction(
     accountId: string,
@@ -15,7 +16,7 @@ function createYnabTransaction(
         amount: Math.round(transaction.chargedAmount * 1000),
         approved: false,
         cleared: ClearedEnum.Cleared,
-        date: new Date(transaction.date).toISOString(),
+        date: moment(transaction.date).tz('Asia/Jerusalem').format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
         import_id: transaction.id,
         memo: transaction.memo,
         payee_name: !payeeId ? transaction.description : undefined,
