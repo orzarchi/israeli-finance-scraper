@@ -1446,10 +1446,10 @@ isarray@~1.0.0:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
 
-israeli-bank-scrapers@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/israeli-bank-scrapers/-/israeli-bank-scrapers-1.0.4.tgz#79258353d2c407f01442ebc74da6f3233964d9b1"
-  integrity sha512-Fdh2HAx+/PceDfGSIChwkRVCb3sQ5FIQ9RhZuCnL1NBA76v64K6dSsy0v6XChNiOt1jD2yD0Wt3mKeuinsEagA==
+israeli-bank-scrapers@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/israeli-bank-scrapers/-/israeli-bank-scrapers-1.1.1.tgz#a36740e6e1138491f1cb0f0c3cee38fcd0e353d6"
+  integrity sha512-+gOXSOPU1+KJKlMnM344RysEQrRypwVLzcJjatkARcFVDcQW7uNs4JwRP0y/Xd4Esji2lPpGzRaHLwjMvAcyzA==
   dependencies:
     build-url "^2.0.0"
     core-js "^3.1.4"
