@@ -21,7 +21,8 @@ export class Configuration implements IPersistedConfiguration {
         { provider: Provider.leumiCard, description: 'מקס איט פיננ-י' },
         { provider: Provider.leumiCard, description: 'מקס איט פיננסי' },
         { provider: Provider.visaCal, description: 'כרטיסי אשראי ל' },
-        { provider: Provider.amex, description: 'אמריקן אקספר-י' }
+        { provider: Provider.amex, description: 'אמריקן אקספר-י' },
+        { provider: Provider.isracard, description: 'ישראכרט-י' }
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {
