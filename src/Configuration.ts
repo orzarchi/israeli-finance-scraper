@@ -3,12 +3,12 @@ import {
     FinancialAccountYnabMapping,
     IPersistedConfiguration,
     PersistedTransaction,
-    Provider,
     YnabAccount,
     YnabBudget,
     YnabUploadTarget
 } from './types';
 import _ from 'lodash';
+import { CompanyTypes } from 'israeli-bank-scrapers';
 
 export class Configuration implements IPersistedConfiguration {
     public id: string;
@@ -16,20 +16,20 @@ export class Configuration implements IPersistedConfiguration {
     public ynabBudgets: YnabBudget[];
     public accountsConfig: FinanciaAccountConfiguration[];
     public persistenceId: string;
-    private creditCardPaymentDescriptions: Array<{ provider: Provider; description: string }> = [
-        { provider: Provider.leumiCard, description: 'מקס-לאומיקאר-י' },
-        { provider: Provider.leumiCard, description: 'מקס איט פיננ-י' },
-        { provider: Provider.leumiCard, description: 'מקס איט פיננסי' },
-        { provider: Provider.visaCal, description: 'כרטיסי אשראי ל' },
-        { provider: Provider.amex, description: 'אמריקן אקספר-י' },
-        { provider: Provider.isracard, description: 'ישראכרט-י' }
+    private creditCardPaymentDescriptions: Array<{ provider: CompanyTypes; description: string }> = [
+        { provider: CompanyTypes.leumiCard, description: 'מקס-לאומיקאר-י' },
+        { provider: CompanyTypes.leumiCard, description: 'מקס איט פיננ-י' },
+        { provider: CompanyTypes.leumiCard, description: 'מקס איט פיננסי' },
+        { provider: CompanyTypes.visaCal, description: 'כרטיסי אשראי ל' },
+        { provider: CompanyTypes.amex, description: 'אמריקן אקספר-י' },
+        { provider: CompanyTypes.isracard, description: 'ישראכרט-י' }
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {
         this.id = dto.id;
         this.persistenceId = persistenceId;
         this.ynabApiKey = dto.ynabApiKey;
-        this.ynabBudgets = dto.ynabBudgets||[];
+        this.ynabBudgets = dto.ynabBudgets || [];
         this.accountsConfig = dto.accountsConfig;
     }
 

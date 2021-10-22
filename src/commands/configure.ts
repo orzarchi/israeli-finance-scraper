@@ -2,8 +2,9 @@ import Db from '../Db';
 import { getAccounts, getBudgets } from '../ynab';
 import { prompt } from 'enquirer';
 import _ from 'lodash';
-import { FinanciaAccountConfiguration, IPersistedConfiguration, Provider } from '../types';
+import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
 import { Configuration } from '../Configuration';
+import { CompanyTypes } from 'israeli-bank-scrapers';
 
 async function question(message: string): Promise<string> {
     const answers = await questions(message);
@@ -154,30 +155,30 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         }
 
         const accountId = await question(`Scraper friendly name? (e.g. Mom's secret card)`);
-        const scraperProvider = (await choice(`Scraper type?`, Object.keys(Provider))) as Provider;
+        const scraperCompanyTypes = (await choice(`Scraper type?`, Object.keys(CompanyTypes))) as CompanyTypes;
         let credentials;
-        switch (scraperProvider) {
-            case Provider.hapoalim:
-            case Provider.visaCal:
-            case Provider.leumiCard:
-            case Provider.leumi:
-            case Provider.max:
-            case Provider.mizrahi:
-            case Provider.otsarHahayal:
+        switch (scraperCompanyTypes) {
+            case CompanyTypes.hapoalim:
+            case CompanyTypes.visaCal:
+            case CompanyTypes.leumiCard:
+            case CompanyTypes.leumi:
+            case CompanyTypes.max:
+            case CompanyTypes.mizrahi:
+            case CompanyTypes.otsarHahayal:
                 credentials = {
                     username: await question('Username?'),
                     password: await question('Password?')
                 };
                 break;
-            case Provider.discount:
+            case CompanyTypes.discount:
                 credentials = {
                     id: await question('Id number?'),
                     password: await question('Password?'),
                     num: await question('Number?')
                 };
                 break;
-            case Provider.isracard:
-            case Provider.amex:
+            case CompanyTypes.isracard:
+            case CompanyTypes.amex:
                 credentials = {
                     id: await question('Id number?'),
                     card6Digits: await question('Card last 6 digits?'),
@@ -189,7 +190,7 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         }
 
         scraperToEdit.id = accountId;
-        scraperToEdit.companyId = scraperProvider as Provider;
+        scraperToEdit.companyId = scraperCompanyTypes as CompanyTypes;
         scraperToEdit.credentials = credentials;
 
         moreAccountsRequired = await confirm(`Add/edit another scraper?`);

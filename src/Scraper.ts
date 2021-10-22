@@ -1,30 +1,26 @@
-import { createScraper } from 'israeli-bank-scrapers';
-import {
-    Account,
-    FinanciaAccountConfiguration,
-    PersistedTransaction,
-    Provider,
-    ScrapeResult,
-    ScrapedTransaction
-} from './types';
+import { CompanyTypes, createScraper } from 'israeli-bank-scrapers';
+import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './types';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 import shortid from 'shortid';
 import logger from './logger';
 import env from './env';
+import { ScaperScrapingResult } from 'israeli-bank-scrapers/lib/scrapers/base-scraper';
+import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers/lib/transactions';
 
 export default class Scraper {
-    constructor(private userId: string) {}
+    constructor(private userId: string) {
+    }
 
     private removeNonAscii(str: string) {
         return str.replace(/[^\x20-\x7E]+/g, '').trim();
     }
 
-    private mapAccount(account: Account, providerName: Provider) {
+    private mapAccount(account: TransactionsAccount, providerName: CompanyTypes) {
         return account.txns.map(tx => this.mapTransaction(tx, account, providerName));
     }
 
-    private mapTransaction(tx: ScrapedTransaction, account: Account, providerName: Provider) {
+    private mapTransaction(tx: Transaction, account: Account, providerName: CompanyTypes) {
         // Assume serialized UTC date strings
         const date = new Date(tx.date);
         const processedDate = new Date(tx.processedDate);
@@ -50,21 +46,21 @@ export default class Scraper {
         };
     }
 
-    private mapScrape(scrape: ScrapeResult, providerName: Provider): PersistedTransaction[] {
-        return _.flatten(scrape.accounts.map(x => this.mapAccount(x, providerName)));
+    private mapScrape(scrape: ScaperScrapingResult, providerName: CompanyTypes): PersistedTransaction[] {
+        return _.flatten((scrape.accounts || []).map(x => this.mapAccount(x, providerName)));
     }
 
-    private processResults(results: { [x: string]: ScrapeResult }): PersistedTransaction[] {
+    private processResults(results: { [x: string]: ScaperScrapingResult }): PersistedTransaction[] {
         return _.flatten(
             Object.keys(results).map(providerName => {
                 const scrape = results[providerName];
-                return this.mapScrape(scrape, providerName as Provider);
+                return this.mapScrape(scrape, providerName as CompanyTypes);
             })
         );
     }
 
     async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
-        const results: { [x: string]: ScrapeResult } = {};
+        const results: { [x: string]: ScaperScrapingResult } = {};
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             headless: env.HEADLESS
@@ -82,16 +78,16 @@ export default class Scraper {
                 browser
             });
 
-            const scrapeResult = (await scraper.scrape(scraperConfig.credentials)) as ScrapeResult;
+            const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));
 
-            if (scrapeResult.success) {
-                scrapeResult.accounts && scrapeResult.accounts.forEach(account => {
+            if (ScaperScrapingResult.success) {
+                ScaperScrapingResult.accounts && ScaperScrapingResult.accounts.forEach(account => {
                     logger.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
                 });
 
-                results[scraperConfig.companyId] = scrapeResult;
+                results[scraperConfig.companyId] = ScaperScrapingResult;
             } else {
-                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${scrapeResult.errorMessage || scrapeResult.errorType}`);
+                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${ScaperScrapingResult.errorMessage || ScaperScrapingResult.errorType}`);
             }
         }
 

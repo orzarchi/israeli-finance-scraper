@@ -45,6 +45,8 @@ export async function uploadTransactions(
     let uploadedTransactionIds = response.data.transaction_ids;
     if (uploadedTransactionIds.length) {
         logger.log(`Uploaded ${uploadedTransactionIds.length} new transactions to provider ${transactions[0].provider}`);
+    } else {
+        logger.log(`No new transaction for provider ${transactions[0].provider}`);
     }
 }
 

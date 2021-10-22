@@ -1,48 +1,15 @@
-export type ScrapedTransaction = {
-    type: 'normal' | 'installments'; // can be either 'normal' or 'installments'
-    identifier: number; // only if exists
-    date: string; // ISO date string
-    processedDate: string; // ISO date string
-    originalAmount: number;
-    originalCurrency: string;
-    chargedAmount: number;
-    description: string;
-    memo: string; // can be null or empty
-    installments: {
-        number: number; // the current installment number
-        total: number; // the total number of installments
-    };
-    status: 'completed' | 'pending';
-};
+import { CompanyTypes } from 'israeli-bank-scrapers';
+import { Transaction } from 'israeli-bank-scrapers/lib/transactions';
 
 export type Account = {
     accountNumber: string;
-    txns: ScrapedTransaction[];
+    txns: Transaction[];
 };
-export type ScrapeResult = {
-    success: boolean;
-    accounts: Account[];
-    errorType: 'invalidPassword' | 'changePassword' | 'timeout' | 'generic'; // only on success=false
-    errorMessage: string; // only on success=false
-};
-
-export enum Provider {
-    hapoalim = 'hapoalim',
-    leumi = 'leumi',
-    max = 'max',
-    mizrahi = 'mizrahi',
-    discount = 'discount',
-    otsarHahayal = 'otsarHahayal',
-    visaCal = 'visaCal',
-    leumiCard = 'leumiCard',
-    isracard = 'isracard',
-    amex = 'amex'
-}
 
 export type PersistedTransaction = {
     id: string;
     approvalNumber: number;
-    provider: Provider;
+    provider: CompanyTypes;
     account: string;
     date: Date; // ISO date string
     processedDate: Date; // ISO date string
@@ -78,12 +45,12 @@ export type FinancialAccountYnabMapping = {
 export type FinanciaAccountConfiguration = {
     id: string;
     accounts: Array<FinancialAccountYnabMapping>;
-    companyId: Provider;
+    companyId: CompanyTypes;
     credentials:
         | {
-              username: string;
-              password: string;
-          }
+        username: string;
+        password: string;
+    }
         | { userCode: string; password: string }
         | { id: string; password: string; card6Digits: string }
         | { id: string; password: string; num: string };
