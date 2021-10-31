@@ -760,6 +760,13 @@ debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
+debug@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
+  integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
+  dependencies:
+    ms "2.1.2"
+
 deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
@@ -1446,13 +1453,14 @@ isarray@~1.0.0:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
 
-israeli-bank-scrapers@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/israeli-bank-scrapers/-/israeli-bank-scrapers-1.5.0.tgz#19f5c4ea40e4b087a63632ee45f0ee7501a4a764"
-  integrity sha512-QlL/FDXH5HAklXQ8ziIie0XZyy2FrpHVOOf6f3bgCEfxkNdC/PAeyGjSdwAOQalDm93vA2B901wfzhsw+dh59Q==
+israeli-bank-scrapers@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/israeli-bank-scrapers/-/israeli-bank-scrapers-1.5.3.tgz#7400a7e213a97ab6fc605104e7092c682aed7c74"
+  integrity sha512-QiyK40wiN9Hpt+dafe+EYlXvE3KfJW3tAH6GL33h6ScBHxHhFDzOurYkRhPyOwYfeZ7ZgwprI0phq5BapkVcZg==
   dependencies:
     build-url "^2.0.0"
     core-js "^3.1.4"
+    debug "^4.3.2"
     husky "^4.2.5"
     json2csv "^4.5.4"
     lodash "^4.17.10"
