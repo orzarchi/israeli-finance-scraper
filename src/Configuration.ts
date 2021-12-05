@@ -16,13 +16,13 @@ export class Configuration implements IPersistedConfiguration {
     public ynabBudgets: YnabBudget[];
     public accountsConfig: FinanciaAccountConfiguration[];
     public persistenceId: string;
-    private creditCardPaymentDescriptions: Array<{ provider: CompanyTypes; description: string }> = [
-        { provider: CompanyTypes.leumiCard, description: 'מקס-לאומיקאר-י' },
-        { provider: CompanyTypes.leumiCard, description: 'מקס איט פיננ-י' },
-        { provider: CompanyTypes.leumiCard, description: 'מקס איט פיננסי' },
-        { provider: CompanyTypes.visaCal, description: 'כרטיסי אשראי ל' },
-        { provider: CompanyTypes.amex, description: 'אמריקן אקספר-י' },
-        { provider: CompanyTypes.isracard, description: 'ישראכרט-י' }
+    private creditCardPaymentDescriptions: Array<{ provider: CompanyTypes; description: string[] }> = [
+        { provider: CompanyTypes.leumiCard, description: ['מקס-לאומיקאר-י'] },
+        { provider: CompanyTypes.leumiCard, description: ['מקס איט פיננ-י'] },
+        { provider: CompanyTypes.leumiCard, description: ['מקס איט פיננסי'] },
+        { provider: CompanyTypes.visaCal, description: ['כרטיסי אשראי ל'] },
+        { provider: CompanyTypes.amex, description: ['אמריקן אקספרס'] },
+        { provider: CompanyTypes.isracard, description: ['ישראכרט-י', 'ישראכרט'] }
     ];
 
     constructor(persistenceId: string, dto: IPersistedConfiguration) {
@@ -69,7 +69,7 @@ export class Configuration implements IPersistedConfiguration {
         ynabAccounts: YnabAccount[]
     ) {
         const matchingDescription = this.creditCardPaymentDescriptions.find(
-            x => x.description === transaction.description
+            x => x.description.includes(transaction.description)
         );
         if (!matchingDescription) {
             return;
