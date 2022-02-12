@@ -1,10 +1,10 @@
-import Db from '../Db';
-import { getAccounts, getBudgets } from '../ynab';
-import { prompt } from 'enquirer';
-import _ from 'lodash';
-import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
-import { Configuration } from '../Configuration';
-import { CompanyTypes } from 'israeli-bank-scrapers';
+import Db from "../Db";
+import { getAccounts, getBudgets } from "../ynab";
+import { prompt } from "enquirer";
+import _ from "lodash";
+import { FinanciaAccountConfiguration, IPersistedConfiguration } from "../types";
+import { Configuration } from "../Configuration";
+import { CompanyTypes } from "israeli-bank-scrapers";
 
 async function question(message: string): Promise<string> {
     const answers = await questions(message);
@@ -165,6 +165,7 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
             case CompanyTypes.max:
             case CompanyTypes.mizrahi:
             case CompanyTypes.otsarHahayal:
+            case CompanyTypes.beinleumi:
                 credentials = {
                     username: await question('Username?'),
                     password: await question('Password?')
