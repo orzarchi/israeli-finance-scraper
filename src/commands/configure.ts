@@ -60,7 +60,10 @@ async function configureYnab(configurationToEdit: Partial<IPersistedConfiguratio
     }
     const budgets = await getBudgets(configurationToEdit.ynabApiKey);
 
-    const budgetName = await question("YNAB Budget Name?");
+    const budgetName = await await choice(
+                "YNAB Budget Name?",
+                budgets.map(x => x.name)
+            )
 
     const budget = budgets.filter((x) => x.name === budgetName);
 
