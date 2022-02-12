@@ -75,7 +75,8 @@ export default class Scraper {
                 combineInstallments: false,
                 showBrowser: true,
                 verbose: false,
-                browser
+                futureMonthsToScrape: 2,
+                browser,
             });
 
             const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));
