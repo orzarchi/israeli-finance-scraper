@@ -48,25 +48,30 @@ async function confirm(message: string) {
 }
 
 async function configureYnab(configurationToEdit: Partial<IPersistedConfiguration>) {
-    const answer = await confirm('Configure YNAB integration?');
+    const answer = await confirm("Configure YNAB integration?");
     if (!answer) {
         return;
     }
 
-    console.info('Ynab integration:');
+    console.info("YNAB integration:");
 
     if (!configurationToEdit.ynabApiKey) {
-        configurationToEdit.ynabApiKey = await question('YNAB API Key?');
+        configurationToEdit.ynabApiKey = await question("YNAB API Key?");
     }
     const budgets = await getBudgets(configurationToEdit.ynabApiKey);
-    configurationToEdit.ynabBudgets = budgets.map(x => ({ id: x.id, name: x.name, accounts: [] }));
+
+    const budgetName = await question("YNAB Budget Name?");
+
+    const budget = budgets.filter((x) => x.name === budgetName);
+
+    configurationToEdit.ynabBudgets = budget.map((x) => ({ id: x.id, name: x.name, accounts: [] }));
     const firstBudget = configurationToEdit.ynabBudgets[0];
 
     const accounts = await getAccounts(configurationToEdit.ynabApiKey, firstBudget.id);
-    firstBudget.accounts = accounts.map(x => ({
+    firstBudget.accounts = accounts.map((x) => ({
         id: x.id,
         name: x.name,
-        transferAccountId: x.transfer_payee_id
+        transferAccountId: x.transfer_payee_id,
     }));
 }
 
