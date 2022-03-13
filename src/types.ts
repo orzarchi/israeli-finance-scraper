@@ -8,7 +8,7 @@ export type Account = {
 
 export type PersistedTransaction = {
     id: string;
-    approvalNumber: number;
+    approvalNumber: number | string;
     provider: CompanyTypes;
     account: string;
     date: Date; // ISO date string
