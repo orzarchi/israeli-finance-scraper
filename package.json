@@ -17,7 +17,7 @@
         "israeli-bank-scrapers": "^1.14.3",
         "lodash": "^4.17.20",
         "minimist": "^1.2.5",
-        "moment": "^2.24.0",
+        "moment": "^2.29.2",
         "moment-timezone": "^0.5.33",
         "shortid": "^2.2.14",
         "ts-node": "^8.0.3",
