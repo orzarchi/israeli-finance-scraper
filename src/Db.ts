@@ -120,9 +120,7 @@ export default class Db {
     private getUniqueDbId(transaction: PersistedTransaction) {
         const date = transaction.date;
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = moment(date)
-            .tz('Asia/Jerusalem')
-            .format('DD');
+        const day = moment(date).format('DD');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
         let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(
             0,

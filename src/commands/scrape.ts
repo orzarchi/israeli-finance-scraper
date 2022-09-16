@@ -1,5 +1,5 @@
 import Db from '../Db';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import env from '../env';
 import _ from 'lodash';
 import shortid from 'shortid';
@@ -15,7 +15,7 @@ export const scrape = async function() {
         .toDate();
 
     const scrapeId = shortid.generate();
-    const scrapeDate = new Date();
+    const scrapeDate = moment().toDate();
 
     let total = 0;
 

@@ -7,6 +7,7 @@ import logger from './logger';
 import env from './env';
 import { ScaperScrapingResult } from 'israeli-bank-scrapers/lib/scrapers/base-scraper';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers/lib/transactions';
+import moment from 'moment-timezone';
 
 export default class Scraper {
     constructor(private userId: string) {
@@ -22,9 +23,9 @@ export default class Scraper {
 
     private mapTransaction(tx: Transaction, account: Account, providerName: CompanyTypes) {
         // Assume serialized UTC date strings
-        const date = new Date(tx.date);
-        const processedDate = new Date(tx.processedDate);
-        if (tx.chargedAmount && date.getHours()) {
+        const date = moment(tx.date).toDate();
+        const processedDate = moment(tx.processedDate).toDate();
+        if (tx.chargedAmount && moment(date).hours() > 0) {
             logger.warn(`${providerName} tx date has hour - possible incorrect utc handling`);
         }
 
@@ -77,6 +78,7 @@ export default class Scraper {
                 verbose: false,
                 futureMonthsToScrape: 2,
                 browser,
+                defaultTimeout: 120000,
             });
 
             const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));
