@@ -44,5 +44,6 @@
     },
     "optionalDependencies": {
         "telegraf": "^3.30.1"
-    }
+    },
+    "packageManager": "yarn@3.2.4"
 }

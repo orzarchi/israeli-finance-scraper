@@ -78,7 +78,6 @@ export default class Scraper {
                 verbose: false,
                 futureMonthsToScrape: 2,
                 browser,
-                defaultTimeout: 120000,
             });
 
             const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));
