@@ -65,7 +65,8 @@ export default class Scraper {
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             headless: env.HEADLESS,
-            channel: env.PUPPETEER_CHANNEL
+            executablePath: env.PUPPETEER_EXECUTABLE_PATH,
+            channel: env.PUPPETEER_EXECUTABLE_PATH ? undefined : env.PUPPETEER_CHANNEL
         });
 
         for (const scraperConfig of scrapers) {
