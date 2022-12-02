@@ -54,7 +54,10 @@ export default class TelegramBot {
 
     public async scrape(reply: (text: string) => Promise<void>) {
         logger.info('Got scrape command');
-        const redirectLog = new RedirectLog(x => reply(x));
+        const redirectLog = new RedirectLog(x => {
+            console.log(x);
+            reply(x);
+        });
         logger.info('Starting scraping...');
 
         try {

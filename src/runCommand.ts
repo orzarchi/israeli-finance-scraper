@@ -1,9 +1,9 @@
 import { scrape } from './commands/scrape';
 import { uploadToYnab } from './commands/uploadToYnab';
 import { startBot } from './commands/startBot';
-import { startBotAndScrape } from './commands/startBotAndScrape';
 import { configure } from './commands/configure';
-import moment from "moment-timezone";
+import moment from 'moment-timezone';
+import { startWeb } from './commands/startWeb';
 
 const commandName = process.argv[2];
 let command;
@@ -20,8 +20,8 @@ switch (commandName) {
     case 'startBot':
         command = startBot;
         break;
-    case 'startBotAndScrape':
-        command = startBotAndScrape;
+    case 'startWeb':
+        command = startWeb;
         break;
     case 'uploadToYnab':
         command = uploadToYnab;

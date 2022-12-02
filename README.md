@@ -9,14 +9,15 @@ on [israeli-bank-scrapers](https://github.com/eshaham/israeli-bank-scrapers).
 1) Create firestore account
 2) Place `firebase-service-account.json` file in root dir
 3) Install all dependencies using `yarn install`
-3) Run `yarn configure` to configure your scrapers and optional YNAB integration
-4) That's it!
+4) Run `yarn configure` to configure your scrapers and optional YNAB integration
+5) That's it!
 
 ## Available Commands (NPM Scripts)
 1) **scrape** - run all scrapers for all stored configurations, and save them to firestore.
 2) **uploadToYnab** - Upload to YNAB (Valid YNAB API key required)
 3) **startBot** - Start a telegram bot. See required env vars below
-4) **startBotAndScrape** - Starts a scrape command, sending logs to a telegram user indicated by **CHAT_ID** env var. Does not require a running telegram bot. Good for scheduled tasks.
+4) **startWeb** - Starts a web server that starts a scrape when receiving a POST to the root address, sending logs to a
+   telegram user indicated by **CHAT_ID** env var. Does not require a running telegram bot. Good for scheduled tasks.
 5) **configure** - Create or edit user configurations.
 
 ## Supported Telegram bot commands
@@ -42,3 +43,4 @@ Heroku is supported.
 7) **HEROKU_ADDRESS** - (Required for heroku integration + running a telegram bot) - Full address pointing to heroku
    app. (e.g. https://awesome-scraper.herokuapp.com
    )
+8) **WEB_ADDRESS** - [Optional] When running in web server mode (or via docker), the port to use. defaults to 8080
