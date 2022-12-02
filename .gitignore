@@ -35,3 +35,9 @@ src/**/*.js
 firebase-service-account.json
 .build
 .serverless
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
