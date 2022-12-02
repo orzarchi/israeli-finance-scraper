@@ -23,7 +23,8 @@ USER pptruser
 WORKDIR /app
 COPY --chown=pptruser . .
 RUN yarn
+RUN yarn build
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["yarn", "startWeb"]
+CMD ["node" ,"--enable-source-maps" ,"dist/src/runCommand.js", "startWeb"]
 

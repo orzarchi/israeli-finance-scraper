@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "lib",
+        "outDir": "dist",
         "experimentalDecorators": true,
         "target": "es2017",
         "allowJs": true,
@@ -15,12 +15,17 @@
         "resolveJsonModule": true,
         "isolatedModules": false,
         "strictNullChecks": true,
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "typeRoots": ["./node_modules/@types", "./src/typings"],
-        "rootDir": "./src",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
         "noImplicitReturns": true,
         "noUnusedLocals": false,
-        "sourceMap": false
+        "sourceMap": false,
+        "types": [
+            "node"
+        ]
     },
     "compileOnSave": true,
     "include": ["src/**/*.ts"]
