@@ -3,8 +3,8 @@ import { getAccounts, getBudgets } from "../ynab";
 import { prompt } from "enquirer";
 import _ from "lodash";
 import { FinanciaAccountConfiguration, IPersistedConfiguration } from "../types";
-import { Configuration } from "../Configuration";
-import { CompanyTypes } from "israeli-bank-scrapers";
+import { Configuration } from '../Configuration';
+import { CompanyTypes } from 'israeli-bank-scrapers-core';
 
 async function question(message: string): Promise<string> {
     const answers = await questions(message);

@@ -1,5 +1,5 @@
-import { CompanyTypes } from 'israeli-bank-scrapers';
-import { Transaction } from 'israeli-bank-scrapers/lib/transactions';
+import { CompanyTypes } from 'israeli-bank-scrapers-core';
+import { Transaction } from 'israeli-bank-scrapers-core/lib/transactions';
 
 export type Account = {
     accountNumber: string;

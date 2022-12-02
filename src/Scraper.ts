@@ -1,12 +1,12 @@
-import { CompanyTypes, createScraper } from 'israeli-bank-scrapers';
+import { CompanyTypes, createScraper } from 'israeli-bank-scrapers-core';
 import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './types';
 import _ from 'lodash';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import shortid from 'shortid';
 import logger from './logger';
 import env from './env';
-import { ScaperScrapingResult } from 'israeli-bank-scrapers/lib/scrapers/base-scraper';
-import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers/lib/transactions';
+import { ScaperScrapingResult } from 'israeli-bank-scrapers-core/lib/scrapers/base-scraper';
+import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 
 export default class Scraper {
@@ -64,7 +64,8 @@ export default class Scraper {
         const results: { [x: string]: ScaperScrapingResult } = {};
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            headless: env.HEADLESS
+            headless: env.HEADLESS,
+            channel: env.PUPPETEER_CHANNEL
         });
 
         for (const scraperConfig of scrapers) {
@@ -77,7 +78,7 @@ export default class Scraper {
                 showBrowser: true,
                 verbose: false,
                 futureMonthsToScrape: 2,
-                browser,
+                browser
             });
 
             const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));

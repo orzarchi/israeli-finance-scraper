@@ -1,7 +1,8 @@
 import yn from 'yn';
-import { CompanyTypes } from 'israeli-bank-scrapers';
+import { CompanyTypes } from 'israeli-bank-scrapers-core';
+import { ChromeReleaseChannel } from 'puppeteer-core';
 
-const parseList = (x?:string) => (x || '').replace(' ','').split(',').filter(y=>!!y);
+const parseList = (x?: string) => (x || '').replace(' ', '').split(',').filter(y => !!y);
 
 export default {
     ONLY_PROVIDERS: parseList(process.env['ONLY_PROVIDERS']) as CompanyTypes[],
@@ -11,5 +12,6 @@ export default {
     CHAT_ID: process.env['CHAT_ID'],
     HEROKU_PORT: parseInt(process.env['PORT'] || '5000'),
     HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
-    HEADLESS: yn(process.env['HEADLESS'] || true) || false
-}
+    HEADLESS: yn(process.env['HEADLESS'] || true) || false,
+    PUPPETEER_CHANNEL: (process.env['PUPPETEER_CHANNEL'] || 'chrome') as ChromeReleaseChannel
+};

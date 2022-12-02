@@ -8,7 +8,7 @@ import {
     YnabUploadTarget
 } from './types';
 import _ from 'lodash';
-import { CompanyTypes } from 'israeli-bank-scrapers';
+import { CompanyTypes } from 'israeli-bank-scrapers-core';
 
 export class Configuration implements IPersistedConfiguration {
     public id: string;
