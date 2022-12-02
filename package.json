@@ -48,6 +48,6 @@
     },
     "packageManager": "yarn@3.3.0",
     "resolutions": {
-        "israeli-bank-scrapers-core/puppeteer-core": "19.3.0"
+        "israeli-bank-scrapers-core/puppeteer-core": "13.5.0"
     }
 }
