@@ -1,5 +1,21 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer, { Browser } from 'puppeteer-core';
 import env from './env';
+import * as proxyChain from 'proxy-chain';
+
+const getProxy = async () => {
+    let proxyUrl = env.HTTP_PROXY_URL;
+
+    if (proxyUrl) {
+        // Can't pass proxy credentials to chrome as flags, create another local proxy hop for that
+        if (proxyUrl.includes('@')) {
+            proxyUrl = await proxyChain.anonymizeProxy(proxyUrl);
+        }
+    }
+
+    return proxyUrl;
+};
+
+const proxyUrlPromise = getProxy();
 
 const lambdaOptions = {
     args: [
@@ -39,19 +55,29 @@ const lambdaOptions = {
     defaultViewport: null
 };
 
-export function launchPuppeteer() {
+export async function launchPuppeteer(): Promise<Browser> {
+
+    const proxyUrl = await proxyUrlPromise;
+
     let options = {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: env.HEADLESS,
         executablePath: env.PUPPETEER_EXECUTABLE_PATH,
         channel: env.PUPPETEER_EXECUTABLE_PATH ? undefined : env.PUPPETEER_CHANNEL
     };
+
+
     if (process.env.AWS_LAMBDA_RUNTIME_API) {
         options = {
             ...options,
             ...lambdaOptions
         };
     }
+
+    if (proxyUrl) {
+        options.args.push(`--proxy-server=${proxyUrl}`);
+    }
+
 
     return puppeteer.launch(options);
 }

@@ -15,5 +15,6 @@ export default {
     HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
     HEADLESS: yn(process.env['HEADLESS'] || true) || false,
     PUPPETEER_CHANNEL: (process.env['PUPPETEER_CHANNEL'] || 'chrome') as ChromeReleaseChannel,
-    PUPPETEER_EXECUTABLE_PATH: process.env['PUPPETEER_EXECUTABLE_PATH']
+    PUPPETEER_EXECUTABLE_PATH: process.env['PUPPETEER_EXECUTABLE_PATH'],
+    HTTP_PROXY_URL: process.env['HTTP_PROXY_URL']
 };

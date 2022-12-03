@@ -3064,6 +3064,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-chain@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "proxy-chain@npm:2.2.0"
+  dependencies:
+    tslib: ^2.3.1
+  checksum: 4d46121bf5d496f575ac0afb9485a6fb2bb7406c2dca26284d98a578f168d978e6f2c8d68813ed9296a8d114621ef6f6fb2d320f4f5a8e60eeee05d78cbe2614
+  languageName: node
+  linkType: hard
+
 "proxy-from-env@npm:1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
@@ -3338,6 +3347,7 @@ __metadata:
     moment: ^2.24.0
     moment-timezone: ^0.5.33
     prettier: ^1.16.4
+    proxy-chain: ^2.2.0
     shortid: ^2.2.14
     telegraf: ^3.30.1
     ts-node: ^8.0.3
@@ -3794,6 +3804,13 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.1":
+  version: 2.4.1
+  resolution: "tslib@npm:2.4.1"
+  checksum: 19480d6e0313292bd6505d4efe096a6b31c70e21cf08b5febf4da62e95c265c8f571f7b36fcc3d1a17e068032f59c269fab3459d6cd3ed6949eafecf64315fca
   languageName: node
   linkType: hard
 
