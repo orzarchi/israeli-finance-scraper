@@ -10,7 +10,7 @@ export default {
     MONTHS_TO_SCRAPE: parseInt(process.env['MONTHS_TO_SCRAPE'] || '1'),
     BOT_TOKEN: process.env['BOT_TOKEN'],
     CHAT_ID: process.env['CHAT_ID'],
-    WEBSERVER_PORT: parseInt(process.env['WEBSERVER_PORT'] || '8080'),
+    WEBSERVER_PORT: parseInt(process.env['WEBSERVER_PORT'] || '9000'),
     HEROKU_PORT: parseInt(process.env['PORT'] || '5000'),
     HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
     HEADLESS: yn(process.env['HEADLESS'] || true) || false,

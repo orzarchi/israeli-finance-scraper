@@ -43,4 +43,4 @@ Heroku is supported.
 7) **HEROKU_ADDRESS** - (Required for heroku integration + running a telegram bot) - Full address pointing to heroku
    app. (e.g. https://awesome-scraper.herokuapp.com
    )
-8) **WEB_ADDRESS** - [Optional] When running in web server mode (or via docker), the port to use. defaults to 8080
+8) **WEBSERVER_PORT** - [Optional] When running in web server mode (or via docker), the port to use. defaults to 9000

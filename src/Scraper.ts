@@ -1,13 +1,12 @@
 import { CompanyTypes, createScraper } from 'israeli-bank-scrapers-core';
 import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './types';
 import _ from 'lodash';
-import puppeteer from 'puppeteer-core';
 import shortid from 'shortid';
 import logger from './logger';
-import env from './env';
 import { ScaperScrapingResult } from 'israeli-bank-scrapers-core/lib/scrapers/base-scraper';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
+import { launchPuppeteer } from './puppeteer';
 
 export default class Scraper {
     constructor(private userId: string) {
@@ -62,12 +61,7 @@ export default class Scraper {
 
     async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
         const results: { [x: string]: ScaperScrapingResult } = {};
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            headless: env.HEADLESS,
-            executablePath: env.PUPPETEER_EXECUTABLE_PATH,
-            channel: env.PUPPETEER_EXECUTABLE_PATH ? undefined : env.PUPPETEER_CHANNEL
-        });
+        const browser = await launchPuppeteer();
 
         for (const scraperConfig of scrapers) {
             logger.log(`Scraping ${scraperConfig.companyId}`);
