@@ -2353,11 +2353,11 @@ __metadata:
   linkType: hard
 
 "json5@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "json5@npm:2.2.1"
+  version: 2.2.3
+  resolution: "json5@npm:2.2.3"
   bin:
     json5: lib/cli.js
-  checksum: 74b8a23b102a6f2bf2d224797ae553a75488b5adbaee9c9b6e5ab8b510a2fc6e38f876d4c77dea672d4014a44b2399e15f2051ac2b37b87f74c0c7602003543b
+  checksum: 2a7436a93393830bce797d4626275152e37e877b265e94ca69c99e3d20c2b9dab021279146a39cdb700e71b2dd32a4cebd1514cd57cee102b1af906ce5040349
   languageName: node
   linkType: hard
 
@@ -3266,7 +3266,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
   version: 1.11.0
-  resolution: "resolve@patch:resolve@npm%3A1.11.0#~builtin<compat/resolve>::version=1.11.0&hash=07638b"
+  resolution: "resolve@patch:resolve@npm%3A1.11.0#~builtin<compat/resolve>::version=1.11.0&hash=c3c19d"
   dependencies:
     path-parse: ^1.0.6
   checksum: a84335c055583bccca988ebefcfffee93adabc9dc9667b7e822626336403610d9d2a71ea80e4c44fedfcadf3e343a0b8d665a965a91a6840e381362b659ebb1b
@@ -3890,11 +3890,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.3#~builtin<compat/typescript>":
   version: 4.9.3
-  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=701156"
+  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ef65c22622d864497d0a0c5db693523329b3284c15fe632e93ad9aa059e8dc38ef3bd767d6f26b1e5ecf9446f49bd0f6c4e5714a2eeaf352805dc002479843d1
+  checksum: 67ca21a387c0572f1c04936e638dde7782c5aa520c3754aadc7cc9b7c915da9ebc3e27c601bfff4ccb7d7264e82dce6d277ada82ec09dc75024349e0ef64926d
   languageName: node
   linkType: hard
 
