@@ -42,6 +42,7 @@
         "runCommand:dev": "ts-node --files src/runCommand.ts",
         "scrape": "yarn runCommand scrape",
         "configure": "yarn runCommand configure",
+        "getOtpContext": "yarn runCommand getOtpContext",
         "changeids": "yarn runCommand changeIds",
         "startWeb": "yarn runCommand startWeb",
         "startWeb:dev": "yarn runCommand:dev startWeb",

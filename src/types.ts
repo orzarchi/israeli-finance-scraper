@@ -53,7 +53,10 @@ export type FinanciaAccountConfiguration = {
     }
         | { userCode: string; password: string }
         | { id: string; password: string; card6Digits: string }
-        | { id: string; password: string; num: string };
+        | { id: string; password: string; num: string }
+        | {
+        email: string, password: string, phoneNumber?: string, otpPermanentToken?: string;
+    };
 };
 
 export type YnabAccount = {

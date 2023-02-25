@@ -1,54 +1,12 @@
-import Db from "../Db";
-import { getAccounts, getBudgets } from "../ynab";
-import { prompt } from "enquirer";
-import _ from "lodash";
-import { FinanciaAccountConfiguration, IPersistedConfiguration } from "../types";
+import Db from '../Db';
+import { getAccounts, getBudgets } from '../ynab';
+import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
 import { Configuration } from '../Configuration';
 import { CompanyTypes } from 'israeli-bank-scrapers-core';
-
-async function question(message: string): Promise<string> {
-    const answers = await questions(message);
-    return answers[0];
-}
-async function questions(...messages: string[]): Promise<string[]> {
-    const responses = (await prompt(
-        messages.map((message: string, index: number) => ({
-            type: 'input',
-            name: 'answer' + index,
-            message
-        }))
-    )) as { [x: string]: string };
-
-    return _(responses)
-        .keys()
-        .sort()
-        .value()
-        .map((x: string) => responses[x]);
-}
-
-async function choice(message: string, choices: string[]) {
-    const result = await prompt({
-        type: 'select',
-        name: 'choices',
-        choices,
-        message
-    });
-
-    return (result as { [x: string]: string }).choices;
-}
-
-async function confirm(message: string) {
-    const result = await prompt({
-        type: 'confirm',
-        name: 'answer',
-        message
-    });
-
-    return (result as { answer: boolean }).answer;
-}
+import { choice, confirm, question } from './cli';
 
 async function configureYnab(configurationToEdit: Partial<IPersistedConfiguration>) {
-    const answer = await confirm("Configure YNAB integration?");
+    const answer = await confirm('Configure YNAB integration?');
     if (!answer) {
         return;
     }
@@ -131,7 +89,7 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
                 payingYnabAccountId: payingYnabAccountId || undefined
             });
             moreAccountsRequired = await confirm(
-                `Add another account for provider for ${financialAccountConfiguration.id}`
+                `Add another account (cc/bank account) for credentials for ${financialAccountConfiguration.id} provider?`
             );
         }
 
@@ -191,6 +149,12 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
                 credentials = {
                     id: await question('Id number?'),
                     card6Digits: await question('Card last 6 digits?'),
+                    password: await question('Password?')
+                };
+                break;
+            case CompanyTypes.oneZero:
+                credentials = {
+                    email: await question('Email?'),
                     password: await question('Password?')
                 };
                 break;

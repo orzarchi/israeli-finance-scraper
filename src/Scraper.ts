@@ -3,7 +3,7 @@ import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './t
 import _ from 'lodash';
 import shortid from 'shortid';
 import logger from './logger';
-import { ScaperScrapingResult } from 'israeli-bank-scrapers-core/lib/scrapers/base-scraper';
+import { ScraperScrapingResult } from 'israeli-bank-scrapers-core';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
@@ -46,11 +46,11 @@ export default class Scraper {
         };
     }
 
-    private mapScrape(scrape: ScaperScrapingResult, providerName: CompanyTypes): PersistedTransaction[] {
+    private mapScrape(scrape: ScraperScrapingResult, providerName: CompanyTypes): PersistedTransaction[] {
         return _.flatten((scrape.accounts || []).map(x => this.mapAccount(x, providerName)));
     }
 
-    private processResults(results: { [x: string]: ScaperScrapingResult }): PersistedTransaction[] {
+    private processResults(results: { [x: string]: ScraperScrapingResult }): PersistedTransaction[] {
         return _.flatten(
             Object.keys(results).map(providerName => {
                 const scrape = results[providerName];
@@ -60,7 +60,7 @@ export default class Scraper {
     }
 
     async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
-        const results: { [x: string]: ScaperScrapingResult } = {};
+        const results: { [x: string]: ScraperScrapingResult } = {};
         const browser = await launchPuppeteer();
 
         for (const scraperConfig of scrapers) {

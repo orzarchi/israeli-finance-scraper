@@ -4,6 +4,7 @@ import { startBot } from './commands/startBot';
 import { configure } from './commands/configure';
 import moment from 'moment-timezone';
 import { startWeb } from './commands/startWeb';
+import { getOtpContext } from './commands/getOtpContext';
 
 const commandName = process.argv[2];
 let command;
@@ -28,6 +29,9 @@ switch (commandName) {
         break;
     case 'configure':
         command = configure;
+        break;
+    case 'getOtpContext':
+        command = getOtpContext;
         break;
 
     default:
