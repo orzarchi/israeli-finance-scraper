@@ -3,7 +3,7 @@ import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './t
 import _ from 'lodash';
 import shortid from 'shortid';
 import logger from './logger';
-import { ScraperScrapingResult } from 'israeli-bank-scrapers-core';
+import { ScraperScrapingResult, ScraperCredentials } from 'israeli-bank-scrapers-core';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
@@ -76,16 +76,16 @@ export default class Scraper {
                 browser
             });
 
-            const ScaperScrapingResult = (await scraper.scrape(scraperConfig.credentials));
+            const scraperScrapingResult = (await scraper.scrape(scraperConfig.credentials as ScraperCredentials));
 
-            if (ScaperScrapingResult.success) {
-                ScaperScrapingResult.accounts && ScaperScrapingResult.accounts.forEach(account => {
+            if (scraperScrapingResult.success) {
+                scraperScrapingResult.accounts && scraperScrapingResult.accounts.forEach(account => {
                     logger.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
                 });
 
-                results[scraperConfig.companyId] = ScaperScrapingResult;
+                results[scraperConfig.companyId] = scraperScrapingResult;
             } else {
-                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${ScaperScrapingResult.errorMessage || ScaperScrapingResult.errorType}`);
+                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${scraperScrapingResult.errorMessage || scraperScrapingResult.errorType}`);
             }
         }
 

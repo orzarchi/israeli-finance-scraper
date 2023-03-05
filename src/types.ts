@@ -55,7 +55,7 @@ export type FinanciaAccountConfiguration = {
         | { id: string; password: string; card6Digits: string }
         | { id: string; password: string; num: string }
         | {
-        email: string, password: string, phoneNumber?: string, otpPermanentToken?: string;
+        email: string, password: string, phoneNumber?: string, otpLongTermToken?: string;
     };
 };
 

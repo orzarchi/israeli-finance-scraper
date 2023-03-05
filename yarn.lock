@@ -1121,7 +1121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4.3.4, debug@npm:^4.0.0, debug@npm:^4.3.2":
+"debug@npm:4.3.4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.3.2":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
   dependencies:
@@ -1179,6 +1179,13 @@ __metadata:
   version: 0.0.1056733
   resolution: "devtools-protocol@npm:0.0.1056733"
   checksum: d81b474d656d5cdfa0ec6afb8725e8707ba8b38ad7fc68abe05e5accdef1967a6bc1a1545744c8b69cb22ec5d3b3e5225d4bc0313b6a017c94a32a43f3d2c3d3
+  languageName: node
+  linkType: hard
+
+"devtools-protocol@npm:0.0.842839":
+  version: 0.0.842839
+  resolution: "devtools-protocol@npm:0.0.842839"
+  checksum: bea3c263c8f956a8a1d40e812f9e6659b397ab0865ca7399e7985e187992793e996e0742f00a71cd645db5612be81eaafda1e1a8f10378cecaf3779c2b9ba925
   languageName: node
   linkType: hard
 
@@ -1424,7 +1431,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extract-zip@npm:2.0.1":
+"extract-zip@npm:2.0.1, extract-zip@npm:^2.0.0":
   version: 2.0.1
   resolution: "extract-zip@npm:2.0.1"
   dependencies:
@@ -1572,6 +1579,16 @@ __metadata:
     fast-querystring: ^1.0.0
     safe-regex2: ^2.0.0
   checksum: eec65665c34fbfeb323a52989de51b106485ec0d6182996fc70d42570a73f88b9637572bb8ae89332532da9ca856615e195768116aeede75d73b929b9534bf7a
+  languageName: node
+  linkType: hard
+
+"find-up@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "find-up@npm:4.1.0"
+  dependencies:
+    locate-path: ^5.0.0
+    path-exists: ^4.0.0
+  checksum: 4c172680e8f8c1f78839486e14a43ef82e9decd0e74145f40707cc42e7420506d5ec92d9a11c22bd2c48fb0c384ea05dd30e10dd152fefeec6f2f75282a8b844
   languageName: node
   linkType: hard
 
@@ -2250,9 +2267,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"israeli-bank-scrapers-core@npm:latest":
-  version: 3.2.0
-  resolution: "israeli-bank-scrapers-core@npm:3.2.0"
+"israeli-bank-scrapers-core@portal:/Users/or/sandbox/israeli-bank-scrapers::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "israeli-bank-scrapers-core@portal:/Users/or/sandbox/israeli-bank-scrapers::locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
     build-url: ^2.0.0
     core-js: ^3.1.4
@@ -2263,11 +2280,10 @@ __metadata:
     moment: ^2.22.2
     moment-timezone: ^0.5.37
     node-fetch: ^2.2.0
-    puppeteer-core: ^6.0.0
+    puppeteer: ^6.0.0
     uuid: ^3.3.2
-  checksum: 8ac2585b1bcd42c0cce5c4419a3fdfddc1bb60094174b088289284953710456ef9375e77fa5a3de153ad16c8dca6c07a10a1cef9d52bd7a3c97c840f11f84756
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "jmespath@npm:0.16.0":
   version: 0.16.0
@@ -2443,6 +2459,15 @@ __metadata:
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
   checksum: 0c37f9f7fa212b38912b7145e1cd16a5f3cd34d782441c3e6ca653485d326f58b3caccda66efce1c5812bde4961bbde3374fae4b0d11bf1226152337f3894aa5
+  languageName: node
+  linkType: hard
+
+"locate-path@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "locate-path@npm:5.0.0"
+  dependencies:
+    p-locate: ^4.1.0
+  checksum: 83e51725e67517287d73e1ded92b28602e3ae5580b301fe54bfb76c0c723e3f285b19252e375712316774cf52006cb236aed5704692c32db0d5d089b69696e30
   languageName: node
   linkType: hard
 
@@ -2836,6 +2861,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-limit@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "p-limit@npm:2.3.0"
+  dependencies:
+    p-try: ^2.0.0
+  checksum: 84ff17f1a38126c3314e91ecfe56aecbf36430940e2873dadaa773ffe072dc23b7af8e46d4b6485d302a11673fe94c6b67ca2cfbb60c989848b02100d0594ac1
+  languageName: node
+  linkType: hard
+
 "p-limit@npm:^3.0.1, p-limit@npm:^3.0.2":
   version: 3.1.0
   resolution: "p-limit@npm:3.1.0"
@@ -2845,12 +2879,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-locate@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "p-locate@npm:4.1.0"
+  dependencies:
+    p-limit: ^2.2.0
+  checksum: 513bd14a455f5da4ebfcb819ef706c54adb09097703de6aeaa5d26fe5ea16df92b48d1ac45e01e3944ce1e6aa2a66f7f8894742b8c9d6e276e16cd2049a2b870
+  languageName: node
+  linkType: hard
+
 "p-locate@npm:^5.0.0":
   version: 5.0.0
   resolution: "p-locate@npm:5.0.0"
   dependencies:
     p-limit: ^3.0.2
   checksum: 1623088f36cf1cbca58e9b61c4e62bf0c60a07af5ae1ca99a720837356b5b6c5ba3eb1b2127e47a06865fee59dd0453cad7cc844cda9d5a62ac1a5a51b7c86d3
+  languageName: node
+  linkType: hard
+
+"p-try@npm:^2.0.0":
+  version: 2.2.0
+  resolution: "p-try@npm:2.2.0"
+  checksum: f8a8e9a7693659383f06aec604ad5ead237c7a261c18048a6e1b5b85a5f8a067e469aa24f5bc009b991ea3b058a87f5065ef4176793a200d4917349881216cae
   languageName: node
   linkType: hard
 
@@ -2962,6 +3012,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pkg-dir@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "pkg-dir@npm:4.2.0"
+  dependencies:
+    find-up: ^4.0.0
+  checksum: 9863e3f35132bf99ae1636d31ff1e1e3501251d480336edb1c211133c8d58906bed80f154a1d723652df1fda91e01c7442c2eeaf9dc83157c7ae89087e43c8d6
+  languageName: node
+  linkType: hard
+
 "pkg-dir@npm:^5.0.0":
   version: 5.0.0
   resolution: "pkg-dir@npm:5.0.0"
@@ -3020,6 +3079,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"progress@npm:^2.0.1":
+  version: 2.0.3
+  resolution: "progress@npm:2.0.3"
+  checksum: f67403fe7b34912148d9252cb7481266a354bd99ce82c835f79070643bb3c6583d10dbcfda4d41e04bbc1d8437e9af0fb1e1f2135727878f5308682a579429b7
+  languageName: node
+  linkType: hard
+
 "protobufjs@npm:^6.10.2, protobufjs@npm:^6.8.6, protobufjs@npm:^6.8.8":
   version: 6.10.2
   resolution: "protobufjs@npm:6.10.2"
@@ -3073,7 +3139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:1.1.0":
+"proxy-from-env@npm:1.1.0, proxy-from-env@npm:^1.0.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
@@ -3130,6 +3196,26 @@ __metadata:
     unbzip2-stream: 1.4.3
     ws: 8.10.0
   checksum: fe57b7755c39df1d196724628448d044fafcf55f8ca03b3d0ca65a319ff42c8213aa9f901e5744ef7c4237159310a7776ef358db839382907d27eac9a4b54ef3
+  languageName: node
+  linkType: hard
+
+"puppeteer@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "puppeteer@npm:6.0.0"
+  dependencies:
+    debug: ^4.1.0
+    devtools-protocol: 0.0.842839
+    extract-zip: ^2.0.0
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.1
+    pkg-dir: ^4.2.0
+    progress: ^2.0.1
+    proxy-from-env: ^1.0.0
+    rimraf: ^3.0.2
+    tar-fs: ^2.0.0
+    unbzip2-stream: ^1.3.3
+    ws: ^7.2.3
+  checksum: d2668c8b90a7eb80e6dfc2096b78b8cf2227877ed73515d41f86875aa5181301d6f907581f1d414ee18b1a8f6af98513b3b03bebc285e4d466d35477758bdce9
   languageName: node
   linkType: hard
 
@@ -3310,7 +3396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:3.0.2":
+"rimraf@npm:3.0.2, rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
@@ -3348,6 +3434,7 @@ __metadata:
     moment-timezone: ^0.5.33
     prettier: ^1.16.4
     proxy-chain: ^2.2.0
+    puppeteer-core: 19.3.0
     shortid: ^2.2.14
     telegraf: ^3.30.1
     ts-node: ^8.0.3
@@ -3668,7 +3755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-fs@npm:2.1.1":
+"tar-fs@npm:2.1.1, tar-fs@npm:^2.0.0":
   version: 2.1.1
   resolution: "tar-fs@npm:2.1.1"
   dependencies:
@@ -3898,7 +3985,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unbzip2-stream@npm:1.4.3":
+"unbzip2-stream@npm:1.4.3, unbzip2-stream@npm:^1.3.3":
   version: 1.4.3
   resolution: "unbzip2-stream@npm:1.4.3"
   dependencies:
@@ -4114,6 +4201,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 3a32e15dffe633dd5ce99659793dbcf1440ea25d2da1060c88cbd22efdfb7986a6933e68aaa4b098fc3f1f7870cb386afd378a1ceaca4b31748471576d5a8b52
+  languageName: node
+  linkType: hard
+
+"ws@npm:^7.2.3":
+  version: 7.5.9
+  resolution: "ws@npm:7.5.9"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: c3c100a181b731f40b7f2fddf004aa023f79d64f489706a28bc23ff88e87f6a64b3c6651fbec3a84a53960b75159574d7a7385709847a62ddb7ad6af76f49138
   languageName: node
   linkType: hard
 

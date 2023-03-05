@@ -1,6 +1,6 @@
 import Db from '../Db';
 import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
-import { CompanyTypes, createScraper, TwoFactorAuthScraper, OneZeroScraper } from 'israeli-bank-scrapers-core';
+import { CompanyTypes, createScraper, OneZeroScraper } from 'israeli-bank-scrapers-core';
 import { choice, question, confirm } from './cli';
 
 async function configureAccountOtpContext(configurationToEdit: Partial<IPersistedConfiguration>, relevantAccount: FinanciaAccountConfiguration) {
@@ -32,7 +32,7 @@ async function configureAccountOtpContext(configurationToEdit: Partial<IPersiste
         verbose: false,
         futureMonthsToScrape: 2,
         startDate: new Date()
-    }) as TwoFactorAuthScraper;
+    });
 
     const result = await (scraper as OneZeroScraper).login({
         email: relevantAccount.credentials.email,
@@ -50,12 +50,10 @@ async function configureAccountOtpContext(configurationToEdit: Partial<IPersiste
 
     if (!result.success) {
         console.error(JSON.stringify(result));
-        return;
+        throw new Error(result.errorMessage);
     }
 
-    const { success } = await (scraper as OneZeroScraper).getLongTermTwoFactorToken('otpCode');
-
-    relevantAccount.credentials.otpPermanentToken = result.persistentOtpToken;
+    relevantAccount.credentials.otpLongTermToken = result.persistentOtpToken;
 }
 
 export const getOtpContext = async function() {
