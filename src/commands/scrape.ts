@@ -25,6 +25,11 @@ export const scrape = async function() {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
+
+            if (env.SKIP_PROVIDERS.length && env.SKIP_PROVIDERS.includes(scraper.companyId)) {
+                continue;
+            }
+
             if (
                 env.ONLY_ACCOUNTS.length &&
                 !_.intersection(env.ONLY_ACCOUNTS, scraper.accounts.map(x => x.accountName)).length
