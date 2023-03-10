@@ -7,16 +7,23 @@ import { CollectionReference } from '@google-cloud/firestore';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
 import logger from './logger';
 import moment from 'moment-timezone';
+import { CompanyTypes } from 'israeli-bank-scrapers-core';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount)
 });
+
+const BATCH_SIZE = 25;
 
 export default class Db {
     private db: admin.firestore.Firestore;
 
     constructor() {
         this.db = admin.firestore();
+    }
+
+    private getCollection() {
+        return this.db.collection('transactions');
     }
 
     async addTransactions(transactions: PersistedTransaction[], ignoreExistingTransactions: boolean = false) {
@@ -26,7 +33,7 @@ export default class Db {
 
         logger.log(`Persisting ${transactions.length} transactions`);
 
-        const collection = this.db.collection('transactions');
+        const collection = this.getCollection();
         const uniqueIds = this.getUniqueIdsForBatch(transactions);
 
         let newTransactions = transactions;
@@ -55,6 +62,13 @@ export default class Db {
         );
 
         return newTransactions.length;
+    }
+
+    async deleteTransactions(transactionIds: string[]) {
+        const uniqueIds = await this.getCollection().where('id', 'in', transactionIds).get();
+        for (const chunk of _.chunk(uniqueIds.docs, BATCH_SIZE)) {
+            await Promise.all(chunk.map(x => x.ref.delete()));
+        }
     }
 
     private getUniqueIdsForBatch(transactions: PersistedTransaction[]) {
@@ -132,18 +146,21 @@ export default class Db {
     async getTransactions(
         startDate: Date,
         endDate?: Date,
-        ignorePending: Boolean = true
+        provider?: CompanyTypes
     ): Promise<PersistedTransaction[]> {
-        const collection = this.db.collection('transactions');
+        const collection = this.getCollection();
         let query = collection.orderBy('date').where('date', '>=', startDate);
 
         if (endDate) {
             query = query.where('date', '<=', endDate);
         }
 
-        if (ignorePending) {
-            query = query.where('status', '==', 'completed');
+        if (provider) {
+            query = query.where('provider', '==', provider);
         }
+
+        // Ignore pending
+        query = query.where('status', '==', 'completed');
 
         const result = await query.get();
         return result.docs.map(x => this.mapDocument(x));
