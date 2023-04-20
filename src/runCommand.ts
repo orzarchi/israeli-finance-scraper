@@ -34,4 +34,5 @@ switch (commandName) {
         throw new Error(`Unknown command ${commandName}`);
 }
 
+// @ts-ignore
 command().catch((x: Error) => console.error(x));

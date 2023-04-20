@@ -1,11 +1,10 @@
-import { CompanyTypes, createScraper } from 'israeli-bank-scrapers';
+import { CompanyTypes, createScraper, ScaperScrapingResult } from 'israeli-bank-scrapers';
 import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './types';
 import _ from 'lodash';
 import puppeteer from 'puppeteer';
 import shortid from 'shortid';
 import logger from './logger';
 import env from './env';
-import { ScaperScrapingResult } from 'israeli-bank-scrapers/lib/scrapers/base-scraper';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers/lib/transactions';
 import moment from 'moment-timezone';
 
@@ -25,7 +24,7 @@ export default class Scraper {
         // Assume serialized UTC date strings
         const date = moment(tx.date).toDate();
         const processedDate = moment(tx.processedDate).toDate();
-        if (tx.chargedAmount && moment(date).hours() > 0) {
+        if (!this.whitelistedProvider(providerName) && tx.chargedAmount && moment(date).hours() > 0) {
             logger.warn(`${providerName} tx date has hour - possible incorrect utc handling`);
         }
 
@@ -45,6 +44,10 @@ export default class Scraper {
             userId: this.userId,
             status: tx.status
         };
+    }
+
+    private whitelistedProvider(providerName: CompanyTypes) {
+        return providerName === CompanyTypes.visaCal;
     }
 
     private mapScrape(scrape: ScaperScrapingResult, providerName: CompanyTypes): PersistedTransaction[] {

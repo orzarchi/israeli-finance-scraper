@@ -6,7 +6,7 @@ const parseList = (x?:string) => (x || '').replace(' ','').split(',').filter(y=>
 export default {
     ONLY_PROVIDERS: parseList(process.env['ONLY_PROVIDERS']) as CompanyTypes[],
     ONLY_ACCOUNTS: parseList(process.env['ONLY_ACCOUNTS']) as string[],
-    MONTHS_TO_SCRAPE: parseInt(process.env['MONTHS_TO_SCRAPE'] || '1'),
+    MONTHS_TO_SCRAPE: parseInt(process.env['MONTHS_TO_SCRAPE'] || '2'),
     BOT_TOKEN: process.env['BOT_TOKEN'],
     CHAT_ID: process.env['CHAT_ID'],
     HEROKU_PORT: parseInt(process.env['PORT'] || '5000'),
