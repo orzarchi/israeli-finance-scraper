@@ -21,6 +21,7 @@
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.33",
         "proxy-chain": "^2.2.0",
+        "puppeteer-core": "19.8",
         "shortid": "^2.2.14",
         "ts-node": "^8.0.3",
         "tsconfig-paths": "^4.1.1",
@@ -55,6 +56,6 @@
     },
     "packageManager": "yarn@3.3.0",
     "resolutions": {
-        "israeli-bank-scrapers-core/puppeteer-core": "19.3.0"
+        "israeli-bank-scrapers-core/puppeteer-core": "19.8.0"
     }
 }
