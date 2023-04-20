@@ -72,7 +72,7 @@ export default class Scraper {
                 combineInstallments: false,
                 showBrowser: true,
                 verbose: false,
-                futureMonthsToScrape: 2,
+                futureMonthsToScrape: 3,
                 browser
             });
 
