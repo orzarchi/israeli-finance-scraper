@@ -1331,15 +1331,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"encoding@npm:^0.1.11":
-  version: 0.1.12
-  resolution: "encoding@npm:0.1.12"
-  dependencies:
-    iconv-lite: ~0.4.13
-  checksum: 96df688a93821e866bea19dd689863b1f9e07ef1c15321dde1fbcb8008ed7c785c48b248c4def01367780d2637c459b8ffa988de9647afe4200b003b1ac369ef
-  languageName: node
-  linkType: hard
-
 "end-of-stream@npm:^1.0.0, end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.1":
   version: 1.4.4
   resolution: "end-of-stream@npm:1.4.4"
@@ -1623,6 +1614,15 @@ __metadata:
   dependencies:
     pend: ~1.2.0
   checksum: c8585fd5713f4476eb8261150900d2cb7f6ff2d87f8feb306ccc8a1122efd152f1783bdb2b8dc891395744583436bfd8081d8e63ece0ec8687eeefea394d4ff2
+  languageName: node
+  linkType: hard
+
+"fetch-ponyfill@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "fetch-ponyfill@npm:7.1.0"
+  dependencies:
+    node-fetch: ~2.6.1
+  checksum: 7fd497dd5f7db890e80193de5bc1cd0115a62400272cd9a992849288e66886fcdb0724ea1ed161be7b8db2daeafda8c58d0259acdda42d6561155dbcdbb0720a
   languageName: node
   linkType: hard
 
@@ -2161,7 +2161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.4.24, iconv-lite@npm:~0.4.13":
+"iconv-lite@npm:0.4.24":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
   dependencies:
@@ -2290,13 +2290,6 @@ __metadata:
   version: 0.1.4
   resolution: "is-stream-ended@npm:0.1.4"
   checksum: 56cbc9cfa0a77877777a3df9e186abb5b0ca73dcbcaf0fd87ed573fb8f8e61283abec0fc072c9e3412336edc04449439b8a128d2bcc6c2797158de5465cfaf85
-  languageName: node
-  linkType: hard
-
-"is-stream@npm:^1.0.1":
-  version: 1.1.0
-  resolution: "is-stream@npm:1.1.0"
-  checksum: 063c6bec9d5647aa6d42108d4c59723d2bd4ae42135a2d4db6eadbd49b7ea05b750fd69d279e5c7c45cf9da753ad2c00d8978be354d65aa9f6bb434969c6a2ae
   languageName: node
   linkType: hard
 
@@ -2869,20 +2862,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^1.0.1":
-  version: 1.7.3
-  resolution: "node-fetch@npm:1.7.3"
-  dependencies:
-    encoding: ^0.1.11
-    is-stream: ^1.0.1
-  checksum: 3bb0528c05d541316ebe52770d71ee25a6dce334df4231fd55df41a644143e07f068637488c18a5b0c43f05041dbd3346752f9e19b50df50569a802484544d5b
-  languageName: node
-  linkType: hard
-
 "node-fetch@npm:^2.2.0, node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.1":
   version: 2.6.1
   resolution: "node-fetch@npm:2.6.1"
   checksum: 91075bedd57879117e310fbcc36983ad5d699e522edb1ebcdc4ee5294c982843982652925c3532729fdc86b2d64a8a827797a745f332040d91823c8752ee4d7c
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:~2.6.1":
+  version: 2.6.9
+  resolution: "node-fetch@npm:2.6.9"
+  dependencies:
+    whatwg-url: ^5.0.0
+  peerDependencies:
+    encoding: ^0.1.0
+  peerDependenciesMeta:
+    encoding:
+      optional: true
+  checksum: acb04f9ce7224965b2b59e71b33c639794d8991efd73855b0b250921382b38331ffc9d61bce502571f6cc6e11a8905ca9b1b6d4aeb586ab093e2756a1fd190d0
   languageName: node
   linkType: hard
 
@@ -3091,16 +3088,6 @@ __metadata:
   dependencies:
     semver-compare: ^1.0.0
   checksum: d87c41581a2a022fbe25965a97006238cd9b8cbbf49b39f78d262548149a9d30bd2bdf35fec3d810e0001e630cd46ef13c7e19c389dea8de7e64db271a2381bb
-  languageName: node
-  linkType: hard
-
-"portable-fetch@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "portable-fetch@npm:3.0.0"
-  dependencies:
-    node-fetch: ^1.0.1
-    whatwg-fetch: ">=0.10.0"
-  checksum: 4b8a0efc2d26c26923187703ed2616c2124b339aabf4578684aa6584196334b6da5c72e24308da0562053cd1aaa6aed357891ffe1c36b88ba4cdd4baff825a63
   languageName: node
   linkType: hard
 
@@ -3503,7 +3490,7 @@ __metadata:
     tslint-config-prettier: ^1.18.0
     typescript: ^4.9.3
     yn: ^3.1.0
-    ynab: ^1.12.0
+    ynab: ^1.49.0
   dependenciesMeta:
     telegraf:
       optional: true
@@ -4212,13 +4199,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-fetch@npm:>=0.10.0":
-  version: 3.0.0
-  resolution: "whatwg-fetch@npm:3.0.0"
-  checksum: dcb90ab919e742d275c32d397d7480f6981da4c1b49961f0d0a2fa6825325b553fee2d793bc38ed85b9bcc8c50de39802440e2480fe40243067b3dab228c52c3
-  languageName: node
-  linkType: hard
-
 "whatwg-url@npm:^5.0.0":
   version: 5.0.0
   resolution: "whatwg-url@npm:5.0.0"
@@ -4386,12 +4366,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ynab@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "ynab@npm:1.12.0"
+"ynab@npm:^1.49.0":
+  version: 1.49.0
+  resolution: "ynab@npm:1.49.0"
   dependencies:
-    portable-fetch: ^3.0.0
-  checksum: 462d77fc740d0382938d5821c87ab24e017cf23c654038bfe597ea14420637ac54e2e9fd780c86cac2a19c540b176084dff438ff7a68f0e96ff6d85a24fe545d
+    fetch-ponyfill: ^7.1.0
+  checksum: 1ab01fc413e9b9fc873542c8638ab2446a904f0568f42c5fa1be5a942f5cb10b9de8e911fe9277e2696e5cfccfed42034805c9d1a5abd596db15c5aca907698d
   languageName: node
   linkType: hard
 

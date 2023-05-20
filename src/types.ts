@@ -44,6 +44,7 @@ export type FinancialAccountYnabMapping = {
 
 export type FinanciaAccountConfiguration = {
     id: string;
+    disabled?: boolean;
     accounts: Array<FinancialAccountYnabMapping>;
     companyId: CompanyTypes;
     credentials:

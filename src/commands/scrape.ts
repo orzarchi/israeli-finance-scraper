@@ -21,7 +21,7 @@ export const scrape = async function() {
 
     for (const configuration of configurations) {
         logger.log(`Scraping configuration ${configuration.id}`);
-        for (const scraper of configuration.accountsConfig) {
+        for (const scraper of configuration.accountsConfig.filter(x => !x.disabled)) {
             if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
                 continue;
             }
