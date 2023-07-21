@@ -41,7 +41,7 @@ export default class TelegramBot {
     }
 
     public sendMessage(chatId: string, message: string) {
-        return this.bot!.telegram.sendMessage(chatId, message);
+        return this.bot!.telegram.sendMessage(chatId, message.slice(0, 4000));
     }
 
     private _getArg(message?: IncomingMessage) {

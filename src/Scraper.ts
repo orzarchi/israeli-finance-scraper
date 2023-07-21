@@ -24,9 +24,6 @@ export default class Scraper {
         // Assume serialized UTC date strings
         const date = moment(tx.date).toDate();
         const processedDate = moment(tx.processedDate).toDate();
-        if (tx.chargedAmount && moment(date).hours() > 0) {
-            logger.warn(`${providerName} tx date has hour - possible incorrect utc handling`);
-        }
 
         return {
             id: shortid.generate(),
