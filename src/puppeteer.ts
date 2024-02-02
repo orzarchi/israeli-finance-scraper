@@ -1,4 +1,4 @@
-import puppeteer, { Browser } from 'puppeteer-core';
+import puppeteer, { Browser } from 'puppeteer';
 import env from './env';
 import * as proxyChain from 'proxy-chain';
 
@@ -61,8 +61,7 @@ export async function launchPuppeteer(): Promise<Browser> {
     let options = {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: env.HEADLESS,
-        executablePath: env.PUPPETEER_EXECUTABLE_PATH,
-        channel: env.PUPPETEER_EXECUTABLE_PATH ? undefined : env.PUPPETEER_CHANNEL
+        executablePath: env.PUPPETEER_EXECUTABLE_PATH
     };
 
     if (process.env.AWS_LAMBDA_RUNTIME_API) {

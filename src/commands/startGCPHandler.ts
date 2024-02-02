@@ -1,4 +1,4 @@
-import functions from '@google-cloud/functions-framework';
+import * as functions from '@google-cloud/functions-framework';
 import env from '../env';
 import TelegramBot from '../notifications/TelegramBot';
 

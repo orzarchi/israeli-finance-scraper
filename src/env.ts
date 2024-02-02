@@ -1,6 +1,5 @@
 import yn from 'yn';
 import { CompanyTypes } from 'israeli-bank-scrapers-core';
-import { ChromeReleaseChannel } from 'puppeteer-core';
 
 const parseList = (x?: string) =>
     (x || '')
@@ -19,7 +18,6 @@ export default {
     HEROKU_PORT: parseInt(process.env['PORT'] || '5000'),
     HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
     HEADLESS: yn(process.env['HEADLESS'] || true) || false,
-    PUPPETEER_CHANNEL: (process.env['PUPPETEER_CHANNEL'] || 'chrome') as ChromeReleaseChannel,
     PUPPETEER_EXECUTABLE_PATH: process.env['PUPPETEER_EXECUTABLE_PATH'],
     HTTP_PROXY_URL: process.env['HTTP_PROXY_URL']
 };
