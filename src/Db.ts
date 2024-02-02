@@ -1,5 +1,4 @@
-import admin, { ServiceAccount } from 'firebase-admin';
-import serviceAccount from '../firebase-service-account.json';
+import admin from 'firebase-admin';
 import { IPersistedConfiguration, PersistedTransaction } from './types';
 import { Configuration } from './Configuration';
 import _ from 'lodash';
@@ -9,9 +8,7 @@ import logger from './logger';
 import moment from 'moment-timezone';
 import { CompanyTypes } from 'israeli-bank-scrapers-core';
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as ServiceAccount)
-});
+admin.initializeApp();
 
 const BATCH_SIZE = 25;
 
