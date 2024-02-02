@@ -1,7 +1,8 @@
 {
-    "main": "src/functions/scrape/index.js",
+    "main": "dist/commands/startGCPHandler.js",
     "dependencies": {
         "@google-cloud/firestore": "^2.2.1",
+        "@google-cloud/functions-framework": "^3.3.0",
         "@types/lodash": "^4.14.123",
         "@types/minimist": "^1.2.0",
         "@types/moment-timezone": "^0.5.30",
@@ -21,7 +22,7 @@
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.33",
         "proxy-chain": "^2.2.0",
-        "puppeteer-core": "19.8",
+        "puppeteer": "19.8",
         "shortid": "^2.2.14",
         "ts-node": "^8.0.3",
         "tsconfig-paths": "^4.1.1",
@@ -49,7 +50,8 @@
         "startWeb:dev": "yarn runCommand:dev startWeb",
         "startBot": "yarn runCommand startBot",
         "uploadToYnab": "yarn runCommand uploadToYnab",
-        "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json"
+        "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json",
+        "gcp-build": "yarn build && node node_modules/puppeteer/install.js"
     },
     "optionalDependencies": {
         "telegraf": "^3.30.1"

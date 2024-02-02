@@ -41,3 +41,4 @@ firebase-service-account.json
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.cache
