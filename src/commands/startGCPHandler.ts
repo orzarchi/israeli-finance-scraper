@@ -3,7 +3,7 @@ import env from '../env';
 import TelegramBot from '../notifications/TelegramBot';
 
 // Register an HTTP function with the Functions Framework
-functions.http('finanaceScraper', async (req, res) => {
+functions.http('financeScraper', async (req, res) => {
     if (!env.BOT_TOKEN) {
         throw new Error('BOT_TOKEN env var not set!');
     }
