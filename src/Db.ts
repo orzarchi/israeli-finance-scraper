@@ -55,14 +55,16 @@ export default class Db {
 
         logger.log(
             `Finished persisting transactions. ${newTransactionsCount} new, ${transactions.length -
-            newTransactionsCount} updates`
+                newTransactionsCount} updates`
         );
 
         return newTransactions.length;
     }
 
     async deleteTransactions(transactionIds: string[]) {
-        const uniqueIds = await this.getCollection().where('id', 'in', transactionIds).get();
+        const uniqueIds = await this.getCollection()
+            .where('id', 'in', transactionIds)
+            .get();
         for (const chunk of _.chunk(uniqueIds.docs, BATCH_SIZE)) {
             await Promise.all(chunk.map(x => x.ref.delete()));
         }
@@ -140,11 +142,7 @@ export default class Db {
         return uniqueId.replace(/[ /]/g, '');
     }
 
-    async getTransactions(
-        startDate: Date,
-        endDate?: Date,
-        provider?: CompanyTypes
-    ): Promise<PersistedTransaction[]> {
+    async getTransactions(startDate: Date, endDate?: Date, provider?: CompanyTypes): Promise<PersistedTransaction[]> {
         const collection = this.getCollection();
         let query = collection.orderBy('date').where('date', '>=', startDate);
 

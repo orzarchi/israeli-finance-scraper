@@ -33,9 +33,7 @@
     "devDependencies": {
         "@types/aws-lambda": "^8.10.109",
         "aws-lambda": "^1.0.7",
-        "prettier": "^1.16.4",
-        "tslint": "^5.15.0",
-        "tslint-config-prettier": "^1.18.0"
+        "prettier": "^1.16.4"
     },
     "scripts": {
         "build": "./node_modules/.bin/tsc",

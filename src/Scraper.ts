@@ -9,8 +9,7 @@ import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
 
 export default class Scraper {
-    constructor(private userId: string) {
-    }
+    constructor(private userId: string) {}
 
     private removeNonAscii(str: string) {
         return str.replace(/[^\x20-\x7E]+/g, '').trim();
@@ -73,16 +72,23 @@ export default class Scraper {
                 browser
             });
 
-            const scraperScrapingResult = (await scraper.scrape(scraperConfig.credentials as ScraperCredentials));
+            const scraperScrapingResult = await scraper.scrape(scraperConfig.credentials as ScraperCredentials);
 
             if (scraperScrapingResult.success) {
-                scraperScrapingResult.accounts && scraperScrapingResult.accounts.forEach(account => {
-                    logger.log(`found ${account.txns.length} transactions for account number ${account.accountNumber}`);
-                });
+                scraperScrapingResult.accounts &&
+                    scraperScrapingResult.accounts.forEach(account => {
+                        logger.log(
+                            `found ${account.txns.length} transactions for account number ${account.accountNumber}`
+                        );
+                    });
 
                 results[scraperConfig.companyId] = scraperScrapingResult;
             } else {
-                logger.log(`failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts.map(x => x.accountName).join(', ')}- ${scraperScrapingResult.errorMessage || scraperScrapingResult.errorType}`);
+                logger.log(
+                    `failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts
+                        .map(x => x.accountName)
+                        .join(', ')}- ${scraperScrapingResult.errorMessage || scraperScrapingResult.errorType}`
+                );
             }
         }
 

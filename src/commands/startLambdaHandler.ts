@@ -26,7 +26,6 @@ export const lambdaHandler = async (event: APIGatewayEvent): Promise<APIGatewayP
             },
             body: JSON.stringify({ success: true })
         };
-
     } catch (e) {
         return {
             statusCode: 500,

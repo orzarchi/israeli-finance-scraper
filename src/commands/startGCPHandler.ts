@@ -1,6 +1,6 @@
-import functions from "@google-cloud/functions-framework";
-import env from "../env";
-import TelegramBot from "../notifications/TelegramBot";
+import functions from '@google-cloud/functions-framework';
+import env from '../env';
+import TelegramBot from '../notifications/TelegramBot';
 
 // Register an HTTP function with the Functions Framework
 functions.http('finanaceScraper', async (req, res) => {
@@ -20,7 +20,6 @@ functions.http('finanaceScraper', async (req, res) => {
         });
 
         res.send('OK');
-
     } catch (e) {
         res.status(500).send('Error');
     }

@@ -3,7 +3,7 @@ import { PersistedTransaction } from './types';
 import ClearedEnum = TransactionSummary.ClearedEnum;
 import _ from 'lodash';
 import { readCsv, writeCsv } from './files';
-import logger from "./logger";
+import logger from './logger';
 import moment from 'moment-timezone';
 
 function createYnabTransaction(
@@ -16,7 +16,9 @@ function createYnabTransaction(
         amount: Math.round(transaction.chargedAmount * 1000),
         approved: false,
         cleared: ClearedEnum.Cleared,
-        date: moment(transaction.date).tz('Asia/Jerusalem').format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+        date: moment(transaction.date)
+            .tz('Asia/Jerusalem')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
         import_id: transaction.id,
         memo: transaction.memo,
         payee_name: !payeeId ? transaction.description : undefined,
@@ -31,12 +33,10 @@ export async function uploadTransactions(
     transactions: PersistedTransaction[],
     transferAccountId?: string | null
 ) {
-
     // const transferAccountLogString = transferAccountId ? ` (Transferring to account ${transferAccountId})` : '';
     // logger.debug(`Uploading ${transactions.length} transactions to budget ${budgetId}${transferAccountLogString}`);
 
     const ynabAPI = new YNABApi(ynabApiKey);
-
 
     const ynabTransactions = transactions.map(x => createYnabTransaction(accountId, x, transferAccountId));
     const response = await ynabAPI.transactions.createTransactions(budgetId, {
@@ -44,7 +44,9 @@ export async function uploadTransactions(
     });
     let uploadedTransactionIds = response.data.transaction_ids;
     if (uploadedTransactionIds.length) {
-        logger.log(`Uploaded ${uploadedTransactionIds.length} new transactions to provider ${transactions[0].provider}`);
+        logger.log(
+            `Uploaded ${uploadedTransactionIds.length} new transactions to provider ${transactions[0].provider}`
+        );
     } else {
         logger.log(`No new transaction for provider ${transactions[0].provider}`);
     }

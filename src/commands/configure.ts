@@ -11,28 +11,25 @@ async function configureYnab(configurationToEdit: Partial<IPersistedConfiguratio
         return;
     }
 
-    console.info("YNAB integration:");
+    console.info('YNAB integration:');
 
     if (!configurationToEdit.ynabApiKey) {
-        configurationToEdit.ynabApiKey = await question("YNAB API Key?");
+        configurationToEdit.ynabApiKey = await question('YNAB API Key?');
     }
     const budgets = await getBudgets(configurationToEdit.ynabApiKey);
 
-    const budgetName = await choice(
-        "YNAB Budget Name?",
-        budgets.map(x => x.name),
-    );
+    const budgetName = await choice('YNAB Budget Name?', budgets.map(x => x.name));
 
-    const budget = budgets.filter((x) => x.name === budgetName);
+    const budget = budgets.filter(x => x.name === budgetName);
 
-    configurationToEdit.ynabBudgets = budget.map((x) => ({ id: x.id, name: x.name, accounts: [] }));
+    configurationToEdit.ynabBudgets = budget.map(x => ({ id: x.id, name: x.name, accounts: [] }));
     const firstBudget = configurationToEdit.ynabBudgets[0];
 
     const accounts = await getAccounts(configurationToEdit.ynabApiKey, firstBudget.id);
-    firstBudget.accounts = accounts.map((x) => ({
+    firstBudget.accounts = accounts.map(x => ({
         id: x.id,
         name: x.name,
-        transferAccountId: x.transfer_payee_id,
+        transferAccountId: x.transfer_payee_id
     }));
 }
 
@@ -89,7 +86,9 @@ async function configureScrapersYnabMapping(configurationToEdit: Partial<IPersis
                 payingYnabAccountId: payingYnabAccountId || undefined
             });
             moreAccountsRequired = await confirm(
-                `Add another account (cc/bank account) for credentials for ${financialAccountConfiguration.id} provider?`
+                `Add another account (cc/bank account) for credentials for ${
+                    financialAccountConfiguration.id
+                } provider?`
             );
         }
 

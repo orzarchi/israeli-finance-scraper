@@ -29,11 +29,11 @@ export async function startWeb() {
         running = true;
         bot.scrape(async x => {
             await bot.sendMessage(env.CHAT_ID!, x);
-        }).catch(() => {
-        }).then(() => {
-            running = false;
-        });
-
+        })
+            .catch(() => {})
+            .then(() => {
+                running = false;
+            });
 
         return { success: true };
     });

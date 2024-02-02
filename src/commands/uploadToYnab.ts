@@ -17,8 +17,8 @@ export const uploadToYnab = async function() {
     const transactions = await db.getTransactions(startDate, todayDate);
 
     for (const configuration of configurations) {
-        if (!configuration.hasYnabIntegration){
-            console.info(`Skipping configuration ${configuration.id}, no ynab integration configured`)
+        if (!configuration.hasYnabIntegration) {
+            console.info(`Skipping configuration ${configuration.id}, no ynab integration configured`);
         }
         const accountBatches = _.groupBy(
             transactions.filter(tx => !!configuration.getYnabUploadTarget(tx)),

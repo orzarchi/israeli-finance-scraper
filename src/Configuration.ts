@@ -33,7 +33,7 @@ export class Configuration implements IPersistedConfiguration {
         this.accountsConfig = dto.accountsConfig;
     }
 
-    public get hasYnabIntegration(){
+    public get hasYnabIntegration() {
         return !!this.ynabApiKey && !!this.ynabBudgets && this.ynabBudgets.length > 0;
     }
 
@@ -46,7 +46,7 @@ export class Configuration implements IPersistedConfiguration {
     }
 
     public getYnabUploadTarget(transaction: PersistedTransaction): YnabUploadTarget | null {
-        const accountConfiguration = _.flatMap(this.accountsConfig, x => x.accounts||[]).find(
+        const accountConfiguration = _.flatMap(this.accountsConfig, x => x.accounts || []).find(
             x => this.removeNonAscii(x.accountName) === this.removeNonAscii(transaction.account)
         );
 
@@ -68,8 +68,8 @@ export class Configuration implements IPersistedConfiguration {
         finanacialAccountYnabMapping: FinancialAccountYnabMapping,
         ynabAccounts: YnabAccount[]
     ) {
-        const matchingDescription = this.creditCardPaymentDescriptions.find(
-            x => x.description.includes(transaction.description)
+        const matchingDescription = this.creditCardPaymentDescriptions.find(x =>
+            x.description.includes(transaction.description)
         );
         if (!matchingDescription) {
             return;

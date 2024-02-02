@@ -2,7 +2,11 @@ import yn from 'yn';
 import { CompanyTypes } from 'israeli-bank-scrapers-core';
 import { ChromeReleaseChannel } from 'puppeteer-core';
 
-const parseList = (x?: string) => (x || '').replace(' ', '').split(',').filter(y => !!y);
+const parseList = (x?: string) =>
+    (x || '')
+        .replace(' ', '')
+        .split(',')
+        .filter(y => !!y);
 
 export default {
     SKIP_PROVIDERS: parseList(process.env['SKIP_PROVIDERS']) as CompanyTypes[],

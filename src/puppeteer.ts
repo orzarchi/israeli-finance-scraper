@@ -56,7 +56,6 @@ const lambdaOptions = {
 };
 
 export async function launchPuppeteer(): Promise<Browser> {
-
     const proxyUrl = await proxyUrlPromise;
 
     let options = {
@@ -65,7 +64,6 @@ export async function launchPuppeteer(): Promise<Browser> {
         executablePath: env.PUPPETEER_EXECUTABLE_PATH,
         channel: env.PUPPETEER_EXECUTABLE_PATH ? undefined : env.PUPPETEER_CHANNEL
     };
-
 
     if (process.env.AWS_LAMBDA_RUNTIME_API) {
         options = {
@@ -77,7 +75,6 @@ export async function launchPuppeteer(): Promise<Browser> {
     if (proxyUrl) {
         options.args.push(`--proxy-server=${proxyUrl}`);
     }
-
 
     return puppeteer.launch(options);
 }

@@ -3,7 +3,10 @@ import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types'
 import { CompanyTypes, createScraper, OneZeroScraper } from 'israeli-bank-scrapers-core';
 import { choice, question, confirm } from './cli';
 
-async function configureAccountOtpContext(configurationToEdit: Partial<IPersistedConfiguration>, relevantAccount: FinanciaAccountConfiguration) {
+async function configureAccountOtpContext(
+    configurationToEdit: Partial<IPersistedConfiguration>,
+    relevantAccount: FinanciaAccountConfiguration
+) {
     if (relevantAccount.companyId !== CompanyTypes.oneZero) {
         console.error(`Only ${CompanyTypes.oneZero} is supported right now`);
         return;

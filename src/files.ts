@@ -1,9 +1,9 @@
 import parse from 'csv-parse';
 import fs from 'fs';
-import {promisify} from "util";
+import { promisify } from 'util';
 const writeFile = promisify(fs.writeFile);
 
-export function readCsv(file: string):Promise<string[][]> {
+export function readCsv(file: string): Promise<string[][]> {
     return new Promise((resolve, reject) => {
         fs.readFile(file, (err, fileData) => {
             if (err) {
@@ -21,6 +21,6 @@ export function readCsv(file: string):Promise<string[][]> {
     });
 }
 
-export function writeCsv(filePath:string, values:string[][]){
-    return writeFile(filePath,values.map(x=>x.join(',')).join('\n'))
+export function writeCsv(filePath: string, values: string[][]) {
+    return writeFile(filePath, values.map(x => x.join(',')).join('\n'));
 }

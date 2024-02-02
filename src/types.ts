@@ -49,15 +49,18 @@ export type FinanciaAccountConfiguration = {
     companyId: CompanyTypes;
     credentials:
         | {
-        username: string;
-        password: string;
-    }
+              username: string;
+              password: string;
+          }
         | { userCode: string; password: string }
         | { id: string; password: string; card6Digits: string }
         | { id: string; password: string; num: string }
         | {
-        email: string, password: string, phoneNumber?: string, otpLongTermToken?: string;
-    };
+              email: string;
+              password: string;
+              phoneNumber?: string;
+              otpLongTermToken?: string;
+          };
 };
 
 export type YnabAccount = {
