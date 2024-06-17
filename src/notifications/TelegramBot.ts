@@ -1,14 +1,15 @@
-import Telegraf, { ContextMessageUpdate } from 'telegraf';
+import Telegraf from 'telegraf';
 import Db from '../Db';
-import { IncomingMessage } from 'telegraf/typings/telegram-types';
 import { RedirectLog } from './RedirectLog';
 import logger from '../logger';
 import { scrape } from '../commands/scrape';
 import { uploadToYnab } from '../commands/uploadToYnab';
 import moment from 'moment';
+import {TelegrafContext} from "telegraf/typings/context";
+import {Message} from "telegraf/typings/telegram-types";
 
 export default class TelegramBot {
-    private bot: Telegraf<ContextMessageUpdate>;
+    private bot: Telegraf<TelegrafContext>;
 
     constructor(botToken: string) {
         this.bot = new Telegraf(botToken);
@@ -44,7 +45,7 @@ export default class TelegramBot {
         return this.bot!.telegram.sendMessage(chatId, message.slice(0, 4000));
     }
 
-    private _getArg(message?: IncomingMessage) {
+    private _getArg(message?: Message) {
         const messageString = (message && message.text) || '';
         return messageString
             .split(' ')
