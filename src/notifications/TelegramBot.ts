@@ -1,15 +1,14 @@
-import Telegraf from 'telegraf';
+import Telegraf, { ContextMessageUpdate } from 'telegraf';
 import Db from '../Db';
 import { RedirectLog } from './RedirectLog';
 import logger from '../logger';
 import { scrape } from '../commands/scrape';
 import { uploadToYnab } from '../commands/uploadToYnab';
 import moment from 'moment';
-import {TelegrafContext} from "telegraf/typings/context";
 import {Message} from "telegraf/typings/telegram-types";
 
 export default class TelegramBot {
-    private bot: Telegraf<TelegrafContext>;
+    private bot: Telegraf<ContextMessageUpdate>;
 
     constructor(botToken: string) {
         this.bot = new Telegraf(botToken);
