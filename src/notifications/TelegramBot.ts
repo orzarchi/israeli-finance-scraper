@@ -62,10 +62,7 @@ export default class TelegramBot {
 
         try {
             redirectLog.start();
-            const scrapedTranscationsNumber = await scrape();
-            if (scrapedTranscationsNumber > 0) {
-                await uploadToYnab();
-            }
+            await scrape();
             redirectLog.stop();
         } catch (err) {
             redirectLog.stop();
