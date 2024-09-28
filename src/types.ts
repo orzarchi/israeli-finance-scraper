@@ -6,7 +6,7 @@ export type Account = {
     txns: Transaction[];
 };
 
-export type PersistedTransaction = {
+export type ScrapedTransaction = {
     id: string;
     approvalNumber: number | string;
     provider: CompanyTypes;
@@ -27,6 +27,15 @@ export type PersistedTransaction = {
     userId: string;
     status: 'completed' | 'pending';
 };
+
+export type PersistedTransaction = ScrapedTransaction & {
+    docId: string;
+    userNote: string;
+    category?: string;
+};
+
+export type TransactionUpdate = Pick<PersistedTransaction, 'docId' | 'userNote' | 'category'>;
+
 
 export interface IPersistedConfiguration {
     id: string;

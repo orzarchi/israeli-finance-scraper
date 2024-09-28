@@ -2,7 +2,7 @@
     "main": "dist/commands/startGCPHandler.js",
     "dependencies": {
         "@google-cloud/firestore": "^2.2.1",
-        "@google-cloud/functions-framework": "^3.3.0",
+        "@google-cloud/functions-framework": "^3.4.2",
         "@types/lodash": "^4.14.123",
         "@types/minimist": "^1.2.0",
         "@types/moment-timezone": "^0.5.30",
@@ -24,7 +24,6 @@
         "proxy-chain": "^2.2.0",
         "puppeteer": "19.8",
         "shortid": "^2.2.14",
-        "ts-node": "^8.0.3",
         "tsconfig-paths": "^4.1.1",
         "yn": "^3.1.0",
         "ynab": "^1.49.0"
@@ -32,14 +31,22 @@
     "devDependencies": {
         "@types/aws-lambda": "^8.10.109",
         "aws-lambda": "^1.0.7",
+        "concurrently": "^9.0.1",
+        "nodemon": "^3.1.7",
         "prettier": "^1.16.4",
         "typescript": "^5.4.5"
     },
     "scripts": {
-        "build": "./node_modules/.bin/tsc",
+        "build": "./node_modules/.bin/tsc --sourceMap",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "runCommand": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json node --enable-source-maps dist/runCommand.js",
-        "runCommand:dev": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json ts-node --files src/runCommand.ts",
+        "runCommand:dev": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json tsx src/runCommand.ts",
+        "gcp:debug": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json node node_modules/.bin/functions-framework --source=./dist/commands/startGCPHandler.js",
+        "gcp:watch": "concurrently \"npm run build -- --watch\" \"nodemon --watch ./dist/commands --exec npm run gcp:debug -- -- --target=$TARGET\"",
+        "gcp:fetchTransactions:debug": "npm run gcp:debug -- --target=fetchTransactions",
+        "gcp:fetchTransactions:watch": "TARGET=\"fetchTransactions\" npm run gcp:watch",
+        "gcp:updateTransactions:debug": "npm run gcp:debug -- --target=updateTransactions",
+        "gcp:updateTransactions:watch": "TARGET=\"updateTransactions\" npm run gcp:watch",
         "scrape": "yarn runCommand scrape",
         "scrape:dev": "yarn runCommand:dev scrape",
         "configure": "yarn runCommand configure",

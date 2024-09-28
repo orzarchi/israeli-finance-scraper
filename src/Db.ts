@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { IPersistedConfiguration, PersistedTransaction } from './types';
+import { IPersistedConfiguration, PersistedTransaction, ScrapedTransaction, TransactionUpdate } from './types';
 import { Configuration } from './Configuration';
 import _ from 'lodash';
 import { CollectionReference } from '@google-cloud/firestore';
@@ -23,7 +23,28 @@ export default class Db {
         return this.db.collection('transactions');
     }
 
-    async addTransactions(transactions: PersistedTransaction[], ignoreExistingTransactions: boolean = false) {
+    async updateById(transactionUpdates: Array<TransactionUpdate>): Promise<void>{
+        if (!transactionUpdates.length) {
+            return;
+        }
+
+        logger.log(`Updating ${transactionUpdates.length} transactions`);
+        const collection = this.getCollection();
+
+        const promises = _.chunk(transactionUpdates, 500).map(async chunk => {
+            const batch = this.db.batch();
+
+            chunk.forEach((txUpdate) => {
+                batch.update(collection.doc(txUpdate.docId), _.omit(txUpdate, 'docId'));
+            });
+
+            await batch.commit();
+        });
+
+        await Promise.all(promises);
+    }
+
+    async addTransactions(transactions: ScrapedTransaction[], ignoreExistingTransactions: boolean = false) {
         if (!transactions.length) {
             return 0;
         }
@@ -70,7 +91,7 @@ export default class Db {
         }
     }
 
-    private getUniqueIdsForBatch(transactions: PersistedTransaction[]) {
+    private getUniqueIdsForBatch(transactions: ScrapedTransaction[]) {
         const seenAlready = new Set();
         return transactions.map(x => {
             const uniqueDbId = this.getUniqueDbId(x);
@@ -87,10 +108,10 @@ export default class Db {
     }
 
     private async mergeWithExistingTransactions(
-        transactions: PersistedTransaction[],
+        transactions: ScrapedTransaction[],
         collection: CollectionReference,
         uniqueIds: string[]
-    ): Promise<[number, PersistedTransaction[]]> {
+    ): Promise<[number, ScrapedTransaction[]]> {
         const existingDocuments = await this.db.getAll(
             ...uniqueIds.map(uniqueId => collection.doc(uniqueId), { fieldMask: ['id'] })
         );
@@ -119,7 +140,7 @@ export default class Db {
         return [newCount, merged];
     }
 
-    private mergeTransactions(object: PersistedTransaction, source: PersistedTransaction) {
+    private mergeTransactions(object: ScrapedTransaction, source: ScrapedTransaction) {
         const customizer = (objValue: any, srcValue: any, key: string) => {
             // short id
             if (key === 'id') {
@@ -130,7 +151,7 @@ export default class Db {
         return _.mergeWith(object, source, customizer);
     }
 
-    private getUniqueDbId(transaction: PersistedTransaction) {
+    private getUniqueDbId(transaction: ScrapedTransaction) {
         const date = transaction.date;
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = moment(date).format('DD');
@@ -163,7 +184,7 @@ export default class Db {
 
     mapDocument(document: DocumentSnapshot) {
         const data = document.data()!;
-        return { ...data, date: data.date.toDate() } as PersistedTransaction;
+        return { ...data, date: data.date.toDate(), docId: document.id } as PersistedTransaction;
     }
 
     async getConfigurations(): Promise<Configuration[]> {

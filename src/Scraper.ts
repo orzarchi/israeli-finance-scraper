@@ -1,5 +1,5 @@
 import { CompanyTypes, createScraper } from 'israeli-bank-scrapers-core';
-import { Account, FinanciaAccountConfiguration, PersistedTransaction } from './types';
+import { Account, FinanciaAccountConfiguration, ScrapedTransaction } from './types';
 import _ from 'lodash';
 import shortid from 'shortid';
 import logger from './logger';
@@ -42,11 +42,11 @@ export default class Scraper {
         };
     }
 
-    private mapScrape(scrape: ScraperScrapingResult, providerName: CompanyTypes): PersistedTransaction[] {
+    private mapScrape(scrape: ScraperScrapingResult, providerName: CompanyTypes): ScrapedTransaction[] {
         return _.flatten((scrape.accounts || []).map(x => this.mapAccount(x, providerName)));
     }
 
-    private processResults(results: { [x: string]: ScraperScrapingResult }): PersistedTransaction[] {
+    private processResults(results: { [x: string]: ScraperScrapingResult }): ScrapedTransaction[] {
         return _.flatten(
             Object.keys(results).map(providerName => {
                 const scrape = results[providerName];
