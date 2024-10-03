@@ -20,12 +20,12 @@ export default class Scraper {
     }
 
     private mapTransaction(tx: Transaction, account: Account, providerName: CompanyTypes) {
-        // Assume serialized UTC date strings
-        const date = moment(tx.date).toDate();
-        const processedDate = moment(tx.processedDate).toDate();
+        // Assume serialized IL date strings
+        const date = moment.tz(tx.date, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
+        const processedDate = moment.tz(tx.processedDate, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
 
         return {
-            id: shortid.generate(),
+            id: tx.identifier,
             account: this.removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,
