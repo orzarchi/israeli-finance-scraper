@@ -124,6 +124,11 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         let credentials;
         switch (scraperCompanyTypes) {
             case CompanyTypes.hapoalim:
+                credentials = {
+                    userCode: await question('UserCode?'),
+                    password: await question('Password?')
+                }
+                break;
             case CompanyTypes.visaCal:
             case CompanyTypes.leumiCard:
             case CompanyTypes.leumi:
