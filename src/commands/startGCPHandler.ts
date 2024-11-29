@@ -17,6 +17,11 @@ functions.http('financeScraper', async (req, res) => {
         throw new Error('CHAT_ID env var not set!');
     }
 
+    if (req.query.auth !== process.env.AUTH) {
+        res.status(401).send('Unauthorized');
+        return;
+    }
+
     const bot = new TelegramBot(env.BOT_TOKEN);
 
     try {
@@ -67,6 +72,11 @@ async function updateTransactions(transactions: TransactionUpdate[]) {
 }
 
 functions.http('fetchTransactions', async (req, res) => {
+    if (req.query.auth !== process.env.AUTH) {
+        res.status(401).send('Unauthorized');
+        return;
+    }
+
     if (!req.query.startDate) {
         res.status(400).send('startDate is required');
         return;
@@ -79,6 +89,11 @@ functions.http('fetchTransactions', async (req, res) => {
 });
 
 functions.http('updateTransactions', async (req, res) => {
+    if (req.query.auth !== process.env.AUTH) {
+        res.status(401).send('Unauthorized');
+        return;
+    }
+
     if (req.method !== 'POST') {
         res.status(405).send('Method not allowed');
         return;
