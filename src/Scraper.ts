@@ -25,7 +25,7 @@ export default class Scraper {
         const processedDate = moment.tz(tx.processedDate, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
 
         return {
-            id: tx.identifier,
+            id: tx.identifier?.toString() || shortid.generate(),
             account: this.removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,
