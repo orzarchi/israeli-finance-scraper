@@ -165,6 +165,12 @@ export default class Db {
 
     private getUniqueDbId(transaction: ScrapedTransaction) {
         const date = transaction.date;
+
+        // New way of generating unique id - using the existing one from provider
+        if (transaction.date.valueOf() > new Date(2024, 11,1).valueOf()){
+            return `${transaction.provider}-${transaction.account}-${transaction.id}`;
+        }
+
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = moment(date).format('DD');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
