@@ -23,7 +23,19 @@ export default class Db {
         return this.db.collection('transactions');
     }
 
-    async updateById(transactionUpdates: Array<TransactionUpdate>): Promise<void>{
+    async deleteScrapeBatch(scrapeId: string) {
+        const collection = this.getCollection();
+        const query = collection.where('scrapeId', '==', scrapeId);
+        const results = await query.get();
+        const batch = this.db.batch();
+        results.forEach(x => {
+            batch.delete(x.ref);
+        });
+
+        await batch.commit();
+    }
+
+    async updateById(transactionUpdates: Array<TransactionUpdate>): Promise<void> {
         if (!transactionUpdates.length) {
             return;
         }
@@ -34,7 +46,7 @@ export default class Db {
         const promises = _.chunk(transactionUpdates, 500).map(async chunk => {
             const batch = this.db.batch();
 
-            chunk.forEach((txUpdate) => {
+            chunk.forEach(txUpdate => {
                 batch.update(collection.doc(txUpdate.docId), _.omit(txUpdate, 'docId'));
             });
 
