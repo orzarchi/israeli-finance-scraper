@@ -20,9 +20,19 @@ export default class Scraper {
     }
 
     private mapTransaction(tx: Transaction, account: Account, providerName: CompanyTypes) {
-        // Assume serialized IL date strings
-        const date = moment.tz(tx.date, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
-        const processedDate = moment.tz(tx.processedDate, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
+        let date: Date;
+        let processedDate: Date;
+
+        if (new Date(tx.date).valueOf() > new Date(2024, 11,1).valueOf()){
+            // New fixed, IL based date strings
+            date = moment.tz(tx.date, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
+            processedDate = moment.tz(tx.processedDate, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
+        }
+        // backward compatability
+        else{
+             date = moment(tx.date).toDate();
+             processedDate = moment(tx.processedDate).toDate();
+        }
 
         return {
             id: tx.identifier?.toString() || shortid.generate(),
