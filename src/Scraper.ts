@@ -35,7 +35,7 @@ export default class Scraper {
         }
 
         return {
-            id: tx.identifier?.toString() || shortid.generate(),
+            id: tx.identifier?.toString(),
             account: this.removeNonAscii(account.accountNumber),
             provider: providerName,
             chargedAmount: tx.chargedAmount,

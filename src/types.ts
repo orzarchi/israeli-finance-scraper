@@ -7,7 +7,7 @@ export type Account = {
 };
 
 export type ScrapedTransaction = {
-    id: string;
+    id?: string;
     approvalNumber: number | string;
     provider: CompanyTypes;
     account: string;
