@@ -36,7 +36,7 @@ functions.http('financeScraper', async (req, res) => {
 });
 
 type TransactionDto = {
-    id: string;
+    id?: string;
     account: string;
     docId: string;
     date: Date;

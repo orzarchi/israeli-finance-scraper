@@ -167,7 +167,7 @@ export default class Db {
         const date = transaction.date;
 
         // New way of generating unique id - using the existing one from provider
-        if (transaction.date.valueOf() > new Date(2024, 11,1).valueOf()){
+        if (transaction.date.valueOf() > new Date(2024, 11,1).valueOf() && transaction.id) {
             return `${transaction.provider}-${transaction.account}-${transaction.id}`;
         }
 
