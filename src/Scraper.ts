@@ -1,9 +1,7 @@
-import { CompanyTypes, createScraper } from 'israeli-bank-scrapers-core';
+import { CompanyTypes, createScraper, ScraperCredentials, ScraperScrapingResult } from 'israeli-bank-scrapers-core';
 import { Account, FinanciaAccountConfiguration, ScrapedTransaction } from './types';
 import _ from 'lodash';
-import shortid from 'shortid';
 import logger from './logger';
-import { ScraperScrapingResult, ScraperCredentials } from 'israeli-bank-scrapers-core';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
@@ -23,7 +21,7 @@ export default class Scraper {
         let date: Date;
         let processedDate: Date;
 
-        if (new Date(tx.date).valueOf() > new Date(2024, 11,1).valueOf()){
+        if (this.shouldTreatDateAsUTCString(providerName, tx)){
             // New fixed, IL based date strings
             date = moment.tz(tx.date, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
             processedDate = moment.tz(tx.processedDate, 'YYYY-MM-DDTHH:mm:ss', 'Asia/Jerusalem').toDate();
@@ -50,6 +48,10 @@ export default class Scraper {
             userId: this.userId,
             status: tx.status
         };
+    }
+
+    private shouldTreatDateAsUTCString(company: CompanyTypes, tx: Transaction) {
+        return company !== CompanyTypes.hapoalim && new Date(tx.date).valueOf() > new Date(2024, 11, 1).valueOf();
     }
 
     private mapScrape(scrape: ScraperScrapingResult, providerName: CompanyTypes): ScrapedTransaction[] {
