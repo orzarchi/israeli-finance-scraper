@@ -174,10 +174,11 @@ export default class Db {
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = moment(date).format('DD');
         const dateString = `${date.getFullYear()}-${month}-${day}`;
+        let formattedInstallments = transaction.installments ? `${transaction.installments.number}/${transaction.installments.total}` : null;
         let uniqueId = `${transaction.provider}-${transaction.account}-${dateString}-${transaction.description.slice(
             0,
             4
-        )}-${transaction.chargedAmount}`;
+        )}-${transaction.chargedAmount}${formattedInstallments ? '-' + formattedInstallments : ''}`;
         return uniqueId.replace(/[ /]/g, '');
     }
 
