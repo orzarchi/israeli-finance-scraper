@@ -1,6 +1,6 @@
-import Telegraf, { ContextMessageUpdate } from 'telegraf';
+import { Telegraf, Context } from 'telegraf';
+import type { Message } from 'node-telegram-bot-api';
 import Db from '../Db';
-import { IncomingMessage } from 'telegraf/typings/telegram-types';
 import { RedirectLog } from './RedirectLog';
 import logger from '../logger';
 import { scrape } from '../commands/scrape';
@@ -8,22 +8,22 @@ import { uploadToYnab } from '../commands/uploadToYnab';
 import moment from 'moment';
 
 export default class TelegramBot {
-    private bot: Telegraf<ContextMessageUpdate>;
+    private bot: Telegraf<Context>;
 
     constructor(botToken: string) {
         this.bot = new Telegraf(botToken);
     }
 
     async launchBot(hostname: string, port: number) {
-        this.bot.command('tx', ({ reply, message }) => {
+        this.bot.command('tx', async (ctx: Context) => {
             return this.getTransactions(async (x: string) => {
-                await reply(x);
-            }, parseInt(this._getArg(message)));
+                await ctx.reply(x);
+            }, parseInt(this._getArg(ctx.message)));
         });
 
-        this.bot.command('scrape', ({ reply }) => {
+        this.bot.command('scrape', async (ctx: Context) => {
             return this.scrape(async x => {
-                await reply(x);
+                await ctx.reply(x);
             });
         });
 
@@ -44,7 +44,7 @@ export default class TelegramBot {
         return this.bot!.telegram.sendMessage(chatId, message.slice(0, 4000));
     }
 
-    private _getArg(message?: IncomingMessage) {
+    private _getArg(message?: Message) {
         const messageString = (message && message.text) || '';
         return messageString
             .split(' ')

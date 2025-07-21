@@ -7,6 +7,7 @@ import { ScraperScrapingResult, ScraperCredentials } from 'israeli-bank-scrapers
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
+import { Browser as PuppeteerCoreBrowser } from 'puppeteer-core';
 
 export default class Scraper {
     constructor(private userId: string) {}
@@ -69,7 +70,7 @@ export default class Scraper {
                 showBrowser: true,
                 verbose: false,
                 futureMonthsToScrape: 3,
-                browser
+                browser: (browser as unknown) as PuppeteerCoreBrowser
             });
 
             const scraperScrapingResult = await scraper.scrape(scraperConfig.credentials as ScraperCredentials);

@@ -3,7 +3,6 @@ import { uploadToYnab } from './commands/uploadToYnab';
 import { startBot } from './commands/startBot';
 import { configure } from './commands/configure';
 import moment from 'moment-timezone';
-import { startWeb } from './commands/startWeb';
 import { getOtpContext } from './commands/getOtpContext';
 
 const commandName = process.argv[2];
@@ -20,9 +19,6 @@ switch (commandName) {
         break;
     case 'startBot':
         command = startBot;
-        break;
-    case 'startWeb':
-        command = startWeb;
         break;
     case 'uploadToYnab':
         command = uploadToYnab;

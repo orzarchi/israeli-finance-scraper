@@ -125,7 +125,6 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
         switch (scraperCompanyTypes) {
             case CompanyTypes.hapoalim:
             case CompanyTypes.visaCal:
-            case CompanyTypes.leumiCard:
             case CompanyTypes.leumi:
             case CompanyTypes.max:
             case CompanyTypes.mizrahi:
