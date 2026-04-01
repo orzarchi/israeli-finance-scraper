@@ -19,5 +19,6 @@ export default {
     HEROKU_ADDRESS: process.env['HEROKU_ADDRESS'],
     HEADLESS: yn(process.env['HEADLESS'] || true) || false,
     PUPPETEER_EXECUTABLE_PATH: process.env['PUPPETEER_EXECUTABLE_PATH'],
-    HTTP_PROXY_URL: process.env['HTTP_PROXY_URL']
+    HTTP_PROXY_URL: process.env['HTTP_PROXY_URL'],
+    CHROME_USER_DATA_DIR: process.env['CHROME_USER_DATA_DIR']
 };

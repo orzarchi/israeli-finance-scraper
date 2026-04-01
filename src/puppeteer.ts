@@ -1,6 +1,10 @@
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { Browser } from 'puppeteer';
 import env from './env';
 import * as proxyChain from 'proxy-chain';
+
+puppeteer.use(StealthPlugin());
 
 const getProxy = async () => {
     let proxyUrl = env.HTTP_PROXY_URL;
@@ -58,10 +62,16 @@ const lambdaOptions = {
 export async function launchPuppeteer(): Promise<Browser> {
     const proxyUrl = await proxyUrlPromise;
 
-    let options = {
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    let options: any = {
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled'
+        ],
         headless: env.HEADLESS,
-        executablePath: env.PUPPETEER_EXECUTABLE_PATH
+        executablePath: env.PUPPETEER_EXECUTABLE_PATH,
+        ignoreDefaultArgs: ['--enable-automation'],
+        userDataDir: env.CHROME_USER_DATA_DIR || undefined
     };
 
     if (process.env.AWS_LAMBDA_RUNTIME_API) {

@@ -67,6 +67,7 @@ export default class Scraper {
                 companyId: scraperConfig.companyId,
                 startDate,
                 combineInstallments: false,
+                additionalTransactionInformation: false,
                 showBrowser: true,
                 verbose: false,
                 futureMonthsToScrape: 3,
