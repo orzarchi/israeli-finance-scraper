@@ -42,3 +42,6 @@ firebase-service-account.json
 !.yarn/sdks
 !.yarn/versions
 .cache
+*.db
+*.db-wal
+*.db-shm
