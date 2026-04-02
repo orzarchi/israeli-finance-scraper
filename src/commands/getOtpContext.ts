@@ -1,4 +1,4 @@
-import Db from '../Db';
+import { createStorageProvider } from '../storage';
 import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
 import { CompanyTypes, createScraper, OneZeroScraper } from 'israeli-bank-scrapers-core';
 import { choice, question, confirm } from './cli';
@@ -60,16 +60,16 @@ async function configureAccountOtpContext(
 }
 
 export const getOtpContext = async function() {
-    const db = new Db();
+    const db = createStorageProvider();
     const configurations = await db.getConfigurations();
     if (!configurations.length) {
         console.log('no configurations');
         return;
     }
-    const configurationId = await choice('Which configuration?', configurations.map(x => x.id));
-    const configurationToEdit = configurations.find(x => x.id === configurationId)!;
+    const configurationId = await choice('Which configuration?', configurations.map((x: { id: string }) => x.id));
+    const configurationToEdit = configurations.find((x: { id: string }) => x.id === configurationId)!;
 
-    let relevantAccounts = configurationToEdit.accountsConfig.filter(x => x.companyId === CompanyTypes.oneZero);
+    let relevantAccounts = configurationToEdit.accountsConfig.filter((x: FinanciaAccountConfiguration) => x.companyId === CompanyTypes.oneZero);
     let relevantAccount = relevantAccounts[0];
     if (!relevantAccount) {
         console.log('No account with otp');
@@ -79,11 +79,11 @@ export const getOtpContext = async function() {
     if (relevantAccounts.length > 1) {
         const relevantAccountId = await choice(
             'Account to fetch OTP context for?',
-            relevantAccounts.map(x => `${x.id} (${x.companyId})`),
-            relevantAccounts.map(x => x.id)
+            relevantAccounts.map((x: FinanciaAccountConfiguration) => `${x.id} (${x.companyId})`),
+            relevantAccounts.map((x: FinanciaAccountConfiguration) => x.id)
         );
 
-        relevantAccount = relevantAccounts.find(x => x.id === relevantAccountId)!;
+        relevantAccount = relevantAccounts.find((x: FinanciaAccountConfiguration) => x.id === relevantAccountId)!;
     }
 
     await configureAccountOtpContext(configurationToEdit, relevantAccount);

@@ -1,4 +1,4 @@
-import Db from '../Db';
+import { createStorageProvider } from '../storage';
 import moment from 'moment-timezone';
 import env from '../env';
 import _ from 'lodash';
@@ -7,7 +7,7 @@ import logger from '../logger';
 import Scraper from '../Scraper';
 
 export const scrape = async function() {
-    const db = new Db();
+    const db = createStorageProvider();
     const configurations = await db.getConfigurations();
     const startDate = moment()
         .startOf('month')

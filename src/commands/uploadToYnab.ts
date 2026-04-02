@@ -1,4 +1,4 @@
-import Db from '../Db';
+import { createStorageProvider } from '../storage';
 import { uploadTransactions } from '../ynab';
 import { PersistedTransaction } from '../types';
 import _ from 'lodash';
@@ -6,7 +6,7 @@ import env from '../env';
 import moment from 'moment';
 
 export const uploadToYnab = async function() {
-    const db = new Db();
+    const db = createStorageProvider();
     const configurations = await db.getConfigurations();
     const startDate = moment()
         .startOf('month')

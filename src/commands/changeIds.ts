@@ -1,10 +1,10 @@
-import Db from '../Db';
+import { createStorageProvider } from '../storage';
 import env from '../env';
 import shortid from 'shortid';
 import moment from 'moment';
 
 export const changeIds = async function() {
-    const db = new Db();
+    const db = createStorageProvider();
     const startDate = moment()
         .startOf('month')
         .subtract(env.MONTHS_TO_SCRAPE, 'months')

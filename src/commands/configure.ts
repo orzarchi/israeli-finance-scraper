@@ -1,4 +1,4 @@
-import Db from '../Db';
+import { createStorageProvider } from '../storage';
 import { getAccounts, getBudgets } from '../ynab';
 import { FinanciaAccountConfiguration, IPersistedConfiguration } from '../types';
 import { Configuration } from '../Configuration';
@@ -175,12 +175,12 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
 }
 
 export const configure = async function() {
-    const db = new Db();
+    const db = createStorageProvider();
     const configurations = await db.getConfigurations();
     let configurationToEdit = null;
-    const configurationId = await choice('Which configuration?', configurations.map(x => x.id).concat(['Create new']));
+    const configurationId = await choice('Which configuration?', configurations.map((x: Configuration) => x.id).concat(['Create new']));
     if (configurationId !== 'Create new') {
-        configurationToEdit = configurations.find(x => x.id === configurationId)!;
+        configurationToEdit = configurations.find((x: Configuration) => x.id === configurationId)!;
     } else {
         const newName = await question('Configuration name?');
         configurationToEdit = new Configuration('', { id: newName } as IPersistedConfiguration);
