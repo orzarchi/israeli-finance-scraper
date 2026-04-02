@@ -74,6 +74,7 @@ export default class Scraper {
         for (const scraperConfig of scrapers) {
             logger.log(`Scraping ${scraperConfig.companyId}`);
 
+            // @ts-expect-error puppeteer vs puppeteer-core #private field mismatch
             const scraper = createScraper({
                 companyId: scraperConfig.companyId,
                 startDate,
