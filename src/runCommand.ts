@@ -1,10 +1,10 @@
 import { scrape } from './commands/scrape';
 import { uploadToYnab } from './commands/uploadToYnab';
-import { startBot } from './commands/startBot';
 import { configure } from './commands/configure';
 import moment from 'moment-timezone';
 import { startWeb } from './commands/startWeb';
 import { getOtpContext } from './commands/getOtpContext';
+import { migrateFromFirestore } from './commands/migrateFromFirestore';
 
 const commandName = process.argv[2];
 let command;
@@ -18,9 +18,6 @@ switch (commandName) {
     case 'upload':
         command = uploadToYnab;
         break;
-    case 'startBot':
-        command = startBot;
-        break;
     case 'startWeb':
         command = startWeb;
         break;
@@ -32,6 +29,9 @@ switch (commandName) {
         break;
     case 'getOtpContext':
         command = getOtpContext;
+        break;
+    case 'migrateFromFirestore':
+        command = migrateFromFirestore;
         break;
 
     default:
