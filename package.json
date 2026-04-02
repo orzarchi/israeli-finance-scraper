@@ -1,8 +1,7 @@
 {
-    "main": "dist/commands/startGCPHandler.js",
+    "main": "dist/runCommand.js",
     "dependencies": {
-        "@google-cloud/firestore": "^2.2.1",
-        "@google-cloud/functions-framework": "^3.4.2",
+        "@hono/node-server": "^1.19.12",
         "@types/lodash": "^4.14.123",
         "@types/minimist": "^1.2.0",
         "@types/moment-timezone": "^0.5.30",
@@ -11,11 +10,12 @@
         "@types/puppeteer-core": "^2.0.0",
         "@types/shortid": "^0.0.29",
         "@types/split2": "^2.1.6",
+        "better-sqlite3": "^12.8.0",
         "csv-parse": "^4.14.2",
+        "drizzle-orm": "^0.45.2",
         "enquirer": "^2.3.0",
-        "fastify": "^4.10.2",
         "firebase-admin": "^9.5.0",
-        "firebase-functions": "^3.13.2",
+        "hono": "^4.12.10",
         "israeli-bank-scrapers-core": "^5.4.6",
         "lodash": "^4.17.21",
         "minimist": "^1.2.5",
@@ -29,9 +29,9 @@
         "ynab": "^1.49.0"
     },
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.109",
-        "aws-lambda": "^1.0.7",
+        "@types/better-sqlite3": "^7.6.13",
         "concurrently": "^9.0.1",
+        "drizzle-kit": "^0.31.10",
         "nodemon": "^3.1.7",
         "prettier": "^1.16.4",
         "tsx": "^4.19.2",
@@ -40,28 +40,19 @@
     "scripts": {
         "build": "./node_modules/.bin/tsc --sourceMap",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "runCommand": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json node --enable-source-maps dist/runCommand.js",
-        "runCommand:dev": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json tsx src/runCommand.ts",
-        "gcp:debug": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json node node_modules/.bin/functions-framework --source=./dist/commands/startGCPHandler.js",
-        "gcp:watch": "concurrently \"npm run build -- --watch\" \"nodemon --watch ./dist/commands --exec npm run gcp:debug -- -- --target=$TARGET\"",
-        "gcp:fetchTransactions:debug": "npm run gcp:debug -- --target=fetchTransactions",
-        "gcp:fetchTransactions:watch": "TARGET=\"fetchTransactions\" npm run gcp:watch",
-        "gcp:updateTransactions:debug": "npm run gcp:debug -- --target=updateTransactions",
-        "gcp:updateTransactions:watch": "TARGET=\"updateTransactions\" npm run gcp:watch",
+        "runCommand": "node --enable-source-maps dist/runCommand.js",
+        "runCommand:dev": "tsx src/runCommand.ts",
         "scrape": "yarn runCommand scrape",
         "scrape:dev": "yarn runCommand:dev scrape",
-        "configure": "yarn runCommand configure",
-        "getOtpContext": "yarn runCommand getOtpContext",
+        "configure": "yarn runCommand:dev configure",
+        "getOtpContext": "yarn runCommand:dev getOtpContext",
         "changeids": "yarn runCommand changeIds",
         "startWeb": "yarn runCommand startWeb",
         "startWeb:dev": "yarn runCommand:dev startWeb",
-        "startBot": "yarn runCommand startBot",
         "uploadToYnab": "yarn runCommand uploadToYnab",
-        "heroku-postbuild": "echo $GOOGLE_CREDENTIALS | base64 -d > firebase-service-account.json",
-        "gcp-build": "yarn build && node node_modules/puppeteer/install.js"
-    },
-    "optionalDependencies": {
-        "telegraf": "^3.30.1"
+        "migrateFromFirestore": "GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json yarn runCommand:dev migrateFromFirestore",
+        "db:generate": "npx drizzle-kit generate",
+        "db:studio": "npx drizzle-kit studio"
     },
     "packageManager": "yarn@3.3.0",
     "resolutions": {
