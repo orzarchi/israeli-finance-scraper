@@ -1,6 +1,7 @@
 {
     "main": "dist/runCommand.js",
     "dependencies": {
+        "@google-cloud/firestore": "^8.3.0",
         "@hono/node-server": "^1.19.12",
         "@types/lodash": "^4.14.123",
         "@types/minimist": "^1.2.0",
