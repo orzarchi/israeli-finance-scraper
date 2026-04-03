@@ -1,4 +1,5 @@
-import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
+import { sqliteTable, text, real, integer, check } from 'drizzle-orm/sqlite-core';
 
 export const transactions = sqliteTable('transactions', {
     docId: text('doc_id').primaryKey(),
@@ -27,4 +28,6 @@ export const configurations = sqliteTable('configurations', {
     docId: text('doc_id').primaryKey(),
     id: text('id').notNull(),
     payload: text('payload').notNull(),
-});
+}, table => [
+    check('configurations_payload_is_json', sql`json_valid(${table.payload})`),
+]);
