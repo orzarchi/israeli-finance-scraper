@@ -8,9 +8,15 @@ import moment from 'moment-timezone';
 import _ from 'lodash';
 import { scrape } from './scrape';
 import { formatError } from '../formatError';
+import yn from 'yn';
 
 const app = new Hono();
 let running = false;
+
+function parseHeadlessOverride(value?: string) {
+    const parsed = yn(value);
+    return parsed === null ? undefined : parsed;
+}
 
 app.use('*', async (c, next) => {
     const startedAt = Date.now();
@@ -96,14 +102,16 @@ app.post('/scrapeAsync', async (c) => {
         return c.text('Unauthorized', 401);
     }
 
+    const headless = parseHeadlessOverride(c.req.query('headless'));
+
     if (running) {
         logger.warn('Scrape async request ignored because a scrape is already running');
         return c.json({ success: false, reason: 'already running' });
     }
 
-    logger.info('Scrape async request accepted');
+    logger.info(`Scrape async request accepted${headless == null ? '' : ` (headless=${headless})`}`);
     running = true;
-    scrape()
+    scrape({ headless })
         .then(summary => {
             logger.info(
                 `Scrape async request completed: ${summary.totals.newTransactions} new, ${summary.totals.updatedTransactions} updates`
@@ -121,16 +129,18 @@ app.post('/scrape', async (c) => {
         return c.text('Unauthorized', 401);
     }
 
+    const headless = parseHeadlessOverride(c.req.query('headless'));
+
     if (running) {
         logger.warn('Scrape request ignored because a scrape is already running');
         return c.json({ success: false, reason: 'already running' });
     }
 
-    logger.info('Scrape request accepted');
+    logger.info(`Scrape request accepted${headless == null ? '' : ` (headless=${headless})`}`);
     running = true;
 
     try {
-        const summary = await scrape();
+        const summary = await scrape({ headless });
         logger.info(`Scrape request completed: ${summary.totals.newTransactions} new, ${summary.totals.updatedTransactions} updates`);
         return c.json({ success: true, summary });
     } catch (e) {

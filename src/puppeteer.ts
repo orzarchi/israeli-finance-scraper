@@ -55,12 +55,12 @@ const lambdaOptions = {
     defaultViewport: null
 };
 
-export async function launchPuppeteer(): Promise<Browser> {
+export async function launchPuppeteer(headless: boolean = env.HEADLESS): Promise<Browser> {
     const proxyUrl = await proxyUrlPromise;
 
     let options = {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        headless: env.HEADLESS,
+        headless,
         executablePath: env.PUPPETEER_EXECUTABLE_PATH
     };
 

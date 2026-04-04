@@ -15,7 +15,7 @@ export default {
     AUTH: process.env['AUTH'],
     SQLITE_PATH: process.env['SQLITE_PATH'],
     WEBSERVER_PORT: parseInt(process.env['WEBSERVER_PORT'] || '8443'),
-    HEADLESS: yn(process.env['HEADLESS'] || true) || false,
+    HEADLESS: yn(process.env['HEADLESS'], { default: true }),
     PUPPETEER_EXECUTABLE_PATH: process.env['PUPPETEER_EXECUTABLE_PATH'],
     HTTP_PROXY_URL: process.env['HTTP_PROXY_URL']
 };

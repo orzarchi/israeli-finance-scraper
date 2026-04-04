@@ -73,9 +73,13 @@ export default class Scraper {
         );
     }
 
-    async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]): Promise<ScrapeProviderRun[]> {
+    async runScrape(
+        startDate: Date,
+        scrapers: FinanciaAccountConfiguration[],
+        headlessOverride?: boolean
+    ): Promise<ScrapeProviderRun[]> {
         const runs: ScrapeProviderRun[] = [];
-        const browser = await launchPuppeteer();
+        const browser = await launchPuppeteer(headlessOverride);
 
         for (const scraperConfig of scrapers) {
             logger.log(`Scraping ${scraperConfig.companyId}`);

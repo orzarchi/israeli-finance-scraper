@@ -7,6 +7,10 @@ import logger from '../logger';
 import Scraper from '../Scraper';
 import { FinanciaAccountConfiguration, ScrapeProviderSummary, ScrapeSummary } from '../types';
 
+type ScrapeOptions = {
+    headless?: boolean;
+};
+
 function shouldScrapeProvider(scraper: FinanciaAccountConfiguration) {
     if (env.ONLY_PROVIDERS.length && !env.ONLY_PROVIDERS.includes(scraper.companyId)) {
         return false;
@@ -26,7 +30,7 @@ function shouldScrapeProvider(scraper: FinanciaAccountConfiguration) {
     return true;
 }
 
-export const scrape = async function(): Promise<ScrapeSummary> {
+export const scrape = async function(options: ScrapeOptions = {}): Promise<ScrapeSummary> {
     const db = createStorageProvider();
     const configurations = await db.getConfigurations();
     const startDate = moment()
@@ -56,7 +60,11 @@ export const scrape = async function(): Promise<ScrapeSummary> {
                 continue;
             }
 
-            const providerRuns = await new Scraper(configuration.persistenceId).runScrape(startDate, scraper);
+            const providerRuns = await new Scraper(configuration.persistenceId).runScrape(
+                startDate,
+                [scraper],
+                options.headless
+            );
 
             for (const providerRun of providerRuns) {
                 providerRun.transactions.forEach(tx => {
