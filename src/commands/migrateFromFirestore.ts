@@ -3,6 +3,7 @@ import { execFileSync } from 'child_process';
 import { createStorageProvider } from '../storage';
 import { IPersistedConfiguration, ScrapedTransaction } from '../types';
 import logger from '../logger';
+import { getErrorMessage } from '../formatError';
 
 type CollectionDocument<T> = {
     id: string;
@@ -40,16 +41,8 @@ function logFirestoreSource(message: string) {
     firestoreSourceLogged = true;
 }
 
-function normalizeErrorMessage(error: unknown) {
-    if (error instanceof Error) {
-        return error.message;
-    }
-
-    return String(error);
-}
-
 function shouldFallbackToGcloud(error: unknown) {
-    const message = normalizeErrorMessage(error);
+    const message = getErrorMessage(error);
     return (
         message.includes('Could not load the default credentials') ||
         message.includes('default credentials were not found') ||

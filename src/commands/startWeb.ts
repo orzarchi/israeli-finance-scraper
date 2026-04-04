@@ -7,9 +7,25 @@ import logger from '../logger';
 import moment from 'moment-timezone';
 import _ from 'lodash';
 import { scrape } from './scrape';
+import { formatError } from '../formatError';
 
 const app = new Hono();
 let running = false;
+
+app.use('*', async (c, next) => {
+    const startedAt = Date.now();
+    const path = new URL(c.req.url).pathname;
+    logger.info(`HTTP ${c.req.method} ${path} started`);
+
+    try {
+        await next();
+    } catch (error) {
+        logger.error(`HTTP ${c.req.method} ${path} failed after ${Date.now() - startedAt}ms: ${formatError(error)}`);
+        throw error;
+    }
+
+    logger.info(`HTTP ${c.req.method} ${path} -> ${c.res.status} in ${Date.now() - startedAt}ms`);
+});
 
 // Health check
 app.get('/', (c) => {
@@ -46,7 +62,7 @@ app.get('/fetchTransactions', async (c) => {
             }))
         );
     } catch (e) {
-        logger.error((<Error>e).message);
+        logger.error(`Failed to fetch transactions: ${formatError(e)}`);
         return c.text('Error', 500);
     }
 });
@@ -69,27 +85,61 @@ app.post('/updateTransactions', async (c) => {
         );
         return c.text('OK');
     } catch (e) {
-        logger.error((<Error>e).message);
+        logger.error(`Failed to update transactions: ${formatError(e)}`);
         return c.text('Error', 500);
     }
 });
 
-// Trigger scrape
+// Trigger scrape in the background
+app.post('/scrapeAsync', async (c) => {
+    if (env.AUTH && c.req.query('auth') !== env.AUTH) {
+        return c.text('Unauthorized', 401);
+    }
+
+    if (running) {
+        logger.warn('Scrape async request ignored because a scrape is already running');
+        return c.json({ success: false, reason: 'already running' });
+    }
+
+    logger.info('Scrape async request accepted');
+    running = true;
+    scrape()
+        .then(summary => {
+            logger.info(
+                `Scrape async request completed: ${summary.totals.newTransactions} new, ${summary.totals.updatedTransactions} updates`
+            );
+        })
+        .catch((e) => logger.error(`Scrape async error: ${formatError(e)}`))
+        .finally(() => { running = false; });
+
+    return c.json({ success: true });
+});
+
+// Trigger scrape and wait for completion
 app.post('/scrape', async (c) => {
     if (env.AUTH && c.req.query('auth') !== env.AUTH) {
         return c.text('Unauthorized', 401);
     }
 
     if (running) {
+        logger.warn('Scrape request ignored because a scrape is already running');
         return c.json({ success: false, reason: 'already running' });
     }
 
+    logger.info('Scrape request accepted');
     running = true;
-    scrape()
-        .catch((e) => logger.error('Scrape error:', (<Error>e).message))
-        .finally(() => { running = false; });
 
-    return c.json({ success: true });
+    try {
+        const summary = await scrape();
+        logger.info(`Scrape request completed: ${summary.totals.newTransactions} new, ${summary.totals.updatedTransactions} updates`);
+        return c.json({ success: true, summary });
+    } catch (e) {
+        const error = formatError(e);
+        logger.error(`Scrape request failed: ${error}`);
+        return c.json({ success: false, error }, 500);
+    } finally {
+        running = false;
+    }
 });
 
 export async function startWeb() {

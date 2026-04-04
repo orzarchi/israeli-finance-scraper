@@ -1,16 +1,22 @@
 import { CompanyTypes, createScraper, ScraperCredentials, ScraperScrapingResult } from 'israeli-bank-scrapers-core';
-import { Account, FinanciaAccountConfiguration, ScrapedTransaction } from './types';
+import { Account, FinanciaAccountConfiguration, ScrapeProviderRun, ScrapedTransaction } from './types';
 import _ from 'lodash';
 import logger from './logger';
 import { Transaction, TransactionsAccount } from 'israeli-bank-scrapers-core/lib/transactions';
 import moment from 'moment-timezone';
 import { launchPuppeteer } from './puppeteer';
+import { formatError } from './formatError';
 
 export default class Scraper {
     constructor(private userId: string) {}
 
     private removeNonAscii(str: string) {
         return str.replace(/[^\x20-\x7E]+/g, '').trim();
+    }
+
+    private summarizeConfiguredAccounts(scraperConfig: FinanciaAccountConfiguration) {
+        const accountNames = (scraperConfig.accounts || []).map(account => account.accountName);
+        return accountNames.length ? accountNames.join(', ') : '(unknown accounts)';
     }
 
     private mapAccount(account: TransactionsAccount, providerName: CompanyTypes) {
@@ -67,12 +73,13 @@ export default class Scraper {
         );
     }
 
-    async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]) {
-        const results: { [x: string]: ScraperScrapingResult } = {};
+    async runScrape(startDate: Date, ...scrapers: FinanciaAccountConfiguration[]): Promise<ScrapeProviderRun[]> {
+        const runs: ScrapeProviderRun[] = [];
         const browser = await launchPuppeteer();
 
         for (const scraperConfig of scrapers) {
             logger.log(`Scraping ${scraperConfig.companyId}`);
+            const requestedAccounts = (scraperConfig.accounts || []).map(account => account.accountName);
 
             // @ts-expect-error puppeteer vs puppeteer-core #private field mismatch
             const scraper = createScraper({
@@ -85,26 +92,60 @@ export default class Scraper {
                 browser
             });
 
-            const scraperScrapingResult = await scraper.scrape(scraperConfig.credentials as ScraperCredentials);
+            try {
+                const scraperScrapingResult = await scraper.scrape(scraperConfig.credentials as ScraperCredentials);
 
-            if (scraperScrapingResult.success) {
-                scraperScrapingResult.accounts &&
-                    scraperScrapingResult.accounts.forEach(account => {
-                        logger.log(
-                            `found ${account.txns.length} transactions for account number ${account.accountNumber}`
-                        );
+                if (scraperScrapingResult.success) {
+                    const scrapedAccounts = (scraperScrapingResult.accounts || []).map(account => ({
+                        accountNumber: account.accountNumber,
+                        transactionsFound: account.txns.length,
+                    }));
+                    scraperScrapingResult.accounts &&
+                        scraperScrapingResult.accounts.forEach(account => {
+                            logger.log(
+                                `found ${account.txns.length} transactions for account number ${account.accountNumber}`
+                            );
+                        });
+
+                    runs.push({
+                        companyId: scraperConfig.companyId,
+                        requestedAccounts,
+                        scrapedAccounts,
+                        success: true,
+                        transactions: this.mapScrape(scraperScrapingResult, scraperConfig.companyId),
                     });
-
-                results[scraperConfig.companyId] = scraperScrapingResult;
-            } else {
-                logger.log(
-                    `failed to scrape ${scraperConfig.companyId} account(s) ${scraperConfig.accounts
-                        .map(x => x.accountName)
-                        .join(', ')}- ${scraperScrapingResult.errorMessage || scraperScrapingResult.errorType}`
+                } else {
+                    const error = scraperScrapingResult.errorMessage || scraperScrapingResult.errorType || 'Unknown scrape failure';
+                    logger.log(
+                        `failed to scrape ${scraperConfig.companyId} account(s) ${this.summarizeConfiguredAccounts(scraperConfig)}- ${
+                            error
+                        }`
+                    );
+                    runs.push({
+                        companyId: scraperConfig.companyId,
+                        requestedAccounts,
+                        scrapedAccounts: [],
+                        success: false,
+                        error,
+                        transactions: [],
+                    });
+                }
+            } catch (error) {
+                const errorMessage = formatError(error);
+                logger.error(
+                    `scraper ${scraperConfig.companyId} account(s) ${this.summarizeConfiguredAccounts(scraperConfig)} threw: ${errorMessage}`
                 );
+                runs.push({
+                    companyId: scraperConfig.companyId,
+                    requestedAccounts,
+                    scrapedAccounts: [],
+                    success: false,
+                    error: errorMessage,
+                    transactions: [],
+                });
             }
         }
 
-        return this.processResults(results);
+        return runs;
     }
 }

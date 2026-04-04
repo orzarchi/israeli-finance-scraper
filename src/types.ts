@@ -36,6 +36,50 @@ export type PersistedTransaction = ScrapedTransaction & {
 
 export type TransactionUpdate = Pick<PersistedTransaction, 'docId' | 'userNote' | 'category'>;
 
+export type ScrapeAccountResult = {
+    accountNumber: string;
+    transactionsFound: number;
+};
+
+export type ScrapeProviderRun = {
+    companyId: CompanyTypes;
+    requestedAccounts: string[];
+    scrapedAccounts: ScrapeAccountResult[];
+    success: boolean;
+    error?: string;
+    transactions: ScrapedTransaction[];
+};
+
+export type ScrapeProviderSummary = {
+    configurationId: string;
+    companyId: CompanyTypes;
+    requestedAccounts: string[];
+    scrapedAccounts: ScrapeAccountResult[];
+    success: boolean;
+    error?: string;
+    transactionsFound: number;
+    transactionsPersisted: number;
+    filteredOutTransactions: number;
+    newTransactions: number;
+    updatedTransactions: number;
+};
+
+export type ScrapeSummary = {
+    startedAt: string;
+    finishedAt: string;
+    totals: {
+        providers: number;
+        successfulProviders: number;
+        failedProviders: number;
+        transactionsFound: number;
+        transactionsPersisted: number;
+        filteredOutTransactions: number;
+        newTransactions: number;
+        updatedTransactions: number;
+    };
+    providers: ScrapeProviderSummary[];
+};
+
 
 export interface IPersistedConfiguration {
     id: string;
