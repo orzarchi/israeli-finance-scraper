@@ -130,7 +130,6 @@ async function configureScrapers(configurationToEdit: Partial<IPersistedConfigur
                 }
                 break;
             case CompanyTypes.visaCal:
-            case CompanyTypes.leumiCard:
             case CompanyTypes.leumi:
             case CompanyTypes.max:
             case CompanyTypes.mizrahi:

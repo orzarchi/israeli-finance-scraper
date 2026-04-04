@@ -17,9 +17,9 @@ export class Configuration implements IPersistedConfiguration {
     public accountsConfig: FinanciaAccountConfiguration[];
     public persistenceId: string;
     private creditCardPaymentDescriptions: Array<{ provider: CompanyTypes; description: string[] }> = [
-        { provider: CompanyTypes.leumiCard, description: ['מקס-לאומיקאר-י'] },
-        { provider: CompanyTypes.leumiCard, description: ['מקס איט פיננ-י'] },
-        { provider: CompanyTypes.leumiCard, description: ['מקס איט פיננסי'] },
+        { provider: CompanyTypes.max, description: ['מקס-לאומיקאר-י'] },
+        { provider: CompanyTypes.max, description: ['מקס איט פיננ-י'] },
+        { provider: CompanyTypes.max, description: ['מקס איט פיננסי'] },
         { provider: CompanyTypes.visaCal, description: ['כרטיסי אשראי ל'] },
         { provider: CompanyTypes.amex, description: ['אמריקן אקספרס'] },
         { provider: CompanyTypes.isracard, description: ['ישראכרט-י', 'ישראכרט'] }
